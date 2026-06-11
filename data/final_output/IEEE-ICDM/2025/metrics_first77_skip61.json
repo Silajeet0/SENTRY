@@ -1,0 +1,57 @@
+{
+  "counts": {
+    "evaluated": 73,
+    "skipped": 3,
+    "ground_truth_positive": 1,
+    "ground_truth_negative": 72,
+    "predicted_positive": 1,
+    "true_positive": 1,
+    "false_positive": 0,
+    "true_negative": 72,
+    "false_negative": 0
+  },
+  "metrics": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "accuracy": 1.0,
+    "specificity": 1.0,
+    "balanced_accuracy": 1.0,
+    "false_positive_rate": 0.0,
+    "false_negative_rate": 0.0
+  },
+  "false_positives": [],
+  "false_negatives": [],
+  "skipped_records": [
+    {
+      "paper_url": "https://ieeexplore.ieee.org/document/11391840",
+      "document_id": "11391840",
+      "label": "unknown",
+      "is_indian_affiliated": false,
+      "authors": [],
+      "indian_authors": [],
+      "indian_institutions": [],
+      "raw_author_section": ""
+    },
+    {
+      "paper_url": "https://ieeexplore.ieee.org/document/11391851",
+      "document_id": "11391851",
+      "label": "unknown",
+      "is_indian_affiliated": false,
+      "authors": [],
+      "indian_authors": [],
+      "indian_institutions": [],
+      "raw_author_section": "Longfeng Wu\nVirginia Tech, Blacksburg, VA, USA\nYao Zhou\nGoogle, Mountain View, CA, USA\nTong Zeng\nVirginia Tech, Blacksburg, VA, USA\nZhimin Peng\nAmazon, Sunnyvale, CA, USA\nBhanu Pratap Singh Rawat\nAmazon, Sunnyvale, CA, USA\nLecheng Zheng\nVirginia Tech, Blacksburg, VA, USA\nGiovanni Seni\nAmazon, Sunnyvale, CA, USA\nDawei Zhou\nVirginia Tech, Blacksburg, VA, USA"
+    },
+    {
+      "paper_url": "https://ieeexplore.ieee.org/document/11391887",
+      "document_id": "11391887",
+      "label": "unknown",
+      "is_indian_affiliated": false,
+      "authors": [],
+      "indian_authors": [],
+      "indian_institutions": [],
+      "raw_author_section": "Noriaki Kawamae\nNTT DOCOMO SOLUTIONS, Tokyo, Japan"
+    }
+  ]
+}

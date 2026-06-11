@@ -1,0 +1,2669 @@
+[
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391712",
+    "document_id": "11391712",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Ning Chen",
+        "affiliation": "Guangdong University of Technology, Guangzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xingming Liao",
+        "affiliation": "Guangdong University of Technology, Guangzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Chengzhong Lin",
+        "affiliation": "Guangdong University of Technology, Guangzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Zhuowei Wang",
+        "affiliation": "Guangdong University of Technology, Guangzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Peijian Zeng",
+        "affiliation": "Guangdong University of Technology, Guangzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Ning Chen\nGuangdong University of Technology, Guangzhou, China\nXingming Liao\nGuangdong University of Technology, Guangzhou, China\nChengzhong Lin\nGuangdong University of Technology, Guangzhou, China\nZhuowei Wang\nGuangdong University of Technology, Guangzhou, China\nPeijian Zeng\nGuangdong University of Technology, Guangzhou, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391713",
+    "document_id": "11391713",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Bo Liu",
+        "affiliation": "School of Intelligence and Science Technology, Peking University",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Hongyan Li",
+        "affiliation": "School of Intelligence and Science Technology, Peking University",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Shenda Hong",
+        "affiliation": "Health Science Center of Peking University, Peking University",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Bo Liu\nSchool of Intelligence and Science Technology, Peking University\nState Key Laboratory of General Artificial Intelligence, Peking University\nHongyan Li\nSchool of Intelligence and Science Technology, Peking University\nState Key Laboratory of General Artificial Intelligence, Peking University\nShenda Hong\nHealth Science Center of Peking University, Peking University"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391714",
+    "document_id": "11391714",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Saumya Karunadhika",
+        "affiliation": "School of Computing and Information Systems, The University of Melbourne, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Ling Luo",
+        "affiliation": "School of Computing and Information Systems, The University of Melbourne, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Bastian Oetomo",
+        "affiliation": "School of Computing and Information Systems, The University of Melbourne, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Michele Discepola",
+        "affiliation": "Department of Chemical Engineering, The University of Melbourne, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Sandra Kentish",
+        "affiliation": "Department of Chemical Engineering, The University of Melbourne, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Sally Gras",
+        "affiliation": "Department of Chemical Engineering, The University of Melbourne, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Uwe Aickelin",
+        "affiliation": "School of Computing and Information Systems, The University of Melbourne, Australia",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Saumya Karunadhika\nSchool of Computing and Information Systems, The University of Melbourne, Australia\nARC Digital Bioprocess Development Hub, Australia\nLing Luo\nSchool of Computing and Information Systems, The University of Melbourne, Australia\nARC Digital Bioprocess Development Hub, Australia\nBastian Oetomo\nSchool of Computing and Information Systems, The University of Melbourne, Australia\nARC Digital Bioprocess Development Hub, Australia\nMichele Discepola\nDepartment of Chemical Engineering, The University of Melbourne, Australia\nARC Digital Bioprocess Development Hub, Australia\nSandra Kentish\nDepartment of Chemical Engineering, The University of Melbourne, Australia\nARC Digital Bioprocess Development Hub, Australia\nSally Gras\nDepartment of Chemical Engineering, The University of Melbourne, Australia\nARC Digital Bioprocess Development Hub, Australia\nUwe Aickelin\nSchool of Computing and Information Systems, The University of Melbourne, Australia\nARC Digital Bioprocess Development Hub, Australia"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391716",
+    "document_id": "11391716",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Yi Xu",
+        "affiliation": "Northeastern University, Boston, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yitian Zhang",
+        "affiliation": "Northeastern University, Boston, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yun Fu",
+        "affiliation": "Northeastern University, Boston, USA",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Yi Xu\nNortheastern University, Boston, USA\nYitian Zhang\nNortheastern University, Boston, USA\nYun Fu\nNortheastern University, Boston, USA"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391717",
+    "document_id": "11391717",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Yi Xu",
+        "affiliation": "Northeastern University, Boston, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yun Fu",
+        "affiliation": "Northeastern University, Boston, USA",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Yi Xu\nNortheastern University, Boston, USA\nYun Fu\nNortheastern University, Boston, USA"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391721",
+    "document_id": "11391721",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Ahmed Luqman",
+        "affiliation": "Department of Computer Science, Lahore University of Management Sciences, Lahore, Pakistan",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Khuzemah Hassan Qazi",
+        "affiliation": "Department of Computer Science, Lahore University of Management Sciences, Lahore, Pakistan",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Murray Patterson",
+        "affiliation": "Department of Computer Science, Georgia State University, Atlanta, GA, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Malik Jahan Khan",
+        "affiliation": "Department of Computer Science, Lahore University of Management Sciences, Lahore, Pakistan",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Imdadullah Khan",
+        "affiliation": "Department of Computer Science, Lahore University of Management Sciences, Lahore, Pakistan",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Ahmed Luqman\nDepartment of Computer Science, Lahore University of Management Sciences, Lahore, Pakistan\nKhuzemah Hassan Qazi\nDepartment of Computer Science, Lahore University of Management Sciences, Lahore, Pakistan\nMurray Patterson\nDepartment of Computer Science, Georgia State University, Atlanta, GA, USA\nMalik Jahan Khan\nDepartment of Computer Science, Lahore University of Management Sciences, Lahore, Pakistan\nImdadullah Khan\nDepartment of Computer Science, Lahore University of Management Sciences, Lahore, Pakistan"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391723",
+    "document_id": "11391723",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Jun-Tong Wang",
+        "affiliation": "National Key Laboratory for Novel Software Technology, Nanjing University, Nanjing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Cun-Yuan Xing",
+        "affiliation": "National Key Laboratory for Novel Software Technology, Nanjing University, Nanjing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Wei Gao",
+        "affiliation": "National Key Laboratory for Novel Software Technology, Nanjing University, Nanjing, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Jun-Tong Wang\nNational Key Laboratory for Novel Software Technology, Nanjing University, Nanjing, China\nCun-Yuan Xing\nNational Key Laboratory for Novel Software Technology, Nanjing University, Nanjing, China\nWei Gao\nNational Key Laboratory for Novel Software Technology, Nanjing University, Nanjing, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391725",
+    "document_id": "11391725",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Ye Liu",
+        "affiliation": "University of Science and Technology of China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Jiajun Zhu",
+        "affiliation": "University of Science and Technology of China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xukai Liu",
+        "affiliation": "University of Science and Technology of China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Haoyu Tang",
+        "affiliation": "University of Science and Technology of China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yanghai Zhang",
+        "affiliation": "University of Science and Technology of China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Kai Zhang",
+        "affiliation": "University of Science and Technology of China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xiaofang Zhou",
+        "affiliation": "The Hong Kong University of Science and Technology",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Enhong Chen",
+        "affiliation": "University of Science and Technology of China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Ye Liu\nUniversity of Science and Technology of China\nState Key Laboratory of Cognitive Intelligence\nJiajun Zhu\nUniversity of Science and Technology of China\nState Key Laboratory of Cognitive Intelligence\nXukai Liu\nUniversity of Science and Technology of China\nState Key Laboratory of Cognitive Intelligence\nHaoyu Tang\nUniversity of Science and Technology of China\nState Key Laboratory of Cognitive Intelligence\nYanghai Zhang\nUniversity of Science and Technology of China\nState Key Laboratory of Cognitive Intelligence\nKai Zhang\nUniversity of Science and Technology of China\nState Key Laboratory of Cognitive Intelligence\nXiaofang Zhou\nThe Hong Kong University of Science and Technology\nEnhong Chen\nUniversity of Science and Technology of China\nState Key Laboratory of Cognitive Intelligence"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391728",
+    "document_id": "11391728",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Yanan Guo",
+        "affiliation": "College of Meteorology and Oceanography, National University of Defense Technology, Changsha, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Junqiang Song",
+        "affiliation": "College of Meteorology and Oceanography, National University of Defense Technology, Changsha, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xiaoqun Cao",
+        "affiliation": "College of Meteorology and Oceanography, National University of Defense Technology, Changsha, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Hongze Leng",
+        "affiliation": "College of Meteorology and Oceanography, National University of Defense Technology, Changsha, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Yanan Guo\nCollege of Meteorology and Oceanography, National University of Defense Technology, Changsha, China\nJunqiang Song\nCollege of Meteorology and Oceanography, National University of Defense Technology, Changsha, China\nXiaoqun Cao\nCollege of Meteorology and Oceanography, National University of Defense Technology, Changsha, China\nHongze Leng\nCollege of Meteorology and Oceanography, National University of Defense Technology, Changsha, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391729",
+    "document_id": "11391729",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Hyunseok Seung",
+        "affiliation": "Department of Statistics, University of Wisconsin-Madison, Madison, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Jaewoo Lee",
+        "affiliation": "School of Computing, University of Georgia, Athens, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Hyunsuk Ko",
+        "affiliation": "School of Electrical Engineering, Hanyang University, Ansan, South Korea",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Hyunseok Seung\nDepartment of Statistics, University of Wisconsin-Madison, Madison, USA\nJaewoo Lee\nSchool of Computing, University of Georgia, Athens, USA\nHyunsuk Ko\nSchool of Electrical Engineering, Hanyang University, Ansan, South Korea"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391730",
+    "document_id": "11391730",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Yanbing Zhou",
+        "affiliation": "Guangxi Key Laboratory of Image and Graphic Intelligent Processing, Guilin University of Electronic Technology, Guilin, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yimin Wen",
+        "affiliation": "Guangxi Key Laboratory of Image and Graphic Intelligent Processing, Guilin University of Electronic Technology, Guilin, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Zhanhua Liu",
+        "affiliation": "Guangxi Key Laboratory of Image and Graphic Intelligent Processing, Guilin University of Electronic Technology, Guilin, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xiang Liu",
+        "affiliation": "Guangxi Key Laboratory of Image and Graphic Intelligent Processing, Guilin University of Electronic Technology, Guilin, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Hang Yu",
+        "affiliation": "School of Computer Engineering and Science, Shanghai University, Shanghai, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yikui Zhai",
+        "affiliation": "School of Electronics and Information Engineering, Wuyi University, Jiangmen, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Yanbing Zhou\nGuangxi Key Laboratory of Image and Graphic Intelligent Processing, Guilin University of Electronic Technology, Guilin, China\nYimin Wen\nGuangxi Key Laboratory of Image and Graphic Intelligent Processing, Guilin University of Electronic Technology, Guilin, China\nSchool of Electronics and Information Engineering, Wuyi University, Jiangmen, China\nZhanhua Liu\nGuangxi Key Laboratory of Image and Graphic Intelligent Processing, Guilin University of Electronic Technology, Guilin, China\nXiang Liu\nGuangxi Key Laboratory of Image and Graphic Intelligent Processing, Guilin University of Electronic Technology, Guilin, China\nHang Yu\nSchool of Computer Engineering and Science, Shanghai University, Shanghai, China\nYikui Zhai\nSchool of Electronics and Information Engineering, Wuyi University, Jiangmen, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391737",
+    "document_id": "11391737",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Quan Li",
+        "affiliation": "Pennsylvania State University, University Park, PA, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Wenchao Yu",
+        "affiliation": "NEC Labs America, New Jersey, NJ, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Suhang Wang",
+        "affiliation": "Pennsylvania State University, University Park, PA, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Minhua Lin",
+        "affiliation": "Pennsylvania State University, University Park, PA, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Lingwei Chen",
+        "affiliation": "Rochester Institute of Technology, Rochester, NY, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Wei Cheng",
+        "affiliation": "NEC Labs America, New Jersey, NJ, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Haifeng Chen",
+        "affiliation": "NEC Labs America, New Jersey, NJ, USA",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Quan Li\nPennsylvania State University, University Park, PA, USA\nWenchao Yu\nNEC Labs America, New Jersey, NJ, USA\nSuhang Wang\nPennsylvania State University, University Park, PA, USA\nMinhua Lin\nPennsylvania State University, University Park, PA, USA\nLingwei Chen\nRochester Institute of Technology, Rochester, NY, USA\nWei Cheng\nNEC Labs America, New Jersey, NJ, USA\nHaifeng Chen\nNEC Labs America, New Jersey, NJ, USA"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391738",
+    "document_id": "11391738",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Izhar Ali",
+        "affiliation": "Department of Computer Science, Rowan University, Glassboro, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Shen-Shyang Ho",
+        "affiliation": "Department of Computer Science, Rowan University, Glassboro, USA",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Izhar Ali\nDepartment of Computer Science, Rowan University, Glassboro, USA\nShen-Shyang Ho\nDepartment of Computer Science, Rowan University, Glassboro, USA"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391740",
+    "document_id": "11391740",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Abdurahman Ali Mohammed",
+        "affiliation": "Department of Computer Science",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Catherine Fonder",
+        "affiliation": "Department of Genetics, Development, and Cell Biology",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Nanovaccine Institute",
+        "affiliation": "Iowa State University, Ames, IA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Ying Wei",
+        "affiliation": "Department of Computer Science",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Wallapak Tavanapong",
+        "affiliation": "Department of Computer Science",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Donald S. Sakaguchi",
+        "affiliation": "Department of Genetics, Development, and Cell Biology",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Neuroscience Program",
+        "affiliation": "Nanovaccine Institute",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Qi Li",
+        "affiliation": "Department of Computer Science",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Surya K. Mallapragada",
+        "affiliation": "Department of Genetics, Development, and Cell Biology",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Neuroscience Program",
+        "affiliation": "Nanovaccine Institute",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Abdurahman Ali Mohammed\nDepartment of Computer Science\nIowa State University, Ames, IA\nCatherine Fonder\nDepartment of Genetics, Development, and Cell Biology\nMolecular, Cellular, and Developmental Biology Program\nNanovaccine Institute\nIowa State University, Ames, IA\nYing Wei\nDepartment of Computer Science\nIowa State University, Ames, IA\nWallapak Tavanapong\nDepartment of Computer Science\nIowa State University, Ames, IA\nDonald S. Sakaguchi\nDepartment of Genetics, Development, and Cell Biology\nMolecular, Cellular, and Developmental Biology Program\nNeuroscience Program\nNanovaccine Institute\nIowa State University, Ames, IA\nQi Li\nDepartment of Computer Science\nIowa State University, Ames, IA\nSurya K. Mallapragada\nDepartment of Genetics, Development, and Cell Biology\nMolecular, Cellular, and Developmental Biology Program\nNeuroscience Program\nNanovaccine Institute\nIowa State University, Ames, IA"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391745",
+    "document_id": "11391745",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Ludwig Bothmann",
+        "affiliation": "Department of Statistics, Munich Center for Machine Learning (MCML), LMU Munich, Munich, Germany",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Bernd Bischl",
+        "affiliation": "Department of Statistics, Munich Center for Machine Learning (MCML), LMU Munich, Munich, Germany",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Eirini Ntoutsi",
+        "affiliation": "Research Institute CODE, Universität der Bundeswehr München, Munich, Germany",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Emmanouil Panagiotou\nFreie Universität Berlin, Berlin, Germany\nResearch Institute CODE, Universität der Bundeswehr München, Munich, Germany\nBenoît Ronval\nICTEAM, UCLouvain, Louvain-la-Neuve, Belgium\nArjun Roy\nFreie Universität Berlin, Berlin, Germany\nResearch Institute CODE, Universität der Bundeswehr München, Munich, Germany\nLudwig Bothmann\nDepartment of Statistics, Munich Center for Machine Learning (MCML), LMU Munich, Munich, Germany\nBernd Bischl\nDepartment of Statistics, Munich Center for Machine Learning (MCML), LMU Munich, Munich, Germany\nSiegfried Nijssen\nICTEAM, UCLouvain, Louvain-la-Neuve, Belgium\nDTAI, KU Leuven, Leuven, Belgium\nEirini Ntoutsi\nResearch Institute CODE, Universität der Bundeswehr München, Munich, Germany"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391747",
+    "document_id": "11391747",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Matěj Zorek",
+        "affiliation": "Department of Computer Science, FEE, Czech Technical University in Prague, Prague, Czech Republic",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Tomáš Pevný",
+        "affiliation": "Department of Computer Science, FEE, Czech Technical University in Prague, Prague, Czech Republic",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Václav Šmídl",
+        "affiliation": "Department of Computer Science, FEE, Czech Technical University in Prague, Prague, Czech Republic",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Matěj Zorek\nDepartment of Computer Science, FEE, Czech Technical University in Prague, Prague, Czech Republic\nTomáš Pevný\nDepartment of Computer Science, FEE, Czech Technical University in Prague, Prague, Czech Republic\nVáclav Šmídl\nDepartment of Computer Science, FEE, Czech Technical University in Prague, Prague, Czech Republic"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391748",
+    "document_id": "11391748",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Ylli Sadikaj",
+        "affiliation": "Faculty of Computer Science, Uni Vie Doctoral School Computer Science, University of Vienna, Vienna, Austria",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yllka Velaj",
+        "affiliation": "Faculty of Computer Science ds: UniVie, University of Vienna, Vienna, Austria",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Claudia Plant",
+        "affiliation": "Faculty of Computer Science ds: UniVie, University of Vienna, Vienna, Austria",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Ylli Sadikaj\nFaculty of Computer Science, Uni Vie Doctoral School Computer Science, University of Vienna, Vienna, Austria\nYllka Velaj\nFaculty of Computer Science ds: UniVie, University of Vienna, Vienna, Austria\nClaudia Plant\nFaculty of Computer Science ds: UniVie, University of Vienna, Vienna, Austria"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391751",
+    "document_id": "11391751",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Krzysztof Grąbczewski",
+        "affiliation": "Department of Informatics, Faculty of Physics, Astronomy and Informatics, Institute of Engineering and Technology, Nicolaus Copernicus University in Torunń, Poland",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Krzysztof Grąbczewski\nDepartment of Informatics, Faculty of Physics, Astronomy and Informatics, Institute of Engineering and Technology, Nicolaus Copernicus University in Torunń, Poland"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391752",
+    "document_id": "11391752",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Senhao Liu",
+        "affiliation": "Renmin University of China, Beijing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Zhiyuan Ji",
+        "affiliation": "Renmin University of China, Beijing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yueguo Chen",
+        "affiliation": "Renmin University of China, Beijing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yunhai Wang",
+        "affiliation": "Renmin University of China, Beijing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xiang Ao",
+        "affiliation": "University of Chinese Academy of Sciences, Beijing, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Senhao Liu\nRenmin University of China, Beijing, China\nZhiyu Guo\nTencent Weixin Group, Shenzhen, China\nZhiyuan Ji\nRenmin University of China, Beijing, China\nYueguo Chen\nRenmin University of China, Beijing, China\nBig Data and Responsible AI for National Governance, Renmin University of China, Beijing, China\nYateng Tang\nTencent Weixin Group, Shenzhen, China\nYunhai Wang\nRenmin University of China, Beijing, China\nXuehao Zheng\nTencent Weixin Group, Shenzhen, China\nXiang Ao\nUniversity of Chinese Academy of Sciences, Beijing, China\nChinese Academy of Sciences, Institute of Intelligent Computing Technology, Suzhou, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391755",
+    "document_id": "11391755",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Yue Wang",
+        "affiliation": "School of Information, Central University of Finance and Economics, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Dehang Fu",
+        "affiliation": "School of Information, Central University of Finance and Economics, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Jie Tan",
+        "affiliation": "School of Information, Central University of Finance and Economics, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Junxiao Han",
+        "affiliation": "School of Computer and Computing Science, Hangzhou City University, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yao Wan",
+        "affiliation": "College of Computer Science and Technology, Huazhong University of Science and Technology, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Lixin Cui",
+        "affiliation": "School of Information, Central University of Finance and Economics, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Lu Bai",
+        "affiliation": "School of Artificial Intelligence, Beijing Normal University, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Philip S. Yu",
+        "affiliation": "Department of Computer Science, University of Illinois Chicago, USA",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Yue Wang\nSchool of Information, Central University of Finance and Economics, China\nDehang Fu\nSchool of Information, Central University of Finance and Economics, China\nJie Tan\nSchool of Information, Central University of Finance and Economics, China\nJunxiao Han\nSchool of Computer and Computing Science, Hangzhou City University, China\nYao Wan\nCollege of Computer Science and Technology, Huazhong University of Science and Technology, China\nLixin Cui\nSchool of Information, Central University of Finance and Economics, China\nLu Bai\nSchool of Artificial Intelligence, Beijing Normal University, China\nPhilip S. Yu\nDepartment of Computer Science, University of Illinois Chicago, USA"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391756",
+    "document_id": "11391756",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Alexander Stepikin",
+        "affiliation": "Applied AI Center, Skoltech, Moscow, Russia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Evgenia Romanenkova",
+        "affiliation": "Applied AI Center, Skoltech, Moscow, Russia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Alexey Zaytsev",
+        "affiliation": "Applied AI Center, Skoltech, Moscow, Russia",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Alexander Stepikin\nApplied AI Center, Skoltech, Moscow, Russia\nEvgenia Romanenkova\nApplied AI Center, Skoltech, Moscow, Russia\nAlexey Zaytsev\nApplied AI Center, Skoltech, Moscow, Russia\nBIMSA, Beijing, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391757",
+    "document_id": "11391757",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Fanchen Bu",
+        "affiliation": "School of Electrical Engineering, Republic of Korea",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Geon Lee",
+        "affiliation": "Kim Jaechul Graduate School of AI, KAIST, Republic of Korea",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Kijung Shin",
+        "affiliation": "School of Electrical Engineering, Republic of Korea",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Minyoung Choe",
+        "affiliation": "Kim Jaechul Graduate School of AI, KAIST, Republic of Korea",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Fanchen Bu\nSchool of Electrical Engineering, Republic of Korea\nGeon Lee\nKim Jaechul Graduate School of AI, KAIST, Republic of Korea\nKijung Shin\nSchool of Electrical Engineering, Republic of Korea\nKim Jaechul Graduate School of AI, KAIST, Republic of Korea\nMinyoung Choe\nKim Jaechul Graduate School of AI, KAIST, Republic of Korea"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391758",
+    "document_id": "11391758",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Xiaolin Han",
+        "affiliation": "Northwestern Polytechnical University",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Tianwen Zhang",
+        "affiliation": "Northwestern Polytechnical University",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yuke Li",
+        "affiliation": "Northwestern Polytechnical University",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Gaukhar Issayeva",
+        "affiliation": "Northwestern Polytechnical University",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Chenhao Ma",
+        "affiliation": "The Chinese University of Hong Kong, Shenzhen",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Lingyun Song",
+        "affiliation": "Northwestern Polytechnical University",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xuequn Shang",
+        "affiliation": "Northwestern Polytechnical University",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Xiaolin Han\nNorthwestern Polytechnical University\nThe Chinese University of Hong Kong, Shenzhen\nTianwen Zhang\nNorthwestern Polytechnical University\nThe Chinese University of Hong Kong, Shenzhen\nYuke Li\nNorthwestern Polytechnical University\nThe Chinese University of Hong Kong, Shenzhen\nGaukhar Issayeva\nNorthwestern Polytechnical University\nThe Chinese University of Hong Kong, Shenzhen\nChenhao Ma\nThe Chinese University of Hong Kong, Shenzhen\nLingyun Song\nNorthwestern Polytechnical University\nThe Chinese University of Hong Kong, Shenzhen\nXuequn Shang\nNorthwestern Polytechnical University\nThe Chinese University of Hong Kong, Shenzhen"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391762",
+    "document_id": "11391762",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Qingwen Zeng",
+        "affiliation": "The University of Sydney, Sydney, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Lining Chen",
+        "affiliation": "The University of Sydney, Sydney, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Jushang Qiu",
+        "affiliation": "Australian National University, Canberra, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Fangchen Liu",
+        "affiliation": "The University of Sydney, Sydney, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Huaming Chen",
+        "affiliation": "The University of Sydney, Sydney, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Ling Chen",
+        "affiliation": "University of Technology Sydney, Sydney, Australia",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Qingwen Zeng\nThe University of Sydney, Sydney, Australia\nLining Chen\nThe University of Sydney, Sydney, Australia\nJushang Qiu\nAustralian National University, Canberra, Australia\nFangchen Liu\nThe University of Sydney, Sydney, Australia\nHuaming Chen\nThe University of Sydney, Sydney, Australia\nLing Chen\nUniversity of Technology Sydney, Sydney, Australia"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391763",
+    "document_id": "11391763",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Guangyu Yang",
+        "affiliation": "Xidian University, Xi'an, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yu Duan",
+        "affiliation": "Xidian University, Xi'an, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Quanxue Gao",
+        "affiliation": "Xidian University, Xi'an, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Jingjing Xue",
+        "affiliation": "Xidian University, Xi'an, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xuhong Dong",
+        "affiliation": "Xi'an Shiyou University, Xi'an, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Guangyu Yang\nXidian University, Xi'an, China\nYu Duan\nXidian University, Xi'an, China\nQuanxue Gao\nXidian University, Xi'an, China\nJingjing Xue\nXidian University, Xi'an, China\nXuhong Dong\nXi'an Shiyou University, Xi'an, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391765",
+    "document_id": "11391765",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Wenjie Liu",
+        "affiliation": "School of Information Science and Engineering, Yunnan University, Kunming, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Kun Yue",
+        "affiliation": "School of Information Science and Engineering, Yunnan University, Kunming, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Zhenyu Zhang",
+        "affiliation": "College of Artificial Intelligence, Tianjin University of Science and Technology, Tianjin, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Liang Duan",
+        "affiliation": "School of Information Science and Engineering, Yunnan University, Kunming, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Wenjie Liu\nSchool of Information Science and Engineering, Yunnan University, Kunming, China\nYunnan Key Laboratory of Intelligent Systems and Computing, Yunnan University, Kunming, China\nKun Yue\nSchool of Information Science and Engineering, Yunnan University, Kunming, China\nYunnan Key Laboratory of Intelligent Systems and Computing, Yunnan University, Kunming, China\nZhenyu Zhang\nCollege of Artificial Intelligence, Tianjin University of Science and Technology, Tianjin, China\nLiang Duan\nSchool of Information Science and Engineering, Yunnan University, Kunming, China\nYunnan Key Laboratory of Intelligent Systems and Computing, Yunnan University, Kunming, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391766",
+    "document_id": "11391766",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Hossein Abdi",
+        "affiliation": "The University of Manchester",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Mingfei Sun",
+        "affiliation": "The University of Manchester",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Wei Pan",
+        "affiliation": "The University of Manchester",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Hossein Abdi\nThe University of Manchester\nMingfei Sun\nThe University of Manchester\nWei Pan\nThe University of Manchester"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391769",
+    "document_id": "11391769",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Davood Dehghani",
+        "affiliation": "York University, Toronto, ON, Canada",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yueting Chen",
+        "affiliation": "Seattle University, Seattle, WA, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xiaohui Yu",
+        "affiliation": "York University, Toronto, ON, Canada",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Nick Koudas",
+        "affiliation": "University of Toronto, Toronto, ON, Canada",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Davood Dehghani\nYork University, Toronto, ON, Canada\nYueting Chen\nSeattle University, Seattle, WA, USA\nXiaohui Yu\nYork University, Toronto, ON, Canada\nNick Koudas\nUniversity of Toronto, Toronto, ON, Canada"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391770",
+    "document_id": "11391770",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Mohammad Ali Javidian",
+        "affiliation": "Computer Science Department, Appalachian State University, Boone, USA",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Mohammad Ali Javidian\nComputer Science Department, Appalachian State University, Boone, USA"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391771",
+    "document_id": "11391771",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Kamil Faber",
+        "affiliation": "*AGH University of Krakow, Poland",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Marcin Pietron",
+        "affiliation": "*AGH University of Krakow, Poland",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Dominik Zurek",
+        "affiliation": "*AGH University of Krakow, Poland",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Roberto Corizzo",
+        "affiliation": "American University, Washington, DC, USA",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Kamil Faber\n*AGH University of Krakow, Poland\nMarcin Pietron\n*AGH University of Krakow, Poland\nDominik Zurek\n*AGH University of Krakow, Poland\nRoberto Corizzo\nAmerican University, Washington, DC, USA"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391772",
+    "document_id": "11391772",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Jianwen Yang",
+        "affiliation": "Institute of Software, Chinese Academy of Sciences University of Chinese Academy of Sciences, Beijing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Qiuhong Zhang",
+        "affiliation": "Institute of Software, Chinese Academy of Sciences University of Chinese Academy of Sciences, Beijing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xinrun Xu",
+        "affiliation": "Institute of Software, Chinese Academy of Sciences University of Chinese Academy of Sciences, Beijing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yurong Wu",
+        "affiliation": "Institute of Software, Chinese Academy of Sciences University of Chinese Academy of Sciences, Beijing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Shuo Zhang",
+        "affiliation": "Institute of Software, Chinese Academy of Sciences, Beijing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Zhiming Ding",
+        "affiliation": "Institute of Software, Chinese Academy of Sciences, Beijing, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Jianwen Yang\nInstitute of Software, Chinese Academy of Sciences University of Chinese Academy of Sciences, Beijing, China\nQiuhong Zhang\nInstitute of Software, Chinese Academy of Sciences University of Chinese Academy of Sciences, Beijing, China\nXinrun Xu\nInstitute of Software, Chinese Academy of Sciences University of Chinese Academy of Sciences, Beijing, China\nYurong Wu\nInstitute of Software, Chinese Academy of Sciences University of Chinese Academy of Sciences, Beijing, China\nShuo Zhang\nInstitute of Software, Chinese Academy of Sciences, Beijing, China\nZhiming Ding\nInstitute of Software, Chinese Academy of Sciences, Beijing, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391773",
+    "document_id": "11391773",
+    "label": "positive",
+    "is_indian_affiliated": true,
+    "authors": [
+      {
+        "name": "Sai Kartheek Reddy Kasu",
+        "affiliation": "Indian Institute of Information Technology, Dharwad, India",
+        "label": "positive",
+        "matched_rules": [
+          "\\bindia\\b",
+          "\\bindian institute\\b"
+        ]
+      },
+      {
+        "name": "Mohammad Zia Ur Rehman",
+        "affiliation": "Indian Institute of Technology, Indore, India",
+        "label": "positive",
+        "matched_rules": [
+          "\\bindia\\b",
+          "\\bindian institute\\b"
+        ]
+      },
+      {
+        "name": "Shahid Shafi Dar",
+        "affiliation": "Indian Institute of Technology, Indore, India",
+        "label": "positive",
+        "matched_rules": [
+          "\\bindia\\b",
+          "\\bindian institute\\b"
+        ]
+      },
+      {
+        "name": "Rishi Bharat Junghare",
+        "affiliation": "Indian Institute of Technology, Indore, India",
+        "label": "positive",
+        "matched_rules": [
+          "\\bindia\\b",
+          "\\bindian institute\\b"
+        ]
+      },
+      {
+        "name": "Dhanvin Sanjay Namboodiri",
+        "affiliation": "Malaviya National Institute of Technology, Jaipur, India",
+        "label": "positive",
+        "matched_rules": [
+          "\\bindia\\b"
+        ]
+      },
+      {
+        "name": "Nagendra Kumar",
+        "affiliation": "Indian Institute of Technology, Indore, India",
+        "label": "positive",
+        "matched_rules": [
+          "\\bindia\\b",
+          "\\bindian institute\\b"
+        ]
+      }
+    ],
+    "indian_authors": [
+      "Sai Kartheek Reddy Kasu",
+      "Mohammad Zia Ur Rehman",
+      "Shahid Shafi Dar",
+      "Rishi Bharat Junghare",
+      "Dhanvin Sanjay Namboodiri",
+      "Nagendra Kumar"
+    ],
+    "indian_institutions": [
+      "Indian Institute of Information Technology, Dharwad, India",
+      "Indian Institute of Technology, Indore, India",
+      "Malaviya National Institute of Technology, Jaipur, India"
+    ],
+    "raw_author_section": "Sai Kartheek Reddy Kasu\nIndian Institute of Information Technology, Dharwad, India\nMohammad Zia Ur Rehman\nIndian Institute of Technology, Indore, India\nShahid Shafi Dar\nIndian Institute of Technology, Indore, India\nRishi Bharat Junghare\nIndian Institute of Technology, Indore, India\nDhanvin Sanjay Namboodiri\nMalaviya National Institute of Technology, Jaipur, India\nNagendra Kumar\nIndian Institute of Technology, Indore, India"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391781",
+    "document_id": "11391781",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Yuhong Mu",
+        "affiliation": "School of Public Health, Suzhou Medical College Soochow University, Suzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Mengyu Jiang",
+        "affiliation": "School of Public Health, Suzhou Medical College Soochow University, Suzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Shanshan Zhang",
+        "affiliation": "School of Public Health, Suzhou Medical College Soochow University, Suzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Lichao Yang",
+        "affiliation": "School of Public Health, Suzhou Medical College Soochow University, Suzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Yuhong Mu\nSchool of Public Health, Suzhou Medical College Soochow University, Suzhou, China\nMengyu Jiang\nSchool of Public Health, Suzhou Medical College Soochow University, Suzhou, China\nShanshan Zhang\nSchool of Public Health, Suzhou Medical College Soochow University, Suzhou, China\nLichao Yang\nSchool of Public Health, Suzhou Medical College Soochow University, Suzhou, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391789",
+    "document_id": "11391789",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Ragja Palakkadavath",
+        "affiliation": "Deakin Applied Artificial Intelligence Initiative, Deakin University, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Hung Le",
+        "affiliation": "Deakin Applied Artificial Intelligence Initiative, Deakin University, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Thanh Nguyen-Tang",
+        "affiliation": "Ying Wu College of Computing, New Jersey Institute of Technology, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Svetha Venkatesh",
+        "affiliation": "Deakin Applied Artificial Intelligence Initiative, Deakin University, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Sunil Gupta",
+        "affiliation": "Deakin Applied Artificial Intelligence Initiative, Deakin University, Australia",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Ragja Palakkadavath\nDeakin Applied Artificial Intelligence Initiative, Deakin University, Australia\nHung Le\nDeakin Applied Artificial Intelligence Initiative, Deakin University, Australia\nThanh Nguyen-Tang\nYing Wu College of Computing, New Jersey Institute of Technology, USA\nSvetha Venkatesh\nDeakin Applied Artificial Intelligence Initiative, Deakin University, Australia\nSunil Gupta\nDeakin Applied Artificial Intelligence Initiative, Deakin University, Australia"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391790",
+    "document_id": "11391790",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Kaichuan Kong",
+        "affiliation": "College of Cyber Security, Jinan University, Guangzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Dongjie Liu",
+        "affiliation": "College of Cyber Security, Jinan University, Guangzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xiaobo Jin",
+        "affiliation": "School of Advanced Technology, Xi'an Jiaotong-Liverpool University, Suzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Guanggang Geng",
+        "affiliation": "College of Cyber Security, Jinan University, Guangzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Zhiying Li",
+        "affiliation": "College of Cyber Security, Jinan University, Guangzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Jian Weng",
+        "affiliation": "College of Cyber Security, Jinan University, Guangzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Kaichuan Kong\nCollege of Cyber Security, Jinan University, Guangzhou, China\nDongjie Liu\nCollege of Cyber Security, Jinan University, Guangzhou, China\nXiaobo Jin\nSchool of Advanced Technology, Xi'an Jiaotong-Liverpool University, Suzhou, China\nGuanggang Geng\nCollege of Cyber Security, Jinan University, Guangzhou, China\nZhiying Li\nCollege of Cyber Security, Jinan University, Guangzhou, China\nJian Weng\nCollege of Cyber Security, Jinan University, Guangzhou, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391794",
+    "document_id": "11391794",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Nestor Cabello",
+        "affiliation": "The University of Melbourne, Melbourne, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Lars Kulik",
+        "affiliation": "The University of Melbourne, Melbourne, Australia",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Nestor Cabello\nThe University of Melbourne, Melbourne, Australia\nLars Kulik\nThe University of Melbourne, Melbourne, Australia"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391795",
+    "document_id": "11391795",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Hyunjin Choo",
+        "affiliation": "KAIST, School of Electrical Engineering, Republic of Korea",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Fanchen Bu",
+        "affiliation": "KAIST, School of Electrical Engineering, Republic of Korea",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Hyunjin Hwang",
+        "affiliation": "KAIST, Kim Jaechul Graduate School of AI, Republic of Korea",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Young-Gyu Yoon",
+        "affiliation": "KAIST, School of Electrical Engineering, Republic of Korea",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Kijung Shin",
+        "affiliation": "KAIST, School of Electrical Engineering, Republic of Korea",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Hyunjin Choo\nKAIST, School of Electrical Engineering, Republic of Korea\nFanchen Bu\nKAIST, School of Electrical Engineering, Republic of Korea\nHyunjin Hwang\nKAIST, Kim Jaechul Graduate School of AI, Republic of Korea\nYoung-Gyu Yoon\nKAIST, School of Electrical Engineering, Republic of Korea\nKijung Shin\nKAIST, School of Electrical Engineering, Republic of Korea\nKAIST, Kim Jaechul Graduate School of AI, Republic of Korea"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391796",
+    "document_id": "11391796",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Dagyeong Na",
+        "affiliation": "Chung-Ang University, South Korea",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Jinho Kang",
+        "affiliation": "University of Seoul, South Korea",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Junseok Kwon",
+        "affiliation": "Chung-Ang University, South Korea",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Dagyeong Na\nChung-Ang University, South Korea\nJinho Kang\nUniversity of Seoul, South Korea\nJunseok Kwon\nChung-Ang University, South Korea"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391798",
+    "document_id": "11391798",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Ryuta Matsuno",
+        "affiliation": "NEC Corporation, Tokyo, Japan",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Akira Kitaoka",
+        "affiliation": "NEC Corporation, Tokyo, Japan",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Ryuta Matsuno\nNEC Corporation, Tokyo, Japan\nAkira Kitaoka\nNEC Corporation, Tokyo, Japan"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391802",
+    "document_id": "11391802",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Yukai Zhu",
+        "affiliation": "School of Artificial Intelligence and Data Science, Hefei, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "He Sun",
+        "affiliation": "School of Computer Science and Technology, University of Science and Technology of China, Hefei, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Mingjun Xiao",
+        "affiliation": "School of Computer Science and Technology, University of Science and Technology of China, Hefei, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Yukai Zhu\nSchool of Artificial Intelligence and Data Science, Hefei, China\nHe Sun\nSchool of Computer Science and Technology, University of Science and Technology of China, Hefei, China\nMingjun Xiao\nSchool of Computer Science and Technology, University of Science and Technology of China, Hefei, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391805",
+    "document_id": "11391805",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Linfeng Luo",
+        "affiliation": "School of Computer Science and Engineering, Central South University",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Zhiqi Guo",
+        "affiliation": "School of Computer Science and Engineering, Central South University",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Fengxiao Tang",
+        "affiliation": "School of Computer Science and Engineering, Central South University",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Zihao Qiu",
+        "affiliation": "School of Computer Science and Engineering, Central South University",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Ming Zhao",
+        "affiliation": "School of Computer Science and Engineering, Central South University",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Linfeng Luo\nSchool of Computer Science and Engineering, Central South University\nZhiqi Guo\nSchool of Computer Science and Engineering, Central South University\nFengxiao Tang\nSchool of Computer Science and Engineering, Central South University\nZihao Qiu\nSchool of Computer Science and Engineering, Central South University\nMing Zhao\nSchool of Computer Science and Engineering, Central South University"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391807",
+    "document_id": "11391807",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Aditya T. Vadlamani",
+        "affiliation": "*Department of Computer Science & Engineering, The Ohio State University, Columbus, Ohio, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Sama Salarian",
+        "affiliation": "*Department of Computer Science & Engineering, The Ohio State University, Columbus, Ohio, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Srinivasan Parthasarathy",
+        "affiliation": "*Department of Computer Science & Engineering, The Ohio State University, Columbus, Ohio, USA",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Aditya T. Vadlamani\n*Department of Computer Science & Engineering, The Ohio State University, Columbus, Ohio, USA\nSama Salarian\n*Department of Computer Science & Engineering, The Ohio State University, Columbus, Ohio, USA\nSaket Gurukar\nMicrosoft, Mountain View, CA, USA\nSrinivasan Parthasarathy\n*Department of Computer Science & Engineering, The Ohio State University, Columbus, Ohio, USA"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391808",
+    "document_id": "11391808",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Huaiyuan Yao",
+        "affiliation": "Arizona State University, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Zhenxiao Cao",
+        "affiliation": "The Hong Kong University of Science and Technology, Hong Kong SAR, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Zhongman Wang",
+        "affiliation": "Beijing Forestry University, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xiewei Ni",
+        "affiliation": "Xi'an Jiaotong University, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Jinyan Dong",
+        "affiliation": "Xi'an Jiaotong University, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yuqiang Han",
+        "affiliation": "Chinese Academy of Sciences China, Hangzhou Institute of Medicine",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xiao Luo",
+        "affiliation": "University of California, Los Angeles, USA",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Huaiyuan Yao\nArizona State University, USA\nZhenxiao Cao\nThe Hong Kong University of Science and Technology, Hong Kong SAR, China\nZhongman Wang\nBeijing Forestry University, China\nXiewei Ni\nXi'an Jiaotong University, China\nJinyan Dong\nXi'an Jiaotong University, China\nHongyi Cai\nUniversiti Malaya, Malaysia\nYuqiang Han\nChinese Academy of Sciences China, Hangzhou Institute of Medicine\nXiao Luo\nUniversity of California, Los Angeles, USA"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391810",
+    "document_id": "11391810",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Yuxin Liu",
+        "affiliation": "Department of Statistics, University of California, Riverside, Riverside, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Stephen Chan",
+        "affiliation": "Department of Mathematics and Statistics, American University of Sharjah, Sharjah, UAE",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Jeffrey Chu",
+        "affiliation": "Center for Applied Statistics, School of Statistics, Renmin University of China, Beijing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yuanyuan Zhang",
+        "affiliation": "Department of Criminology, University of Manchester, Manchester, UK",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yuzhou Chen",
+        "affiliation": "Department of Statistics, University of California, Riverside, Riverside, USA",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Yuxin Liu\nDepartment of Statistics, University of California, Riverside, Riverside, USA\nStephen Chan\nDepartment of Mathematics and Statistics, American University of Sharjah, Sharjah, UAE\nJeffrey Chu\nCenter for Applied Statistics, School of Statistics, Renmin University of China, Beijing, China\nYuanyuan Zhang\nDepartment of Criminology, University of Manchester, Manchester, UK\nYuzhou Chen\nDepartment of Statistics, University of California, Riverside, Riverside, USA"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391811",
+    "document_id": "11391811",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Honghui Xu",
+        "affiliation": "*Department of Information Technology, Kennesaw State University, Marietta, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Shiva Shrestha",
+        "affiliation": "*Department of Information Technology, Kennesaw State University, Marietta, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Zhipeng Cai",
+        "affiliation": "Department of Computer Science, Georgia State University, Atlanta, USA",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Honghui Xu\n*Department of Information Technology, Kennesaw State University, Marietta, USA\nShiva Shrestha\n*Department of Information Technology, Kennesaw State University, Marietta, USA\nWei Chen\nNexa AI, Cupertino, USA\nZhiyuan Li\nNexa AI, Cupertino, USA\nZhipeng Cai\nDepartment of Computer Science, Georgia State University, Atlanta, USA"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391813",
+    "document_id": "11391813",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Yang Zhao",
+        "affiliation": "Department of Computer and Information Science, Temple University",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yuzhou Chen",
+        "affiliation": "Department of Statistics, University of California, Riverside",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xinghua Shi",
+        "affiliation": "Department of Computer and Information Science, Temple University",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Yang Zhao\nDepartment of Computer and Information Science, Temple University\nYuzhou Chen\nDepartment of Statistics, University of California, Riverside\nXinghua Shi\nDepartment of Computer and Information Science, Temple University"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391816",
+    "document_id": "11391816",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Ruochen Yang",
+        "affiliation": "University of Southern California, United States",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Paul Bogdan",
+        "affiliation": "University of Southern California, United States",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Fanchen Bu\nKAIST, Republic of Korea\nRuochen Yang\nUniversity of Southern California, United States\nPaul Bogdan\nUniversity of Southern California, United States\nKijung Shin\nKAIST, Republic of Korea"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391817",
+    "document_id": "11391817",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Jie Tu",
+        "affiliation": "School of Information Science and Engineering, Yunnan University, Kunming, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Kun Yue",
+        "affiliation": "School of Information Science and Engineering, Yunnan University, Kunming, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Zhenyu Zhang",
+        "affiliation": "College of Artificial Intelligence, Tianjin University of Science and Technology, Tianjin, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Liang Duan",
+        "affiliation": "School of Information Science and Engineering, Yunnan University, Kunming, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Jie Tu\nSchool of Information Science and Engineering, Yunnan University, Kunming, China\nYunnan Key Laboratory of Intelligent Systems and Computing, Yunnan University, Kunming, China\nKun Yue\nSchool of Information Science and Engineering, Yunnan University, Kunming, China\nYunnan Key Laboratory of Intelligent Systems and Computing, Yunnan University, Kunming, China\nZhenyu Zhang\nCollege of Artificial Intelligence, Tianjin University of Science and Technology, Tianjin, China\nLiang Duan\nSchool of Information Science and Engineering, Yunnan University, Kunming, China\nYunnan Key Laboratory of Intelligent Systems and Computing, Yunnan University, Kunming, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391818",
+    "document_id": "11391818",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Amine Bechar",
+        "affiliation": "Department of Computer Science, University of Sharjah, Sharjah, UAE",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Adel Oulefki",
+        "affiliation": "Research Institut of Science and Technology (RISE), University of Sharjah, UAE",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Abbes Amira",
+        "affiliation": "Department of Computer Science, University of Sharjah, Sharjah, UAE",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Fatih Kurogollu",
+        "affiliation": "Department of Computer Science, University of Sharjah, Sharjah, UAE",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yassine Himeur",
+        "affiliation": "College of Engineering and Information Technology, University of Dubai, Dubai, UAE",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Amine Bechar\nDepartment of Computer Science, University of Sharjah, Sharjah, UAE\nAdel Oulefki\nResearch Institut of Science and Technology (RISE), University of Sharjah, UAE\nAbbes Amira\nDepartment of Computer Science, University of Sharjah, Sharjah, UAE\nFatih Kurogollu\nDepartment of Computer Science, University of Sharjah, Sharjah, UAE\nYassine Himeur\nCollege of Engineering and Information Technology, University of Dubai, Dubai, UAE"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391819",
+    "document_id": "11391819",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Yarui Cao",
+        "affiliation": "Clemson University, Clemson, SC, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Kai Liu",
+        "affiliation": "Clemson University, Clemson, SC, USA",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Yarui Cao\nClemson University, Clemson, SC, USA\nKai Liu\nClemson University, Clemson, SC, USA"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391821",
+    "document_id": "11391821",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Anwesha Das",
+        "affiliation": "The University of Chicago",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Henry Hoffmann",
+        "affiliation": "The University of Chicago",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Alex Aiken",
+        "affiliation": "SLAC National Accelerator Laboratory/Stanford University",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Anwesha Das\nThe University of Chicago\nSLAC National Accelerator Laboratory/Stanford University\nHenry Hoffmann\nThe University of Chicago\nAlex Aiken\nSLAC National Accelerator Laboratory/Stanford University"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391824",
+    "document_id": "11391824",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Taylor Dinkins",
+        "affiliation": "School of EECS, Oregon State University, Corvallis, OR, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Weng-Keen Wong",
+        "affiliation": "School of EECS, Oregon State University, Corvallis, OR, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Haifeng Chen",
+        "affiliation": "NEC Labs America, Princeton, NJ, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yanchi Liu",
+        "affiliation": "NEC Labs America, Princeton, NJ, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Kai Ishikawa",
+        "affiliation": "NEC Corporation, Kawasaki, Japan",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Taylor Dinkins\nSchool of EECS, Oregon State University, Corvallis, OR, USA\nWeng-Keen Wong\nSchool of EECS, Oregon State University, Corvallis, OR, USA\nHaifeng Chen\nNEC Labs America, Princeton, NJ, USA\nYanchi Liu\nNEC Labs America, Princeton, NJ, USA\nKai Ishikawa\nNEC Corporation, Kawasaki, Japan"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391825",
+    "document_id": "11391825",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Junping Liu",
+        "affiliation": "Wuhan Textile University, Engineering Research Center of Hubei Province for Clothing Information, Wuhan, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Mingchao Yu",
+        "affiliation": "Wuhan Textile University, Engineering Research Center of Hubei Province for Clothing Information, Wuhan, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xinrong Hu",
+        "affiliation": "Wuhan Textile University, Engineering Research Center of Hubei Province for Clothing Information, Wuhan, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Jie Yang",
+        "affiliation": "University of Wollongong, Wollongong, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yi Guo",
+        "affiliation": "Western Sydney University, Sydney, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Wanqing Li",
+        "affiliation": "University of Wollongong, Wollongong, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Wenbin Zhang",
+        "affiliation": "Florida International University, Florida, United States",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Junping Liu\nWuhan Textile University, Engineering Research Center of Hubei Province for Clothing Information, Wuhan, China\nMingchao Yu\nWuhan Textile University, Engineering Research Center of Hubei Province for Clothing Information, Wuhan, China\nXinrong Hu\nWuhan Textile University, Engineering Research Center of Hubei Province for Clothing Information, Wuhan, China\nJie Yang\nUniversity of Wollongong, Wollongong, Australia\nYi Guo\nWestern Sydney University, Sydney, Australia\nWanqing Li\nUniversity of Wollongong, Wollongong, Australia\nWenbin Zhang\nFlorida International University, Florida, United States"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391827",
+    "document_id": "11391827",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Jingyi Yuan",
+        "affiliation": "School of Electrical, Computer and Energy Engineering, Arizona State University, AZ, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Muhao Guo",
+        "affiliation": "School of Electrical, Computer and Energy Engineering, Arizona State University, AZ, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yang Weng",
+        "affiliation": "School of Electrical, Computer and Energy Engineering, Arizona State University, AZ, USA",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Jingyi Yuan\nSchool of Electrical, Computer and Energy Engineering, Arizona State University, AZ, USA\nMuhao Guo\nSchool of Electrical, Computer and Energy Engineering, Arizona State University, AZ, USA\nYang Weng\nSchool of Electrical, Computer and Energy Engineering, Arizona State University, AZ, USA"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391831",
+    "document_id": "11391831",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Kartheek Bondugula",
+        "affiliation": "Basque Center for Applied Mathematics (BCAM), Bilbao, Spain",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Santiago Mazuelas",
+        "affiliation": "Basque Center for Applied Mathematics (BCAM), Bilbao, Spain",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Aritz Pérez",
+        "affiliation": "Basque Center for Applied Mathematics (BCAM), Bilbao, Spain",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Kartheek Bondugula\nBasque Center for Applied Mathematics (BCAM), Bilbao, Spain\nSantiago Mazuelas\nBasque Center for Applied Mathematics (BCAM), Bilbao, Spain\nIKERBASQUE, Basque Foundation for Science\nAritz Pérez\nBasque Center for Applied Mathematics (BCAM), Bilbao, Spain"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391833",
+    "document_id": "11391833",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Li Rong Wang",
+        "affiliation": "A*STAR Centre for Frontier AI Research, College of Computing and Data Science, Nanyang Technological University, Singapore",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Thomas C. Henderson",
+        "affiliation": "School of Computing, University of Utah, Salt Lake City, United States",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yew Soon Ong",
+        "affiliation": "A*STAR Centre for Frontier AI Research, College of Computing and Data Science, Nanyang Technological University, Singapore",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yih Yng Ng",
+        "affiliation": "Swee Hock School of Public Health National University of Singapore, Singapore",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xiuyi Fan",
+        "affiliation": "Lee Kong Chian School of Medicine & College of Computing and Data Science, Nanyang Technological University, Singapore",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Li Rong Wang\nA*STAR Centre for Frontier AI Research, College of Computing and Data Science, Nanyang Technological University, Singapore\nThomas C. Henderson\nSchool of Computing, University of Utah, Salt Lake City, United States\nYew Soon Ong\nA*STAR Centre for Frontier AI Research, College of Computing and Data Science, Nanyang Technological University, Singapore\nYih Yng Ng\nSwee Hock School of Public Health National University of Singapore, Singapore\nXiuyi Fan\nLee Kong Chian School of Medicine & College of Computing and Data Science, Nanyang Technological University, Singapore"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391837",
+    "document_id": "11391837",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Minkyu Kim",
+        "affiliation": "Ziovision Co., Ltd., Republic of Korea",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Hyun-Soo Choi",
+        "affiliation": "Ziovision Co., Ltd., Republic of Korea",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Jinho Kim",
+        "affiliation": "Kangwon National University, Republic of Korea",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Minkyu Kim\nZiovision Co., Ltd., Republic of Korea\nHyun-Soo Choi\nZiovision Co., Ltd., Republic of Korea\nSeoul National University of Science and Technology, Republic of Korea\nJinho Kim\nKangwon National University, Republic of Korea"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391840",
+    "document_id": "11391840",
+    "label": "unknown",
+    "is_indian_affiliated": false,
+    "authors": [],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": ""
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391846",
+    "document_id": "11391846",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Yuhang Liu",
+        "affiliation": "Binghamton University, Binghamton, New York, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yingxue Zhang",
+        "affiliation": "Binghamton University, Binghamton, New York, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xin Zhang",
+        "affiliation": "San Diego State University, San Diego, California, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yu Yang",
+        "affiliation": "Lehigh University, Bethlehem, Pennsylvania, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Yanhua Li",
+        "affiliation": "Worcester Polytechnic Institute, Worcester, Massachusetts, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Jun Luo",
+        "affiliation": "Logistics and Supply Chain MultiTech R&D Centre, Hong Kong, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Yuhang Liu\nBinghamton University, Binghamton, New York, USA\nYingxue Zhang\nBinghamton University, Binghamton, New York, USA\nXin Zhang\nSan Diego State University, San Diego, California, USA\nYu Yang\nLehigh University, Bethlehem, Pennsylvania, USA\nYanhua Li\nWorcester Polytechnic Institute, Worcester, Massachusetts, USA\nJun Luo\nLogistics and Supply Chain MultiTech R&D Centre, Hong Kong, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391851",
+    "document_id": "11391851",
+    "label": "unknown",
+    "is_indian_affiliated": false,
+    "authors": [],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Longfeng Wu\nVirginia Tech, Blacksburg, VA, USA\nYao Zhou\nGoogle, Mountain View, CA, USA\nTong Zeng\nVirginia Tech, Blacksburg, VA, USA\nZhimin Peng\nAmazon, Sunnyvale, CA, USA\nBhanu Pratap Singh Rawat\nAmazon, Sunnyvale, CA, USA\nLecheng Zheng\nVirginia Tech, Blacksburg, VA, USA\nGiovanni Seni\nAmazon, Sunnyvale, CA, USA\nDawei Zhou\nVirginia Tech, Blacksburg, VA, USA"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391854",
+    "document_id": "11391854",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Yu Duan",
+        "affiliation": "School of Computer Science, Northwestern Polytechnical University, Xi'an, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Junzhi He",
+        "affiliation": "School of Electronic Engineering, Xidian University, Xi'an, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Feiping Nie",
+        "affiliation": "School of Electronic Engineering, Xidian University, Xi'an, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Quanxue Gao",
+        "affiliation": "School of Computer Science, Northwestern Polytechnical University, Xi'an, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Cheng Deng",
+        "affiliation": "School of Electronic Engineering, Xidian University, Xi'an, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Yu Duan\nSchool of Computer Science, Northwestern Polytechnical University, Xi'an, China\nJunzhi He\nSchool of Electronic Engineering, Xidian University, Xi'an, China\nFeiping Nie\nSchool of Electronic Engineering, Xidian University, Xi'an, China\nQuanxue Gao\nSchool of Computer Science, Northwestern Polytechnical University, Xi'an, China\nCheng Deng\nSchool of Electronic Engineering, Xidian University, Xi'an, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391855",
+    "document_id": "11391855",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Yu-Xuan Zhou",
+        "affiliation": "Faculty of Science and Technology, Beijing Normal-Hong Kong Baptist University, Zhuhai, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Ru-Bin Li",
+        "affiliation": "Department of Computer Science and Engineering, The Hong Kong University of Science and Technology, Kowloon, Hong Kong",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Zhe Xuan-Yuan",
+        "affiliation": "Faculty of Science and Technology, Beijing Normal-Hong Kong Baptist University, Zhuhai, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Pei-Yuan Lai",
+        "affiliation": "School of Electronics and Information, Guangdong Polytechnic Normal University, Guangzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Chang-Dong Wang",
+        "affiliation": "School of Computer Science and Engineering, Sun Yat-sen University, Guangzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Yu-Xuan Zhou\nFaculty of Science and Technology, Beijing Normal-Hong Kong Baptist University, Zhuhai, China\nRu-Bin Li\nDepartment of Computer Science and Engineering, The Hong Kong University of Science and Technology, Kowloon, Hong Kong\nZhe Xuan-Yuan\nFaculty of Science and Technology, Beijing Normal-Hong Kong Baptist University, Zhuhai, China\nPei-Yuan Lai\nSchool of Electronics and Information, Guangdong Polytechnic Normal University, Guangzhou, China\nThe Association for Soft Science of Guangdong, Guangzhou, China\nGuangdong Provincial Key Laboratory of Intellectual Property & Big Data, Guangzhou, China\nChang-Dong Wang\nSchool of Computer Science and Engineering, Sun Yat-sen University, Guangzhou, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391859",
+    "document_id": "11391859",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Yichen Hu",
+        "affiliation": "School of Cyber Science and Engineering, Southeast University, Nanjing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Changsheng Wan",
+        "affiliation": "School of Cyber Science and Engineering, Southeast University, Nanjing, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Yichen Hu\nSchool of Cyber Science and Engineering, Southeast University, Nanjing, China\nEngineering Research Center of Blockchain Application, Ministry of Education, Supervision and Management (Southeast University), China\nChangsheng Wan\nSchool of Cyber Science and Engineering, Southeast University, Nanjing, China\nEngineering Research Center of Blockchain Application, Ministry of Education, Supervision and Management (Southeast University), China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391862",
+    "document_id": "11391862",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Jinpeng Chen",
+        "affiliation": "School of Computer Science (National Pilot Software Engineering School), BUPT, Beijing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Huachen Guan",
+        "affiliation": "School of Computer Science (National Pilot Software Engineering School), BUPT, Beijing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Fan Zhang",
+        "affiliation": "School of Computer Science (National Pilot Software Engineering School), BUPT, Beijing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Zhenye Yang",
+        "affiliation": "School of Computer Science (National Pilot Software Engineering School), BUPT, Beijing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Jianxiang He",
+        "affiliation": "School of Computer Science (National Pilot Software Engineering School), BUPT, Beijing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Hongbo Gao",
+        "affiliation": "Department of Automation, University of Science and Technology of China, Hefei, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Kaimin Wei",
+        "affiliation": "College of Information Science and Technology, Jinan University, Guangzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Jinpeng Chen\nSchool of Computer Science (National Pilot Software Engineering School), BUPT, Beijing, China\nAnhui Provincial Key Laboratory of Multimodal Cognitive Computation, Anhui University, Hefei, China\nKey Laboratory of Symbolic Computation and Knowledge Engineering of Ministry of Education, Jilin University, Changchun, China\nKey Laboratory of Trustworthy Distributed Computing and Service (BUPT), Ministry of Education, Beijing, China\nHuachen Guan\nSchool of Computer Science (National Pilot Software Engineering School), BUPT, Beijing, China\nKey Laboratory of Trustworthy Distributed Computing and Service (BUPT), Ministry of Education, Beijing, China\nFan Zhang\nSchool of Computer Science (National Pilot Software Engineering School), BUPT, Beijing, China\nKey Laboratory of Trustworthy Distributed Computing and Service (BUPT), Ministry of Education, Beijing, China\nZhenye Yang\nSchool of Computer Science (National Pilot Software Engineering School), BUPT, Beijing, China\nKey Laboratory of Trustworthy Distributed Computing and Service (BUPT), Ministry of Education, Beijing, China\nJianxiang He\nSchool of Computer Science (National Pilot Software Engineering School), BUPT, Beijing, China\nKey Laboratory of Trustworthy Distributed Computing and Service (BUPT), Ministry of Education, Beijing, China\nHongbo Gao\nDepartment of Automation, University of Science and Technology of China, Hefei, China\nKaimin Wei\nCollege of Information Science and Technology, Jinan University, Guangzhou, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391863",
+    "document_id": "11391863",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Ningyuan Zhao",
+        "affiliation": "Department of Automation, Xiamen, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Fan Yang",
+        "affiliation": "Department of Automation, Xiamen, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Ningyuan Zhao\nDepartment of Automation, Xiamen, China\nKey Laboratory of Multimedia Trusted Perception and Efficient Computing, Ministry of Education of China, Xiamen, China\nFan Yang\nDepartment of Automation, Xiamen, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391865",
+    "document_id": "11391865",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Ahmed Elhussein",
+        "affiliation": "Department of Biomedical Informatics, Columbia University, NY, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Gamze Gürsoy",
+        "affiliation": "Department of Biomedical Informatics, Columbia University, NY, USA",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Ahmed Elhussein\nDepartment of Biomedical Informatics, Columbia University, NY, USA\nNew York Genome Center, NY, USA\nGamze Gürsoy\nDepartment of Biomedical Informatics, Columbia University, NY, USA\nNew York Genome Center, NY, USA\nDepartment of Computer Science, Columbia University, NY, USA"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391866",
+    "document_id": "11391866",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Angela Li",
+        "affiliation": "Applied Mathematics and Physics, Stony Brook University, Stony Brook, NY",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "David Li",
+        "affiliation": "Katz School of Science and Health, Yeshiva University, New York, NY",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Angela Li\nApplied Mathematics and Physics, Stony Brook University, Stony Brook, NY\nDavid Li\nKatz School of Science and Health, Yeshiva University, New York, NY"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391874",
+    "document_id": "11391874",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Yassine Baghoussi",
+        "affiliation": "Faculty of Engineering University of Porto, LIAAD, INESC TEC, Porto, Portugal",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Carlos Soares",
+        "affiliation": "Faculty of Engineering University of Porto, Fraunhofer AICOS, Porto, Portugal",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "João Mendes Moreira",
+        "affiliation": "Faculty of Engineering University of Porto, LIAAD, INESC TEC, Porto, Portugal",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Yassine Baghoussi\nFaculty of Engineering University of Porto, LIAAD, INESC TEC, Porto, Portugal\nCarlos Soares\nFaculty of Engineering University of Porto, Fraunhofer AICOS, Porto, Portugal\nJoão Mendes Moreira\nFaculty of Engineering University of Porto, LIAAD, INESC TEC, Porto, Portugal"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391876",
+    "document_id": "11391876",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Kuan-Ting Chen",
+        "affiliation": "Mohamed bin Zayed University of Artificial Intelligence",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Chih-Jen Lin",
+        "affiliation": "Mohamed bin Zayed University of Artificial Intelligence",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Kuan-Ting Chen\nMohamed bin Zayed University of Artificial Intelligence\nChih-Jen Lin\nMohamed bin Zayed University of Artificial Intelligence\nNational Taiwan University"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391878",
+    "document_id": "11391878",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Peijian Zeng",
+        "affiliation": "Guangdong University of Technology, Guangzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Feiyan Pang",
+        "affiliation": "Guangdong University of Technology, Guangzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Zhanbo Wang",
+        "affiliation": "Guangdong University of Technology, Guangzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Aimin Yang",
+        "affiliation": "Guangdong University of Technology, Guangzhou, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Peijian Zeng\nGuangdong University of Technology, Guangzhou, China\nFeiyan Pang\nGuangdong University of Technology, Guangzhou, China\nZhanbo Wang\nGuangdong University of Technology, Guangzhou, China\nAimin Yang\nGuangdong University of Technology, Guangzhou, China\nLingnan Normal University, Zhanjiang, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391879",
+    "document_id": "11391879",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Jing Chai",
+        "affiliation": "School of Information Science & Engineering, Yunnan University, Kunming, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Jing Chai\nSchool of Information Science & Engineering, Yunnan University, Kunming, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391880",
+    "document_id": "11391880",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Yibo Huang",
+        "affiliation": "School of Computer Science, The University of Auckland",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Zixin Kuang",
+        "affiliation": "School of Computer Science, The University of Auckland",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Meng-Fen Chiang",
+        "affiliation": "Department of Electrical and Computer Engineering, National Yang Ming Chiao Tung University",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Wang-Chien Lee",
+        "affiliation": "Department of Computer Science and Engineering, The Pennsylvania State University",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Yibo Huang\nSchool of Computer Science, The University of Auckland\nZixin Kuang\nSchool of Computer Science, The University of Auckland\nMeng-Fen Chiang\nDepartment of Electrical and Computer Engineering, National Yang Ming Chiao Tung University\nWang-Chien Lee\nDepartment of Computer Science and Engineering, The Pennsylvania State University"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391881",
+    "document_id": "11391881",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Yining Wang",
+        "affiliation": "Shandong University, Qingdao, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Ke Li",
+        "affiliation": "Huazhong University of Science and Technology, Wuhan, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Fujun Han",
+        "affiliation": "Southwest University, Chongqing, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Shuhan Liu",
+        "affiliation": "Shandong University, Qingdao, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xuan Hou",
+        "affiliation": "Shandong University, Qingdao, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Dejun Teng",
+        "affiliation": "Shandong University, Qingdao, China",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Zhaohui Peng",
+        "affiliation": "Shandong University, Qingdao, China",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Yining Wang\nShandong University, Qingdao, China\nKe Li\nHuazhong University of Science and Technology, Wuhan, China\nFujun Han\nSouthwest University, Chongqing, China\nShuhan Liu\nShandong University, Qingdao, China\nXuan Hou\nShandong University, Qingdao, China\nDejun Teng\nShandong University, Qingdao, China\nZhaohui Peng\nShandong University, Qingdao, China"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391882",
+    "document_id": "11391882",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Nam Le",
+        "affiliation": "School of Information Technology, Deakin University, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Leo Yu Zhang",
+        "affiliation": "School of Information and Communication Technology, Griffith University, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Kewen Liao",
+        "affiliation": "School of Information Technology, Deakin University, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Shirui Pan",
+        "affiliation": "School of Information Technology, Deakin University, Australia",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Wei Luo",
+        "affiliation": "School of Information Technology, Deakin University, Australia",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Nam Le\nSchool of Information Technology, Deakin University, Australia\nLeo Yu Zhang\nSchool of Information and Communication Technology, Griffith University, Australia\nKewen Liao\nSchool of Information Technology, Deakin University, Australia\nShirui Pan\nSchool of Information Technology, Deakin University, Australia\nWei Luo\nSchool of Information Technology, Deakin University, Australia"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391883",
+    "document_id": "11391883",
+    "label": "negative",
+    "is_indian_affiliated": false,
+    "authors": [
+      {
+        "name": "Shahbaz Rezaei",
+        "affiliation": "Computer Science Department, University of California, Davis, CA, USA",
+        "label": "negative",
+        "matched_rules": []
+      },
+      {
+        "name": "Xin Liu",
+        "affiliation": "Computer Science FbaseliDepartment, University of California, Davis, CA, USA",
+        "label": "negative",
+        "matched_rules": []
+      }
+    ],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Shahbaz Rezaei\nComputer Science Department, University of California, Davis, CA, USA\nXin Liu\nComputer Science FbaseliDepartment, University of California, Davis, CA, USA"
+  },
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391887",
+    "document_id": "11391887",
+    "label": "unknown",
+    "is_indian_affiliated": false,
+    "authors": [],
+    "indian_authors": [],
+    "indian_institutions": [],
+    "raw_author_section": "Noriaki Kawamae\nNTT DOCOMO SOLUTIONS, Tokyo, Japan"
+  }
+]

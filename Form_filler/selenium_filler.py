@@ -1,0 +1,123 @@
+# selenium_filler.py
+import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select, WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
+
+def fill_single_paper(driver: webdriver.Chrome, paper_data: dict, form_config: dict):
+    """
+    Fills the form for a single paper using an active browser instance.
+    """
+    try:
+        # --- PHASE 1: PREPARE ALL AUTHOR FIELDS ---
+        authors = paper_data.get('all_authors', [])
+        num_authors = len(authors)
+        clicks_needed = max(0, num_authors - 1)
+        
+        if clicks_needed > 0:
+            add_author_button = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.CLASS_NAME, "addAuthor"))
+            )
+            for i in range(clicks_needed):
+                print(f"   -> Clicking 'Add another author' ({i+1}/{clicks_needed})...")
+
+                # --- SCROLLING FIX ---
+                # Execute JavaScript to scroll the button into the center of the view.
+                # This prevents other elements (like footers) from intercepting the click.
+                driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", add_author_button)
+                time.sleep(0.5) # A brief pause for the scroll to settle
+
+                # Now that it's in view, wait for it to be clickable and then click
+                WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.CLASS_NAME, "addAuthor"))
+                ).click()
+                
+                print("      ...waiting for 10 seconds for page to update.")
+                time.sleep(10)
+        
+        # This verification step is still useful as a final check
+        WebDriverWait(driver, 10).until(
+            lambda d: len(d.find_elements(By.NAME, "authors[]")) == num_authors
+        )
+
+        # --- PHASE 2: FILL THE ENTIRE FORM ---
+        print("   -> Filling paper title...")
+        driver.find_element(By.NAME, "paperTitle").send_keys(paper_data['paper_title'])
+
+        print("   -> Filling author details...")
+        all_author_name_fields = driver.find_elements(By.NAME, "authors[]")
+        all_affiliation_fields = driver.find_elements(By.NAME, "affiliations[]")
+        for i, author in enumerate(authors):
+            all_author_name_fields[i].send_keys(author['name'])
+            all_affiliation_fields[i].send_keys(author['affiliation'])
+
+        print("   -> Selecting dropdown options...")
+        Select(driver.find_element(By.NAME, "venue")).select_by_visible_text(form_config['venue'])
+        Select(driver.find_element(By.NAME, "year")).select_by_visible_text(form_config['year'])
+        Select(driver.find_element(By.NAME, "month")).select_by_visible_text(form_config['month'])
+        Select(driver.find_element(By.NAME, "areaResearch")).select_by_visible_text(paper_data['area_of_research'])
+
+        # --- PHASE 3: SUBMIT ---
+        print("   -> Submitting form...")
+        submit_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//div[@class='col-12 text-center btnAdd']/button"))
+        )
+        # Also scroll the submit button into view before clicking
+        driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", submit_button)
+        time.sleep(0.5)
+        submit_button.click()
+        
+        # Wait for the success message to appear
+        WebDriverWait(driver, 20).until(
+            EC.visibility_of_element_located((By.CLASS_NAME, "success"))
+        )
+        print("   -> ✅ Submission successful!")
+        return True
+
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"\n   -> ❌ An error occurred during form filling: Could not find or interact with an element.")
+        print(f"      Details: {e}")
+        return False
+    except Exception as e:
+        print(f"\n   -> ❌ An unexpected error occurred: {e}")
+        return False
+
+
+def process_papers_with_selenium(papers: list, form_config: dict):
+    """
+    Main processing function. Sets up a single browser instance and loops through
+    all papers, filling the form for each one.
+    """
+    driver = None
+    try:
+        print("🚀 Starting browser for the entire session...")
+        service = webdriver.chrome.service.Service()
+        driver = webdriver.Chrome(service=service)
+        
+        total_papers = len(papers)
+        print(f"Found {total_papers} paper(s) to process.")
+
+        for i, paper in enumerate(papers):
+            print(f"\n--- Processing Paper {i+1}/{total_papers}: {paper.get('paper_title', 'No Title')} ---")
+            
+            # Navigate to the form for each paper to start fresh
+            driver.get(form_config["form_url"])
+            
+            # Call the function to fill the form for this specific paper
+            success = fill_single_paper(driver, paper, form_config)
+            
+            if success and i < total_papers - 1:
+                print("--- Pausing for 5 seconds before next paper ---")
+                time.sleep(5)
+            elif not success:
+                print("--- Pausing for 10 seconds after error before trying next paper ---")
+                time.sleep(10)
+
+        print("\n✅ All papers have been processed.")
+
+    finally:
+        if driver:
+            print("\nClosing browser...")
+            driver.quit()

@@ -1,0 +1,7 @@
+[
+  {
+    "url": "https://papers.nips.cc/paper_files/paper/2025/file/22f61e7079302f67f633ab1fc19bf8dc-Paper-Conference.pdf",
+    "error": "All tiers failed \u2014 no content retrieved | PDFScraper: HTTPSConnectionPool(host='papers.nips.cc', port=443): Read timed out. | APIScraper: All APIs failed. SS: No DOI or arXiv ID extractable | OA: No DOI or arXiv ID",
+    "index": 821
+  }
+]

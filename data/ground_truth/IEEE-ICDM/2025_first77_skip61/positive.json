@@ -1,0 +1,77 @@
+[
+  {
+    "paper_url": "https://ieeexplore.ieee.org/document/11391773",
+    "document_id": "11391773",
+    "label": "positive",
+    "is_indian_affiliated": true,
+    "authors": [
+      {
+        "name": "Sai Kartheek Reddy Kasu",
+        "affiliation": "Indian Institute of Information Technology, Dharwad, India",
+        "label": "positive",
+        "matched_rules": [
+          "\\bindia\\b",
+          "\\bindian institute\\b"
+        ]
+      },
+      {
+        "name": "Mohammad Zia Ur Rehman",
+        "affiliation": "Indian Institute of Technology, Indore, India",
+        "label": "positive",
+        "matched_rules": [
+          "\\bindia\\b",
+          "\\bindian institute\\b"
+        ]
+      },
+      {
+        "name": "Shahid Shafi Dar",
+        "affiliation": "Indian Institute of Technology, Indore, India",
+        "label": "positive",
+        "matched_rules": [
+          "\\bindia\\b",
+          "\\bindian institute\\b"
+        ]
+      },
+      {
+        "name": "Rishi Bharat Junghare",
+        "affiliation": "Indian Institute of Technology, Indore, India",
+        "label": "positive",
+        "matched_rules": [
+          "\\bindia\\b",
+          "\\bindian institute\\b"
+        ]
+      },
+      {
+        "name": "Dhanvin Sanjay Namboodiri",
+        "affiliation": "Malaviya National Institute of Technology, Jaipur, India",
+        "label": "positive",
+        "matched_rules": [
+          "\\bindia\\b"
+        ]
+      },
+      {
+        "name": "Nagendra Kumar",
+        "affiliation": "Indian Institute of Technology, Indore, India",
+        "label": "positive",
+        "matched_rules": [
+          "\\bindia\\b",
+          "\\bindian institute\\b"
+        ]
+      }
+    ],
+    "indian_authors": [
+      "Sai Kartheek Reddy Kasu",
+      "Mohammad Zia Ur Rehman",
+      "Shahid Shafi Dar",
+      "Rishi Bharat Junghare",
+      "Dhanvin Sanjay Namboodiri",
+      "Nagendra Kumar"
+    ],
+    "indian_institutions": [
+      "Indian Institute of Information Technology, Dharwad, India",
+      "Indian Institute of Technology, Indore, India",
+      "Malaviya National Institute of Technology, Jaipur, India"
+    ],
+    "raw_author_section": "Sai Kartheek Reddy Kasu\nIndian Institute of Information Technology, Dharwad, India\nMohammad Zia Ur Rehman\nIndian Institute of Technology, Indore, India\nShahid Shafi Dar\nIndian Institute of Technology, Indore, India\nRishi Bharat Junghare\nIndian Institute of Technology, Indore, India\nDhanvin Sanjay Namboodiri\nMalaviya National Institute of Technology, Jaipur, India\nNagendra Kumar\nIndian Institute of Technology, Indore, India"
+  }
+]
