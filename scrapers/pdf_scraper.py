@@ -1,7 +1,6 @@
 """
 Tier 3: PDF text extraction.
-Used when the paper is only available as a PDF (e.g. direct PDF links,
-open-access CVF papers served as PDF, arXiv PDFs, etc.)
+Used when the paper is only available as a PDF and/or previous tier fails
 
 """
 import io
@@ -12,7 +11,7 @@ from .base import BaseScraper, ScrapeResult
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) " # customize the HTTP header so that we aren't blocked
         "Chrome/120.0.0.0 Safari/537.36"
     )
 }
@@ -22,7 +21,7 @@ class PDFScraper(BaseScraper):
 
     def can_handle(self, url: str) -> bool:
         # Handle direct PDF links or arXiv
-        return url.endswith(".pdf") or "arxiv.org/pdf" in url
+        return url.endswith(".pdf") or "arxiv.org/pdf" in url # check if passed url is pdf scraping friendly
 
     def scrape(self, url: str) -> ScrapeResult:
         try:
@@ -44,9 +43,9 @@ class PDFScraper(BaseScraper):
                     success=False, error=f"Not a PDF (content-type: {content_type})"
                 )
 
-            pdf_bytes = io.BytesIO(resp.content)
+            pdf_bytes = io.BytesIO(resp.content) # data is now a virtual file
 
-            content = extract_text(pdf_bytes, page_numbers=[0], maxpages=1)
+            content = extract_text(pdf_bytes, page_numbers=[0], maxpages=1) # extract info only from first page since we are interested only in that page's content
 
             if len(content) < 100:
                 fallback_content = self._try_neurips_abstract_page(url)
@@ -63,7 +62,7 @@ class PDFScraper(BaseScraper):
                 )
 
             return ScrapeResult(
-                content=content[:8000],
+                content=content[:8000], # cap to avoid oversized LLM prompts
                 source="pdf",
                 url=url,
                 success=True

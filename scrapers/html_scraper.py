@@ -1,22 +1,18 @@
 """
 Tier 1: Direct HTML scraper using requests + BeautifulSoup.
-Fast, free, zero dependencies beyond standard libs.
-Works for: ACL Anthology, NeurIPS, ICML, ICLR, AAAI, IJCAI, CVPR (openaccess),
-           ECCV (openaccess), SIGMOD, VLDB, most open-access proceedings.
 """
 import requests
 from bs4 import BeautifulSoup
 from .base import BaseScraper, ScrapeResult
 
-# Sites known to work with direct HTML scraping
+# Sites known to work with direct HTML scraping, have not tiggered this tier at all as I tested only NeurIPS and ICDM
 HTML_FRIENDLY_DOMAINS = [
     "aclanthology.org",
-    "proceedings.neurips.cc",
-    "proceedings.mlr.press",       # ICML, AISTATS, UAI
-    "openreview.net",              # ICLR, NeurIPS workshops
+    "proceedings.mlr.press",      
+    "openreview.net",              
     "aaai.org",
     "ijcai.org",
-    "openaccess.thecvf.com",       # CVPR, ICCV, ECCV
+    "openaccess.thecvf.com",     
     "vldb.org",
     "cidrdb.org",
     "usenix.org",
@@ -26,7 +22,7 @@ HTML_FRIENDLY_DOMAINS = [
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) " # customize the HTTP header so that we aren't blocked
         "Chrome/120.0.0.0 Safari/537.36"
     ),
     "Accept-Language": "en-US,en;q=0.9",
@@ -36,7 +32,7 @@ HEADERS = {
 class HTMLScraper(BaseScraper):
 
     def can_handle(self, url: str) -> bool:
-        return any(domain in url for domain in HTML_FRIENDLY_DOMAINS)
+        return any(domain in url for domain in HTML_FRIENDLY_DOMAINS) # check if passed url is html scraping friendly
 
     def scrape(self, url: str) -> ScrapeResult:
         try:
@@ -55,14 +51,14 @@ class HTMLScraper(BaseScraper):
 
             soup = BeautifulSoup(resp.text, "html.parser")
 
-            # Remove nav, footer, scripts, styles — keep signal, not noise
+            # Remove nav, footer, scripts, styles and other useless stuff
             for tag in soup(["script", "style", "nav", "footer",
                              "header", "aside", "noscript"]):
                 tag.decompose()
 
             text = soup.get_text(separator="\n", strip=True)
 
-            # Sanity check: at least 200 chars of real content
+            # proceed only if there are at least 200 chars of real content
             if len(text) < 200:
                 return ScrapeResult(
                     content="", source="html", url=final_url,
