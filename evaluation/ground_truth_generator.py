@@ -1,7 +1,7 @@
 """
-Generate deterministic ground-truth labels from IEEE Xplore authors pages.
+Generate deterministic ground-truth labels from IEEE Xplore authors pages (tailored for IEEE only haven't generalized yet).
 
-This does not call an LLM. It reads /document/<id>/authors#authors, extracts
+It reads /document/<id>/authors#authors, extracts
 author-affiliation pairs, and applies factual affiliation rules.
 """
 import argparse

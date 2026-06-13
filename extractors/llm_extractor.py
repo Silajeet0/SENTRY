@@ -1,9 +1,5 @@
 """
-LLM Extractor: single API call, structured JSON output.
-The LLM does ONLY extraction — never navigation or planning.
-
-Supports any OpenAI-compatible API (OpenAI, Anthropic, NVIDIA NIM, Ollama, etc.)
-Configure via environment variables.
+In contrast to Agent-E, the LLM does ONLY extraction — never navigation or planning.
 """
 import os
 import json
@@ -80,14 +76,14 @@ class LLMExtractor:
     def extract(self, content: str, url: str, content_source: str) -> PaperInfo:
         """
         Single LLM call to extract all paper info from raw content.
-        Never loops. Returns PaperInfo with error field set on failure.
+        Returns PaperInfo with error field set on failure.
         """
         info = PaperInfo(paper_url=url, raw_content_source=content_source)
 
         try:
             prompt = EXTRACTION_PROMPT.format(
                 area_list="\n".join(f"- {a}" for a in AREA_LIST),
-                content=content[:12000]   # hard cap — fits any model context
+                content=content[:12000]   # hard cap so we don't face any issue with context limits
             )
 
             parsed = None
@@ -117,7 +113,7 @@ class LLMExtractor:
             )
             info.indian_institutions = parsed.get("indian_institutions", [])
 
-            # Sanity check: verify LLM didn't miss any Indian affiliations
+            # verify LLM didn't miss any Indian affiliations
             info = self._verify_indian_affiliations(info)
 
         except Exception as e:
@@ -125,10 +121,8 @@ class LLMExtractor:
 
         return info
 
-    # ------------------------------------------------------------------ #
-
     def _call_llm(self, prompt: str) -> str:
-        """Single LLM call. Swappable via env vars."""
+        """LLM call"""
         from openai import OpenAI
 
         client = OpenAI(api_key=self.api_key, base_url=self.base_url)
@@ -141,7 +135,7 @@ class LLMExtractor:
                 },
                 {"role": "user", "content": prompt}
             ],
-            temperature=0.0,
+            temperature=0.0, # we don't need creativity
             max_tokens=2000,
         )
         if self._should_request_json_mode():
@@ -150,7 +144,6 @@ class LLMExtractor:
         try:
             response = client.chat.completions.create(**request)
         except Exception:
-            # Some OpenAI-compatible endpoints reject response_format.
             request.pop("response_format", None)
             response = client.chat.completions.create(**request)
 
@@ -180,7 +173,7 @@ class LLMExtractor:
 
     def _verify_indian_affiliations(self, info: PaperInfo) -> PaperInfo:
         """
-        Post-LLM sanity check: scan all affiliations for India keywords.
+        scan all affiliations for India keywords.
         Catches cases where the LLM missed an affiliation.
         """
         if not info.all_authors:

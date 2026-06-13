@@ -1,14 +1,13 @@
 """
-Tier 4: Free academic API fallback.
+Tier 4: academic API fallback.
 Used when all browser/scraping tiers fail (paywalls, auth walls, etc.)
 
-APIs used (all free, no key required for basic use):
+APIs used:
 - Semantic Scholar Graph API  https://api.semanticscholar.org/graph/v1
 - OpenAlex                    https://api.openalex.org
 - CrossRef                    https://api.crossref.org
 
-Coverage: Semantic Scholar covers ~200M papers. OpenAlex ~240M.
-Between them, virtually every A/A* conference paper is covered.
+only limitation is that it needs a DOI or arXiv id to work
 """
 import re
 import requests
@@ -33,7 +32,7 @@ def _extract_doi(url: str) -> str | None:
     for pat in patterns:
         m = re.search(pat, url)
         if m:
-            if "arxiv" in url:
+            if "arxiv" in url: # if there is arXiv id in url use that instead
                 continue
             doi = m.group(1) if m.lastindex else m.group(0)
             return _clean_doi(doi)
@@ -109,17 +108,17 @@ class APIScraper(BaseScraper):
         doi = _extract_doi(url) or _extract_ieee_doi_from_page(url)
         arxiv_id = _extract_arxiv_id(url)
 
-        # --- Try Semantic Scholar ---
+        # Try Semantic Scholar
         ss_result = self._try_semantic_scholar(url, doi, arxiv_id)
         if ss_result.success:
             return ss_result
 
-        # --- Try OpenAlex ---
+        # Try OpenAlex
         oa_result = self._try_openalex(url, doi, arxiv_id)
         if oa_result.success:
             return oa_result
 
-        # --- Try CrossRef (title/DOI metadata only, no affiliations) ---
+        # Try CrossRef
         cr_result = self._try_crossref(doi)
         if cr_result.success:
             return cr_result

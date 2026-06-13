@@ -10,8 +10,8 @@ class ScrapeResult:
     content: str          # raw text content retrieved
     source: str           # which tier retrieved it e.g. "html", "browser", "pdf", "api"
     url: str              # final URL (may differ from input if redirected)
-    success: bool
-    error: str = ""
+    success: bool         # retrieval successful or not indicator
+    error: str = ""       # if error in retrieval then its reason
 
 
 class BaseScraper(ABC):
@@ -29,6 +29,6 @@ class BaseScraper(ABC):
     def can_handle(self, url: str) -> bool:
         """
         Quick pre-check: should this tier even attempt this URL?
-        Used to skip irrelevant tiers fast (e.g. skip PDF tier for HTML-only sites).
+        Used to skip irrelevant tiers fast like skip PDF tier for HTML-only sites.
         """
         pass
