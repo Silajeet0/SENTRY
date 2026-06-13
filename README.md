@@ -7,9 +7,9 @@ A multi-tier, deterministic pipeline for identifying Indian-affiliated authors a
 ## Architecture Overview
 
 ```
-Proceedings URL
-      │
-      ▼
+             Proceedings URL
+                   │
+                   ▼
 ┌─────────────────────────────────────────┐
 │           Stage 1: Link Extraction      │
 │  html_fetcher → flat / grouped extractor│
@@ -94,8 +94,7 @@ AEGIS_Refactored/
 ### 1. Install dependencies
 
 ```bash
-pip install requests beautifulsoup4 openai pdfminer.six python-dotenv
-pip install playwright && playwright install chromium   # for Tier 2 (IEEE, ACM)
+pip install -r requirements.txt   
 ```
 
 ### 2. Configure LLM via environment variables
@@ -104,9 +103,9 @@ Create a `.env` file in the project root:
 
 ```env
 LLM_PROVIDER=groq            # or: nvidia, openai, anthropic, ollama
-LLM_MODEL=llama-3.3-70b-versatile
+LLM_MODEL=openai/gpt-oss-20b   # used in the test run
 LLM_API_KEY=your_key_here
-LLM_BASE_URL=https://api.groq.com/openai/v1
+LLM_BASE_URL=https://api.groq.com/openai/v1 # or corresponding url
 ```
 
 Any OpenAI-compatible endpoint works. The pipeline uses the `openai` Python SDK universally.
