@@ -7,9 +7,9 @@ A multi-tier, deterministic pipeline for identifying Indian-affiliated authors a
 ## Architecture Overview
 
 ```
-             Proceedings URL
-                   │
-                   ▼
+              Proceedings URL
+                    │
+                    ▼
 ┌─────────────────────────────────────────┐
 │           Stage 1: Link Extraction      │
 │  html_fetcher → flat / grouped extractor│
