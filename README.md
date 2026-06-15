@@ -7,9 +7,9 @@ A multi-tier, deterministic pipeline for identifying Indian-affiliated authors a
 ## Architecture Overview
 
 ```
-Proceedings URL
-      │
-      ▼
+              Proceedings URL
+                    │
+                    ▼
 ┌─────────────────────────────────────────┐
 │           Stage 1: Link Extraction      │
 │  html_fetcher → flat / grouped extractor│
@@ -94,8 +94,7 @@ AEGIS_Refactored/
 ### 1. Install dependencies
 
 ```bash
-pip install requests beautifulsoup4 openai pdfminer.six python-dotenv
-pip install playwright && playwright install chromium   # for Tier 2 (IEEE, ACM)
+pip install -r requirements.txt   
 ```
 
 ### 2. Configure LLM via environment variables
@@ -104,9 +103,9 @@ Create a `.env` file in the project root:
 
 ```env
 LLM_PROVIDER=groq            # or: nvidia, openai, anthropic, ollama
-LLM_MODEL=llama-3.3-70b-versatile
+LLM_MODEL=openai/gpt-oss-20b   # used in the test run
 LLM_API_KEY=your_key_here
-LLM_BASE_URL=https://api.groq.com/openai/v1
+LLM_BASE_URL=https://api.groq.com/openai/v1 # or corresponding url
 ```
 
 Any OpenAI-compatible endpoint works. The pipeline uses the `openai` Python SDK universally.
@@ -150,8 +149,6 @@ python run_single_paper.py --synthetic-indian
 | **Flat** | NeurIPS / NIPS, IEEE-ICDM, IEEE-CVPR, any IEEE Xplore proceedings |
 | **Grouped (track-based)** | ACL, EMNLP, NAACL, ACM-KDD, ACM-SIGMOD, ACM-IKDD |
 
-Expand coverage by adding entries to `HTML_FRIENDLY_DOMAINS` (html_scraper), `BASE_URL_PATTERNS` (flat_link_extractor), and the `DOMAIN_INTERACTIONS` dict (browser_scraper).
-
 ---
 
 ## Output Format
@@ -179,18 +176,6 @@ Expand coverage by adding entries to `HTML_FRIENDLY_DOMAINS` (html_scraper), `BA
 
 ---
 
-## Configuration Reference
-
-| Environment Variable | Default | Description |
-|---|---|---|
-| `LLM_PROVIDER` | `nvidia` | Provider hint for JSON mode detection |
-| `LLM_MODEL` | `meta/llama-3.3-70b-instruct` | Model name |
-| `LLM_API_KEY` | _(empty)_ | API key |
-| `LLM_BASE_URL` | NVIDIA NIM endpoint | Base URL of OpenAI-compatible API |
-| `LLM_RESPONSE_FORMAT_JSON` | `auto` | Force JSON mode: `true`/`false`/`auto` |
-
----
-
 ## Form Filler (Standalone)
 
 After running the pipeline, use the Selenium-based form filler to submit results to the IKDD data-sharing portal:
@@ -199,9 +184,6 @@ After running the pipeline, use the Selenium-based form filler to submit results
 # Edit FORM_URL, CONFERENCE_NAME, YEAR, MONTH, VENUE inside the script
 python Form_filler/run_selenium_filler.py
 ```
-
-> **Note:** The `form_filling/` directory contains a legacy Agent-E-based form filler that requires a locally running Agent-E server. It is superseded by `Form_filler/` (Selenium) and is not maintained.
-
 ---
 
 ## Evaluation
@@ -210,14 +192,3 @@ Ground truth data for IEEE-ICDM 2025 is included under `data/ground_truth/`. The
 
 ---
 
-## Known Issues & Limitations
-
-- **`evaluation` module not included:** `pipeline.py` and `llm_extractor.py` import `from evaluation.india_rules import classify_affiliation`. This module must be present in the repo root for the pipeline to run. Ensure it is added before first use.
-- IEEE Xplore pages behind institutional paywalls will fall through to Tier 4 (API). Affiliation coverage from Semantic Scholar may be incomplete for very recent papers.
-- NeurIPS PDFs are page-1 only. Papers with affiliations stated only in the body will be missed by the prefilter and escalated to the LLM correctly.
-
----
-
-## License
-
-Research use. See `LICENSE` for terms.
