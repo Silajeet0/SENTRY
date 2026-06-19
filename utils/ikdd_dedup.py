@@ -57,10 +57,7 @@ def _similarity(a: str, b: str) -> float:
     return len(intersection) / len(union)
 
 
-# -------------------------------------------------------------------
-# IKDD scraper
-# -------------------------------------------------------------------
-
+# scraper
 def _scrape_approved_titles(username: str, password: str) -> list[str]:
     """
     Logs in to IKDD and scrapes all approved Premier Paper titles.
@@ -337,9 +334,7 @@ class DedupResult:
     matched_title: str
 
 
-# -------------------------------------------------------------------
 # CLI
-# -------------------------------------------------------------------
 
 def main():
     logging.basicConfig(
