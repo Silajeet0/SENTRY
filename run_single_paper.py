@@ -43,7 +43,34 @@ def main():
     else:
         if not args.url:
             parser.error("provide a paper URL or use --synthetic-indian")
-        info = process_paper(args.url)
+        # In run_single_paper.py, before process_paper(args.url):
+
+        if "dl.acm.org" in args.url and not args.synthetic_indian:
+            from pathlib import Path
+            import time, json
+            
+            cookie_path = Path("data/acm_session_cookies.json")
+            cookies_fresh = (
+                cookie_path.exists()
+                and (time.time() - cookie_path.stat().st_mtime) / 60 < 30
+            )
+            
+            if not cookies_fresh:
+                print("[INFO] No fresh ACM cookies — warming up via proceedings page...")
+                import re
+                match = re.search(r"10\.1145/(\d+)\.\d+", args.url)
+                if match:
+                    from workflows.link_extractors.acm_api_fetcher import warmup_acm_cookies
+                    proceedings_url = f"https://dl.acm.org/doi/proceedings/10.1145/{match.group(1)}"
+                    try:
+                        warmup_acm_cookies(proceedings_url)
+                        print("[INFO] ACM cookies refreshed.")
+                    except Exception as e:
+                        print(f"[WARN] Cookie warmup failed: {e} — scraping may fall through to SS")
+            else:
+                print("[INFO] Using existing ACM cookies.")
+
+            info = process_paper(args.url)
 
     print(json.dumps(asdict(info), indent=2, ensure_ascii=False))
 

@@ -1,2 +1,5 @@
 .env
 dynamic_page.html
+__pycache__/
+*.pyc
+data/
