@@ -44,7 +44,7 @@ if __name__ == "__main__":
         max_papers=None,
         resume_from=0,
         delay=10
-    )'''
+    )
 
     #acm_ikdd
     run_pipeline(
@@ -55,4 +55,44 @@ if __name__ == "__main__":
         resume_from=0,
         delay=10
     )
+
+    #IEEE-CVPR
+    run_pipeline(
+        proceeding_url="https://ieeexplore.ieee.org/xpl/conhome/11091818/proceeding",
+        conference="IEEE-CVPR",
+        year="2025",
+        max_papers=None,
+        resume_from=0,
+        delay=10
+    )
+
+    #icml
+    run_pipeline(
+            proceeding_url="https://proceedings.mlr.press/v267/",
+            conference="ICML",
+            year="2025",
+            max_papers=None,
+            resume_from=0,
+            delay=10
+        )
     
+
+    #acm_sigcomm
+    run_pipeline(
+        proceeding_url="https://dl.acm.org/doi/proceedings/10.1145/3718958",
+        conference="ACM_SIGCOMM",
+        year="2025",
+        max_papers=None,
+        resume_from=0,
+        delay=10
+    )'''
+
+    #ccs
+    run_pipeline(
+        proceeding_url="https://dl.acm.org/doi/proceedings/10.1145/3719027",
+        conference="ACM_SIGCOMM",
+        year="2025",
+        max_papers=None,
+        resume_from=0,
+        delay=10
+    )

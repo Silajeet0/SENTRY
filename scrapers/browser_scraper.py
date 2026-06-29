@@ -312,151 +312,92 @@ class BrowserScraper(BaseScraper):
     @staticmethod
     def _scrape_acm_authors_page(page, url: str) -> str:
         """
-        Click 'Authors Info & Claims' on the already-loaded paper page and
-        extract author/affiliation pairs directly from the DOM.
+        Extract author/affiliation pairs directly from the live DOM using
+        page.evaluate(), with a polling wait until affiliations are populated.
 
-        Strategy:
-          1. Find the <a href="#tab-contributors"> link using its known stable
-             attributes (data-id or class) and click it via JavaScript to avoid
-             Playwright's default behaviour of waiting for navigation — the hash
-             change is not a navigation but it can confuse the click() waiter.
-          2. Wait for the contributors tab panel to become visible in the DOM
-             using a targeted CSS selector rather than a broad body-text scan,
-             which removes the race condition that caused garbled output.
-          3. Extract name and affiliation directly from the panel's HTML nodes
-             instead of parsing raw inner_text — this eliminates the name/
-             affiliation swap entirely because we read structured data.
+        Key insight: the affiliation divs are injected by JS after page load.
+        page.content() misses them. outerHTML via evaluate() sees them — but
+        only after the JS has run. We poll until at least one affiliation span
+        has non-empty text, then extract everything at once.
         """
         try:
-            # Step 1: locate the "Authors Info & Claims" anchor.
-            # We match on its known stable attributes in priority order.
-            # Use JavaScript click so the hash change doesn't trigger
-            # Playwright's navigation guard (which can cause a stale-page read).
-            clicked = page.evaluate("""
-                () => {
-                    const selectors = [
-                        'a[data-id="article-authors-viewall"]',
-                        'a.to-authors-affiliations[href="#tab-contributors"]',
-                        'a.to-authors-affiliations',
-                    ];
-                    for (const sel of selectors) {
-                        const el = document.querySelector(sel);
-                        if (el) {
-                            el.click();
-                            return true;
-                        }
+            # Poll until affiliation spans are populated (max 15s).
+            # The JS that fills them runs asynchronously after page load.
+            for _ in range(15):
+                has_affs = page.evaluate("""
+                    () => {
+                        const spans = document.querySelectorAll(
+                            'div[property="affiliation"] span[property="name"]'
+                        );
+                        return [...spans].some(s => s.innerText.trim().length > 0);
                     }
-                    return false;
-                }
-            """)
+                """)
+                if has_affs:
+                    break
+                page.wait_for_timeout(1000)
+            else:
+                log.warning("ACM: affiliation spans never populated after 15s")
 
-            if not clicked:
-                log.warning("ACM: 'Authors Info & Claims' link not found on page")
-                return ""
-
-            # Step 2: wait for the contributors tab panel to be present and
-            # populated in the DOM. The panel has id="tab-contributors" and
-            # contains li elements with author entries once rendered.
-            # We do NOT rely on body.innerText to avoid reading a stale snapshot.
-            try:
-                page.wait_for_selector(
-                    "#tab-contributors li.author-name, "
-                    "#tab-contributors .author-info, "
-                    "#tab-contributors .loa__author-name",
-                    state="visible",
-                    timeout=15000,
-                )
-            except Exception:
-                # Fallback: wait for the panel itself to appear even if
-                # the specific author-name selectors don't match the version
-                # of ACM DL currently served.
-                page.wait_for_selector(
-                    "#tab-contributors",
-                    state="visible",
-                    timeout=10000,
-                )
-                page.wait_for_timeout(2000)  # let JS finish populating the panel
-
-            # Step 3: extract structured name + affiliation pairs directly
-            # from the DOM so there is no ambiguity about which text belongs
-            # to a name vs an affiliation.
+            # Extract directly from the live DOM.
+            # DOM structure confirmed from DevTools:
+            #   span[property="author"]    — one per author, names only, flat list
+            #   div.affiliations           — one per author, in matching document order
+            #     div[property="affiliation"]  — ONE OR MORE per author
+            #       span[property="name"]      — affiliation text
+            #
+            # Names and affiliation groups are zipped by index.
+            # Multiple affiliations for one author are joined with "; ".
             pairs = page.evaluate("""
                 () => {
-                    const panel = document.querySelector('#tab-contributors');
-                    if (!panel) return [];
-
-                    const results = [];
-
-                    // ACM DL renders each author as an <li> that contains:
-                    //   .author-name (or .loa__author-name)  → the person's name
-                    //   .author-info / .affiliation / p       → institution text
-                    // We try several known selector patterns so the extractor
-                    // is resilient to minor ACM DL markup version changes.
-
-                    // Pattern A: .loa-authors list (most common as of 2024-25)
-                    const loaItems = panel.querySelectorAll(
-                        '.loa-authors li, .contributors__list li'
-                    );
-                    if (loaItems.length > 0) {
-                        loaItems.forEach(li => {
-                            const nameEl = li.querySelector(
-                                '.author-name span, .loa__author-name, '
-                                + '[class*="author-name"], strong'
-                            );
-                            const affEl = li.querySelector(
-                                '.author-info, .affiliation, '
-                                + '[class*="affiliation"], p'
-                            );
-                            const name = nameEl ? nameEl.innerText.trim() : '';
-                            const aff  = affEl  ? affEl.innerText.trim()  : '';
-                            if (name) results.push({ name, aff });
-                        });
-                        if (results.length > 0) return results;
-                    }
-
-                    // Pattern B: definition-list style (dl / dt / dd)
-                    const dts = panel.querySelectorAll('dt');
-                    if (dts.length > 0) {
-                        dts.forEach(dt => {
-                            const dd = dt.nextElementSibling;
-                            const name = dt.innerText.trim();
-                            const aff  = dd ? dd.innerText.trim() : '';
-                            if (name) results.push({ name, aff });
-                        });
-                        if (results.length > 0) return results;
-                    }
-
-                    // Pattern C: generic fallback — grab every heading-like
-                    // element followed by a paragraph inside the panel.
-                    // This mirrors the old text heuristic but operates on
-                    // structured nodes, not raw text, so order is guaranteed.
-                    const children = Array.from(panel.children);
-                    for (let i = 0; i < children.length - 1; i++) {
-                        const tag = children[i].tagName;
-                        if (['H2','H3','H4','STRONG','B'].includes(tag) ||
-                            (children[i].className || '').includes('author')) {
-                            const name = children[i].innerText.trim();
-                            const aff  = children[i + 1].innerText.trim();
-                            if (name && aff) results.push({ name, aff });
+                    // Author names in document order
+                    const names = [...document.querySelectorAll(
+                        'span[property="author"][typeof="Person"]'
+                    )].map(span => {
+                        const given  = span.querySelector('span[property="givenName"]');
+                        const family = span.querySelector('span[property="familyName"]');
+                        if (given || family) {
+                            return [given, family]
+                                .filter(Boolean)
+                                .map(el => (el.textContent || '').trim())
+                                .join(' ').trim();
                         }
-                    }
-                    return results;
+                        const a = span.querySelector('a[title]');
+                        return a ? a.getAttribute('title').trim() : '';
+                    }).filter(Boolean);
+
+                    // Affiliation groups in document order.
+                    // Each div.affiliations = one author's affiliation block.
+                    // Multiple div[property="affiliation"] inside = multiple affs.
+                    const affGroups = [...document.querySelectorAll('div.affiliations')]
+                        .map(group => {
+                            const texts = [...group.querySelectorAll(
+                                'div[property="affiliation"][typeof="Organization"] '
+                                + 'span[property="name"]'
+                            )].map(s => (s.textContent || '').trim()).filter(Boolean);
+                            return texts.join('; ') || 'Unknown';
+                        });
+
+                    // Zip by index
+                    return names.map((name, i) => ({
+                        name,
+                        aff: affGroups[i] || 'Unknown'
+                    }));
                 }
             """)
 
             if not pairs:
-                log.warning("ACM: contributors panel found but no author pairs extracted")
+                log.warning("ACM: no author/affiliation pairs found in live DOM")
                 return ""
 
             lines = [
                 f"Author: {p['name']} | Affiliation: {p['aff']}"
-                for p in pairs
-                if p.get("name")
+                for p in pairs if p.get("name")
             ]
+            log.debug(f"ACM live DOM: extracted {len(lines)} authors")
             return "\n".join(lines)[:12000]
 
         except Exception as e:
-            log.warning(f"ACM authors panel scrape failed: {e}")
+            log.warning(f"ACM live DOM extraction failed: {e}")
             return ""
 
     # -----------------------------------------------------------------------

@@ -8,7 +8,7 @@ def is_track_grouped(conference: str) -> bool:
 
     Accepts both base names and composite names like ieee_icdm, acm_ikdd, etc.
     """
-    flat_keywords = ["ieee", "neurips", "nips"]
+    flat_keywords = ["ieee", "neurips", "nips", "icml"]
     grouped_keywords = ["acm", "acl"]
 
     name = conference.lower()

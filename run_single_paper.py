@@ -74,6 +74,5 @@ def main():
 
     print(json.dumps(asdict(info), indent=2, ensure_ascii=False))
 
-
 if __name__ == "__main__":
     main()
