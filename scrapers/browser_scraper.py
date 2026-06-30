@@ -32,12 +32,16 @@ log = logging.getLogger(__name__)
 ACM_COOKIE_PATH = Path("data/acm_session_cookies.json")
 ACM_COOKIE_MAX_AGE_MINUTES = 30
 
+OPENREVIEW_COOKIE_PATH = Path("data/openreview_session_cookies.json")
+OPENREVIEW_COOKIE_MAX_AGE_MINUTES = 30
+
 # Domains that need JS rendering
 BROWSER_DOMAINS = [
     "ieeexplore.ieee.org",
     "dl.acm.org",
     "link.springer.com",
     "nature.com",
+    "openreview.net",
 ]
 
 # Per-domain interaction rules before reading the DOM
@@ -72,10 +76,12 @@ class BrowserScraper(BaseScraper):
             from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
 
             is_acm = "dl.acm.org" in url
+            is_openreview = "openreview.net" in url
 
-            # ACM requires headless=False to pass Cloudflare Turnstile.
-            # IEEE and others work fine headless.
-            use_headless = not is_acm
+            # ACM and OpenReview both require headless=False — their bot
+            # challenge walls detect and block headless Chromium. IEEE and
+            # others work fine headless.
+            use_headless = not (is_acm or is_openreview)
 
             with sync_playwright() as p:
                 browser = p.chromium.launch(
@@ -101,6 +107,21 @@ class BrowserScraper(BaseScraper):
                             "— Cloudflare may re-challenge. Re-run link extraction to refresh."
                         )
 
+                # Load OpenReview session cookies if fresh — same Cloudflare-
+                # style challenge wall as ACM, same cookie-reuse strategy.
+                if is_openreview and OPENREVIEW_COOKIE_PATH.exists():
+                    age_minutes = (time.time() - OPENREVIEW_COOKIE_PATH.stat().st_mtime) / 60
+                    if age_minutes < OPENREVIEW_COOKIE_MAX_AGE_MINUTES:
+                        or_cookies = json.loads(OPENREVIEW_COOKIE_PATH.read_text())
+                        context.add_cookies(or_cookies)
+                        log.debug(f"Loaded {len(or_cookies)} OpenReview session cookies ({age_minutes:.1f}m old)")
+                    else:
+                        log.warning(
+                            f"OpenReview session cookies are {age_minutes:.0f}m old "
+                            f"(>{OPENREVIEW_COOKIE_MAX_AGE_MINUTES}m) — challenge may "
+                            "reappear. Re-run link extraction to refresh."
+                        )
+
                 page = context.new_page()
 
                 page.add_init_script("""
@@ -116,14 +137,16 @@ class BrowserScraper(BaseScraper):
                     title = page.title()
                     log.debug(f"Page title: {title}")
 
-                    # Detect Cloudflare challenge — fail fast rather than
-                    # scraping the challenge page as if it were content
-                    if "just a moment" in title.lower():
+                    # Detect bot challenge — fail fast rather than scraping
+                    # the challenge page as if it were content. Covers both
+                    # Cloudflare's "Just a moment..." (ACM) and OpenReview's
+                    # challenge page title.
+                    if "just a moment" in title.lower() or "challenge" in title.lower():
                         browser.close()
                         return ScrapeResult(
                             content="", source="browser", url=url,
                             success=False,
-                            error="Cloudflare challenge — session cookies stale or missing"
+                            error="Bot challenge detected — session cookies stale or missing"
                         )
 
                 except PWTimeout:
@@ -186,6 +209,20 @@ class BrowserScraper(BaseScraper):
                         )
                     else:
                         content = "[ACM paper content]\n" + acm_content
+
+                # OpenReview — download the PDF directly via requests using
+                # saved session cookies,
+                # then extract page 1 text for title/authors/affiliations.
+                # This replaces `content` rather than appending — the forum
+                # page's body text (reviews, discussion threads) is mostly
+                # noise for author/affiliation extraction.
+                if "openreview.net/forum" in url:
+                    pdf_text = self._scrape_openreview_pdf(page, url)
+                    if pdf_text:
+                        content = (
+                            "[OpenReview PDF page 1 — title, authors, affiliations]\n"
+                            + pdf_text
+                        )
 
                 browser.close()
 
@@ -398,6 +435,114 @@ class BrowserScraper(BaseScraper):
 
         except Exception as e:
             log.warning(f"ACM live DOM extraction failed: {e}")
+            return ""
+
+    @staticmethod
+    def _scrape_openreview_pdf(page, url: str) -> str:
+        """
+        Download the OpenReview PDF via requests using saved session cookies,
+        and extract page 1 text (title, authors, affiliations) with pdfminer.
+
+        Why requests + cookies instead of context.route()
+        ─────────────────────────────────────────────────
+        The route-intercept approach (route.fetch() inside a Playwright route
+        handler) is fragile: it makes the request from Node.js's networking
+        stack, not the browser's, so it doesn't reliably carry the page's
+        cookie jar or TLS fingerprint. In practice this caused two failure
+        modes — empty captures, and an asyncio race where the browser context
+        closed mid-route-handler, crashing with TargetClosedError.
+
+        The fix mirrors what worked for ACM DL: download with plain requests,
+        passing the session cookies saved to disk (OPENREVIEW_COOKIE_PATH) by
+        the Playwright session that already cleared any challenge wall. This
+        is synchronous, has no route lifecycle to manage, and cannot race
+        against the browser closing because it doesn't touch the browser at all.
+
+        Forum URL → PDF URL:
+            openreview.net/forum?id=X  →  openreview.net/pdf?id=X
+        """
+        try:
+            import io
+            import requests
+            from pdfminer.high_level import extract_text
+
+            pdf_url = url.replace("openreview.net/forum", "openreview.net/pdf", 1)
+            log.debug(f"OpenReview PDF URL: {pdf_url}")
+
+            # Load saved session cookies — captured during link extraction or
+            # warmup, mirrors ACM's cookie reuse pattern exactly.
+            session_cookies: dict[str, str] = {}
+            if OPENREVIEW_COOKIE_PATH.exists():
+                age_minutes = (time.time() - OPENREVIEW_COOKIE_PATH.stat().st_mtime) / 60
+                if age_minutes < OPENREVIEW_COOKIE_MAX_AGE_MINUTES:
+                    raw_cookies = json.loads(OPENREVIEW_COOKIE_PATH.read_text())
+                    session_cookies = {c["name"]: c["value"] for c in raw_cookies}
+                    log.debug(
+                        f"OpenReview PDF: using {len(session_cookies)} session cookies "
+                        f"({age_minutes:.1f}m old)"
+                    )
+                else:
+                    log.warning(
+                        f"OpenReview PDF: cookies are {age_minutes:.0f}m old — "
+                        "download may be blocked"
+                    )
+
+            headers = {
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) "
+                    "Chrome/120.0.0.0 Safari/537.36"
+                ),
+                "Accept": "application/pdf,*/*",
+                "Referer": url,
+                "Accept-Language": "en-US,en;q=0.9",
+            }
+
+            resp = requests.get(
+                pdf_url,
+                headers=headers,
+                cookies=session_cookies,
+                timeout=30,
+                allow_redirects=True,
+            )
+
+            content_type = resp.headers.get("content-type", "")
+            log.debug(
+                f"OpenReview PDF response: HTTP {resp.status_code} "
+                f"ct={content_type} len={len(resp.content)}"
+            )
+
+            if resp.status_code != 200:
+                log.warning(
+                    f"OpenReview PDF: HTTP {resp.status_code} — "
+                    "cookies may be stale, re-run link extraction to refresh"
+                )
+                return ""
+
+            if "pdf" not in content_type.lower() or len(resp.content) < 1000:
+                log.warning(
+                    f"OpenReview PDF: response doesn't look like a PDF "
+                    f"(ct={content_type}, len={len(resp.content)})"
+                )
+                return ""
+
+            pdf_bytes = resp.content
+            log.debug(f"OpenReview PDF: downloaded {len(pdf_bytes)} bytes")
+
+            text = extract_text(io.BytesIO(pdf_bytes), page_numbers=[0], maxpages=1)
+
+            if not text or len(text) < 50:
+                log.warning("OpenReview PDF: page 1 extraction returned too little text")
+                return ""
+
+            log.info(f"OpenReview PDF: extracted {len(text)} chars from page 1")
+            return f"[OpenReview PDF page 1]\n{text[:8000]}"
+
+        except ImportError:
+            log.warning("pdfminer.six not installed — run: pip install pdfminer.six")
+            return ""
+        except Exception as e:
+            log.warning(f"OpenReview PDF extraction failed: {e}")
             return ""
 
     # -----------------------------------------------------------------------

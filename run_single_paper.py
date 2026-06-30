@@ -43,18 +43,21 @@ def main():
     else:
         if not args.url:
             parser.error("provide a paper URL or use --synthetic-indian")
-        # In run_single_paper.py, before process_paper(args.url):
 
-        if "dl.acm.org" in args.url and not args.synthetic_indian:
+        # ACM DL needs a fresh Cloudflare session before scraping — warm up
+        # cookies here if they're missing or stale. This only affects ACM
+        # URLs; all other URLs (OpenReview, IEEE, NeurIPS, etc.) skip this
+        # block entirely and go straight to process_paper() below.
+        if "dl.acm.org" in args.url:
             from pathlib import Path
-            import time, json
-            
+            import time
+
             cookie_path = Path("data/acm_session_cookies.json")
             cookies_fresh = (
                 cookie_path.exists()
                 and (time.time() - cookie_path.stat().st_mtime) / 60 < 30
             )
-            
+
             if not cookies_fresh:
                 print("[INFO] No fresh ACM cookies — warming up via proceedings page...")
                 import re
@@ -70,7 +73,11 @@ def main():
             else:
                 print("[INFO] Using existing ACM cookies.")
 
-            info = process_paper(args.url)
+        # Process the paper — runs for every URL, ACM or otherwise.
+        # This was previously nested inside the ACM-only `if` block above,
+        # which meant non-ACM URLs (including OpenReview) never reached this
+        # line and `info` was left unbound, causing the crash at print() time.
+        info = process_paper(args.url)
 
     print(json.dumps(asdict(info), indent=2, ensure_ascii=False))
 

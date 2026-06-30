@@ -1,7 +1,11 @@
 """
 Tier 3: PDF text extraction.
-Used when the paper is only available as a PDF and/or previous tier fails
+Used when the paper is only available as a PDF and/or previous tier fails.
 
+NOTE: openreview.net is NOT handled here — it returns 403 (Cloudflare-style
+challenge) to all requests.get() calls regardless of headers, identical to
+ACM DL's behaviour. OpenReview papers are handled by Tier 2 (browser_scraper.py)
+which uses Playwright with cookie-based session warmup.
 """
 import io
 import requests
@@ -11,7 +15,7 @@ from .base import BaseScraper, ScrapeResult
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) " # customize the HTTP header so that we aren't blocked
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
         "Chrome/120.0.0.0 Safari/537.36"
     )
 }
@@ -20,8 +24,7 @@ HEADERS = {
 class PDFScraper(BaseScraper):
 
     def can_handle(self, url: str) -> bool:
-        # Handle direct PDF links or arXiv
-        return url.endswith(".pdf") or "arxiv.org/pdf" in url # check if passed url is pdf scraping friendly
+        return url.endswith(".pdf") or "arxiv.org/pdf" in url
 
     def scrape(self, url: str) -> ScrapeResult:
         try:
@@ -43,9 +46,9 @@ class PDFScraper(BaseScraper):
                     success=False, error=f"Not a PDF (content-type: {content_type})"
                 )
 
-            pdf_bytes = io.BytesIO(resp.content) # data is now a virtual file
+            pdf_bytes = io.BytesIO(resp.content)
 
-            content = extract_text(pdf_bytes, page_numbers=[0], maxpages=1) # extract info only from first page since we are interested only in that page's content
+            content = extract_text(pdf_bytes, page_numbers=[0], maxpages=1)
 
             if len(content) < 100:
                 fallback_content = self._try_neurips_abstract_page(url)
@@ -62,7 +65,7 @@ class PDFScraper(BaseScraper):
                 )
 
             return ScrapeResult(
-                content=content[:8000], # cap to avoid oversized LLM prompts
+                content=content[:8000],
                 source="pdf",
                 url=url,
                 success=True

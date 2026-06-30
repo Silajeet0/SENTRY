@@ -46,7 +46,7 @@ if __name__ == "__main__":
         delay=10
     )
 
-    #acm_ikdd
+    #acm_kdd
     run_pipeline(
         proceeding_url="https://dl.acm.org/doi/proceedings/10.1145/3770854",
         conference="ACM_KDD",
@@ -65,16 +65,6 @@ if __name__ == "__main__":
         resume_from=0,
         delay=10
     )
-
-    #icml
-    run_pipeline(
-            proceeding_url="https://proceedings.mlr.press/v267/",
-            conference="ICML",
-            year="2025",
-            max_papers=None,
-            resume_from=0,
-            delay=10
-        )
     
 
     #acm_sigcomm
@@ -85,13 +75,23 @@ if __name__ == "__main__":
         max_papers=None,
         resume_from=0,
         delay=10
-    )'''
+    )
 
-    #ccs
+    #acm_ccs
     run_pipeline(
         proceeding_url="https://dl.acm.org/doi/proceedings/10.1145/3719027",
-        conference="ACM_SIGCOMM",
+        conference="ACM_CCS",
         year="2025",
+        max_papers=None,
+        resume_from=0,
+        delay=10
+    )'''
+
+    #icml
+    run_pipeline(
+        proceeding_url="https://openreview.net/group?id=ICML.cc/2026/Conference#tab-accept-spotlight",
+        conference="ICML",
+        year="2026",
         max_papers=None,
         resume_from=0,
         delay=10
