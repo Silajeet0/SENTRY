@@ -81,7 +81,7 @@ class BrowserScraper(BaseScraper):
             # ACM and OpenReview both require headless=False — their bot
             # challenge walls detect and block headless Chromium. IEEE and
             # others work fine headless.
-            use_headless = not (is_acm or is_openreview)
+            use_headless = False
 
             with sync_playwright() as p:
                 browser = p.chromium.launch(
