@@ -138,43 +138,146 @@ def _fetch_accepted_paper_ids(venue_id: str, accept_tab_keywords: list[str]) -> 
 
         for tab_text in accept_tabs:
             try:
-                # Click the tab by its visible text
                 page.get_by_text(tab_text, exact=True).first.click(timeout=10000)
                 log.info(f"  Clicked tab: {tab_text}")
             except Exception as e:
                 log.debug(f"  Could not click tab '{tab_text}': {e}")
                 continue
 
-            # Wait for the paper list to render after the tab click —
-            # poll until forum links stop increasing in count.
-            prev_count = -1
-            stable_rounds = 0
-            for _ in range(15):
-                page.wait_for_timeout(1000)
-                links = page.evaluate("""
-                    () => [...document.querySelectorAll('a[href*="forum?id="]')]
-                        .map(a => a.href)
+            # Wait for this tab's content to load — poll until the active
+            # panel has at least one forum link or pagination appears.
+            for _ in range(10):
+                page.wait_for_timeout(500)
+                ready = page.evaluate("""
+                    () => {
+                        const panel = document.querySelector('.tab-pane.active.in, .tab-pane.active');
+                        if (!panel) return false;
+                        return panel.querySelectorAll('a[href*="forum?id="]').length > 0
+                            || panel.querySelectorAll('ul.pagination').length > 0;
+                    }
                 """)
-                count = len(set(links))
-                if count == prev_count:
-                    stable_rounds += 1
-                    if stable_rounds >= 2:
+                if ready:
+                    break
+
+            tab_ids_before = len(note_ids)
+            page_num = 1
+
+            while True:
+                # All page.evaluate() calls are wrapped in a single try/except.
+                # Cloudflare occasionally re-challenges mid-session (~every 6min
+                # of continuous scraping), destroying the execution context.
+                # On detection: wait for auto-resolution, re-click the tab,
+                # and continue from the same page_num (no links are lost since
+                # note_ids persists across the recovery).
+                try:
+                    # Wait for page content to stabilise
+                    prev_count = -1
+                    for _ in range(10):
+                        page.wait_for_timeout(700)
+                        count = page.evaluate("""
+                            () => {
+                                const panel = document.querySelector('.tab-pane.active.in, .tab-pane.active');
+                                if (!panel) return -1;
+                                return panel.querySelectorAll('a[href*="forum?id="]').length;
+                            }
+                        """)
+                        if count == prev_count and count >= 0:
+                            break
+                        prev_count = count
+
+                    # Collect forum IDs visible in the active panel
+                    ids_on_page = set(page.evaluate(r"""
+                        () => {
+                            const panel = document.querySelector('.tab-pane.active.in, .tab-pane.active');
+                            if (!panel) return [];
+                            return [...new Set(
+                                [...panel.querySelectorAll('a[href*="forum?id="]')]
+                                .map(a => {
+                                    const m = a.href.match(/forum[?]id=([\w-]+)/);
+                                    return m ? m[1] : null;
+                                })
+                                .filter(Boolean)
+                            )];
+                        }
+                    """))
+
+                    new_ids = [i for i in ids_on_page if i not in note_ids]
+                    note_ids.update(new_ids)
+
+                    log.info(
+                        f"  Tab '{tab_text}' page {page_num}: "
+                        f"+{len(new_ids)} new links | running total: {len(note_ids)}"
+                    )
+
+                    # Click › (first right-arrow) in the active panel pagination
+                    next_result = 'retry'
+                    for attempt in range(3):
+                        next_result = page.evaluate("""
+                            () => {
+                                const panel = document.querySelector(
+                                    '.tab-pane.active.in, .tab-pane.active'
+                                );
+                                if (!panel) return 'no-panel';
+
+                                const lis = [...panel.querySelectorAll('ul.pagination li')];
+                                if (lis.length === 0) return 'no-arrow';
+
+                                const rightArrows = lis.filter(li =>
+                                    (li.className || '').includes('right-arrow')
+                                );
+                                if (rightArrows.length === 0) return 'no-arrow';
+
+                                const nextLi = rightArrows[0];
+                                const cls = nextLi.className || '';
+                                if (cls.includes('disabled')) return 'last-page';
+
+                                const a = nextLi.querySelector('a[role="button"], a, button');
+                                if (!a) return 'no-link';
+                                a.click();
+                                return 'clicked';
+                            }
+                        """)
+
+                        if next_result != 'no-panel':
+                            break
+                        log.debug(f"  Panel gone during re-render, retrying ({attempt+1}/3)...")
+                        page.wait_for_timeout(1000)
+
+                    if next_result == 'clicked':
+                        page.wait_for_timeout(1500)
+                        page_num += 1
+                    else:
+                        log.info(
+                            f"  Tab '{tab_text}' done after {page_num} page(s) "
+                            f"(reason: {next_result}). "
+                            f"New IDs this tab: {len(note_ids) - tab_ids_before}"
+                        )
                         break
-                else:
-                    stable_rounds = 0
-                prev_count = count
 
-            # Collect forum IDs found after this tab's content loaded
-            links = page.evaluate("""
-                () => [...document.querySelectorAll('a[href*="forum?id="]')]
-                    .map(a => a.href)
-            """)
-            for href in links:
-                match = re.search(r"forum\?id=([\w-]+)", href)
-                if match:
-                    note_ids.add(match.group(1))
-
-            log.info(f"  Total unique forum IDs so far: {len(note_ids)}")
+                except Exception as e:
+                    err = str(e)
+                    if ("Execution context was destroyed" in err
+                            or "most likely because of a navigation" in err
+                            or "navigation" in err.lower()):
+                        log.warning(
+                            f"  Cloudflare re-challenge on page {page_num} — "
+                            "waiting up to 30s for auto-resolution..."
+                        )
+                        try:
+                            page.wait_for_selector("text=Accept", timeout=30000)
+                            log.info("  Cloudflare cleared — re-clicking tab and resuming")
+                            page.get_by_text(tab_text, exact=True).first.click(timeout=10000)
+                            page.wait_for_timeout(3000)
+                            # continue without incrementing page_num — re-scrape
+                            # the current page since we don't know if it loaded
+                        except Exception as wait_err:
+                            log.error(
+                                f"  Cloudflare did not clear within 30s: {wait_err} "
+                                "— stopping this tab early"
+                            )
+                            break
+                    else:
+                        raise
 
         # Save session cookies before closing — captures the same challenge
         # clearance browser_scraper.py needs for per-paper PDF downloads.
