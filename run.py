@@ -60,12 +60,21 @@ if __name__ == "__main__":
     ]
 
     # Dynamically loop and execute each pipeline configuration sequentially
-    for conf in conferences_to_run:
+    '''for conf in conferences_to_run:
         print(f"Starting pipeline processing for: {conf['conference']} ({conf['year']})...")
         run_pipeline(
             proceeding_url=conf["proceeding_url"],
             conference=conf["conference"],
             year=conf["year"],
+            max_papers=None,
+            resume_from=0,
+            delay=10
+        )'''
+    
+    run_pipeline(
+            proceeding_url="https://papers.nips.cc/paper_files/paper/2025",
+            conference="NeurIPS",
+            year="2025",
             max_papers=None,
             resume_from=0,
             delay=10
