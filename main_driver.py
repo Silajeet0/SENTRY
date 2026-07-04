@@ -22,7 +22,7 @@ OPENREVIEW_COOKIE_MAX_AGE_MINUTES = 30
 # Link extraction loads the group page in Playwright (the API itself returns
 # a ChallengeRequiredError for unauthenticated programmatic access).
 OPENREVIEW_CONFERENCES = {
-    "ICLR", "ICML", "NEURIPS", "ICLR_ORAL", "ICLR_SPOTLIGHT",
+    "ICLR", "ICML", "ICLR_ORAL", "ICLR_SPOTLIGHT",
     "ICML_ORAL", "ICML_SPOTLIGHT",
 }
 
