@@ -49,7 +49,10 @@ class PDFScraper(BaseScraper):
             pdf_bytes = io.BytesIO(resp.content)
 
             content = extract_text(pdf_bytes, page_numbers=[0], maxpages=1)
-
+            print("=" * 80)
+            print("PDF TEXT LENGTH:", len(content))
+            print(content[:4000])
+            print("=" * 80)
             if len(content) < 100:
                 fallback_content = self._try_neurips_abstract_page(url)
                 if fallback_content:

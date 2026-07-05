@@ -28,6 +28,65 @@ if __name__ == "__main__":
             "year": "2025"
         },
         {
+            "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/11368763/proceeding",
+            "conference": "IEEE-FOCS",
+            "year": "2025"
+        },
+
+        {
+            "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/10973274/proceeding",
+            "conference": "IEEE-HRI",
+            "year": "2025"
+        },
+
+        {
+            "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/11443115/proceeding",
+            "conference": "IEEE-ICCV",
+            "year": "2025"
+        },
+
+        {
+            "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/11127273/proceeding",
+            "conference": "IEEE-ICRA",
+            "year": "2025"
+        },
+
+        {
+            "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/11220258/proceeding",
+            "conference": "IEEE-ISMAR",
+            "year": "2025"
+        },
+
+        {
+            "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/11186120/proceeding",
+            "conference": "IEEE-LICS",
+            "year": "2025"
+        },
+
+        {
+            "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/11186120/proceeding",
+            "conference": "IEEE-LICS",
+            "year": "2025"
+        },
+
+        {
+            "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/11524112/proceeding",
+            "conference": "IEEE-PERCOM",
+            "year": "2025"
+        },
+
+        {
+            "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/11023178/proceeding",
+            "conference": "IEEE-SP",
+            "year": "2025"
+        },
+
+        {
+            "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/10937339/proceeding",
+            "conference": "IEEE-CV",
+            "year": "2025"
+        },
+        {
             "proceeding_url": "https://aclanthology.org/events/acl-2025/",
             "conference": "ACL",
             "year": "2025"
@@ -60,7 +119,7 @@ if __name__ == "__main__":
     ]
 
     # Dynamically loop and execute each pipeline configuration sequentially
-    '''for conf in conferences_to_run:
+    for conf in conferences_to_run:
         print(f"Starting pipeline processing for: {conf['conference']} ({conf['year']})...")
         run_pipeline(
             proceeding_url=conf["proceeding_url"],
@@ -69,13 +128,5 @@ if __name__ == "__main__":
             max_papers=None,
             resume_from=0,
             delay=10
-        )'''
-    
-    run_pipeline(
-            proceeding_url="https://papers.nips.cc/paper_files/paper/2025",
-            conference="NeurIPS",
-            year="2025",
-            max_papers=None,
-            resume_from=0,
-            delay=10
         )
+    
