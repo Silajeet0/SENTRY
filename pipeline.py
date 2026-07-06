@@ -17,6 +17,7 @@ import time
 import logging
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import urlparse
 
 from scrapers.html_scraper import HTMLScraper
 from scrapers.browser_scraper import BrowserScraper
@@ -39,6 +40,11 @@ TIERS = [
     PDFScraper(),
     APIScraper(),       # always last — API fallback works for any URL
 ]
+
+PDF_PREFILTER_DOMAINS = {
+    "papers.nips.cc",
+    "aclanthology.org",
+}
 
 EXTRACTOR = LLMExtractor()
 
@@ -88,16 +94,16 @@ def process_paper(url: str) -> PaperInfo:
     return info
 
 
-def _should_skip_llm_by_prefilter(url: str, content: str, content_source: str) -> bool:
-    """
-    For PDF-heavy proceedings, most papers are non-Indian. Since final output
-    stores only Indian-affiliated papers, skip the LLM when page-1 text has no
-    deterministic Indian affiliation signal.
-    """
+def _should_skip_llm_by_prefilter(url, content, content_source) -> bool:
+    '''skip llm calls for pdf's that  definitely aren't Indian, saves compute and time'''
     if content_source != "pdf":
         return False
-    if "papers.nips.cc" not in url and "neurips" not in url.lower():
+
+    domain = urlparse(url).netloc
+
+    if domain not in PDF_PREFILTER_DOMAINS:
         return False
+
     return classify_affiliation(content).label != "positive"
 
 
