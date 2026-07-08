@@ -77,15 +77,15 @@ CONFERENCE_SESSION_CONFIG: dict[str, dict] = {
     # KDD — single "Research Track" session; everything else is skipped.
     # ------------------------------------------------------------------
     "ACM_KDD": {
-        "skip_sessions": [],
-        "include_only": ["Research Track"],
+        "skip_sessions": ["Workshop", "Tutorial"],
+        "include_only": [],
     },
 
     # ------------------------------------------------------------------
-    # CCS — many "Session A1/B2/..." slots; skip only keynote.
+    # CCS — many "Session A1/B2/..." slots; skip keynote + workshop/tutorial.
     # ------------------------------------------------------------------
     "ACM_CCS": {
-        "skip_sessions": ["Keynote"],
+        "skip_sessions": ["Keynote", "Workshop", "Tutorial"],
         "include_only": [],
     },
 
@@ -94,14 +94,14 @@ CONFERENCE_SESSION_CONFIG: dict[str, dict] = {
     # ------------------------------------------------------------------
     "ACM_SIGMOD": {
         "skip_sessions": ["Keynote", "Demo", "Panel", "Tutorial", "Workshop"],
-        "include_only": ["Industry Papers"],
+        "include_only": [],
     },
 
     # ------------------------------------------------------------------
     # SIGGRAPH — all technical paper sessions.
     # ------------------------------------------------------------------
     "ACM_SIGGRAPH": {
-        "skip_sessions": ["Keynote", "Course", "Talk", "Panel", "Poster"],
+        "skip_sessions": ["Keynote", "Course", "Talk", "Panel", "Poster", "Workshop", "Tutorial"],
         "include_only": [],
     },
 
@@ -110,6 +110,86 @@ CONFERENCE_SESSION_CONFIG: dict[str, dict] = {
     # ------------------------------------------------------------------
     "ACM_SIGCOMM": {
         "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel", "Poster"],
+        "include_only": [],
+    },
+
+    # ------------------------------------------------------------------
+    # EC — all technical sessions.
+    # ------------------------------------------------------------------
+    "ACM_EC": {
+        "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
+        "include_only": [],
+    },
+
+    # ------------------------------------------------------------------
+    # FSE — all technical sessions.
+    # ------------------------------------------------------------------
+    "ACM_FSE": {
+        "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
+        "include_only": [],
+    },
+
+    # ------------------------------------------------------------------
+    # ISCA — all technical sessions.
+    # ------------------------------------------------------------------
+    "ACM_ISCA": {
+        "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
+        "include_only": [],
+    },
+
+    # ------------------------------------------------------------------
+    # MOBICOM — all technical sessions.
+    # ------------------------------------------------------------------
+    "ACM_MOBICOM": {
+        "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
+        "include_only": [],
+    },
+
+    # ------------------------------------------------------------------
+    # PODC — all technical sessions.
+    # ------------------------------------------------------------------
+    "ACM_PODC": {
+        "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
+        "include_only": [],
+    },
+
+    # ------------------------------------------------------------------
+    # PODS — all technical sessions.
+    # ------------------------------------------------------------------
+    "ACM_PODS": {
+        "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
+        "include_only": [],
+    },
+
+    # ------------------------------------------------------------------
+    # SIGIR — all technical sessions.
+    # ------------------------------------------------------------------
+    "ACM_SIGIR": {
+        "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
+        "include_only": [],
+    },
+
+    # ------------------------------------------------------------------
+    # SOSP — all technical sessions.
+    # ------------------------------------------------------------------
+    "ACM_SOSP": {
+        "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
+        "include_only": [],
+    },
+
+    # ------------------------------------------------------------------
+    # STOC — all technical sessions.
+    # ------------------------------------------------------------------
+    "ACM_STOC": {
+        "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
+        "include_only": [],
+    },
+
+    # ------------------------------------------------------------------
+    # UIST — all technical sessions.
+    # ------------------------------------------------------------------
+    "ACM_UIST": {
+        "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
         "include_only": [],
     },
 }

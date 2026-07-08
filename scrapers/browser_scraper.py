@@ -26,6 +26,7 @@ from utils.ieee_author_parser import (
     extract_document_id,
     format_author_affiliation_pairs,
 )
+from workflows.link_extractors.acm_api_fetcher import warmup_acm_cookies
 
 log = logging.getLogger(__name__)
 
@@ -70,6 +71,13 @@ class BrowserScraper(BaseScraper):
 
     def can_handle(self, url: str) -> bool:
         return any(domain in url for domain in BROWSER_DOMAINS)
+    
+    @staticmethod
+    def _acm_proceedings_url(paper_url: str) -> str | None:
+        m = re.search(r"/doi/10\.1145/(\d+)\.\d+", paper_url)
+        if not m:
+            return None
+        return f"https://dl.acm.org/doi/proceedings/10.1145/{m.group(1)}"
 
     def scrape(self, url: str) -> ScrapeResult:
         try:
@@ -82,6 +90,21 @@ class BrowserScraper(BaseScraper):
             # challenge walls detect and block headless Chromium. IEEE and
             # others work fine headless.
             use_headless = False
+            if is_acm and ACM_COOKIE_PATH.exists():
+                age_minutes = (time.time() - ACM_COOKIE_PATH.stat().st_mtime) / 60
+                if age_minutes >= ACM_COOKIE_MAX_AGE_MINUTES:
+                    log.warning(
+                        f"ACM session cookies are {age_minutes:.0f}m old "
+                        f"(>{ACM_COOKIE_MAX_AGE_MINUTES}m) — refreshing before scrape."
+                    )
+                    base_url = self._acm_proceedings_url(url)
+                    if base_url:
+                        try:
+                            warmup_acm_cookies(base_url)
+                        except Exception as e:
+                            log.warning(f"ACM cookie warmup failed: {e}")
+                    else:
+                        log.warning(f"Could not derive ACM proceedings URL from {url}")
 
             with sync_playwright() as p:
                 browser = p.chromium.launch(
@@ -96,16 +119,9 @@ class BrowserScraper(BaseScraper):
                 # Load ACM session cookies if fresh — avoids re-challenging
                 # Cloudflare on every paper after link extraction
                 if is_acm and ACM_COOKIE_PATH.exists():
-                    age_minutes = (time.time() - ACM_COOKIE_PATH.stat().st_mtime) / 60
-                    if age_minutes < ACM_COOKIE_MAX_AGE_MINUTES:
-                        cookies = json.loads(ACM_COOKIE_PATH.read_text())
-                        context.add_cookies(cookies)
-                        log.debug(f"Loaded {len(cookies)} ACM session cookies ({age_minutes:.1f}m old)")
-                    else:
-                        log.warning(
-                            f"ACM session cookies are {age_minutes:.0f}m old (>{ACM_COOKIE_MAX_AGE_MINUTES}m) "
-                            "— Cloudflare may re-challenge. Re-run link extraction to refresh."
-                        )
+                    cookies = json.loads(ACM_COOKIE_PATH.read_text())
+                    context.add_cookies(cookies)
+                    log.debug(f"Loaded {len(cookies)} ACM session cookies")
 
                 # Load OpenReview session cookies if fresh — same Cloudflare-
                 # style challenge wall as ACM, same cookie-reuse strategy.
