@@ -64,12 +64,6 @@ if __name__ == "__main__":
         },
 
         {
-            "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/11186120/proceeding",
-            "conference": "IEEE-LICS",
-            "year": "2025"
-        },
-
-        {
             "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/11524112/proceeding",
             "conference": "IEEE-PERCOM",
             "year": "2025"
@@ -92,14 +86,14 @@ if __name__ == "__main__":
             "year": "2025"
         },
         {
-            "proceeding_url": "https://dl.acm.org/doi/proceedings/10.1145/3770854",
-            "conference": "ACM_KDD",
-            "year": "2026v1"
-        },
-        {
             "proceeding_url": "https://ieeexplore.ieee.org/xpl/conhome/11091818/proceeding",
             "conference": "IEEE-CVPR",
             "year": "2025"
+        },
+        {
+            "proceeding_url": "https://dl.acm.org/doi/proceedings/10.1145/3770854",
+            "conference": "ACM_KDD",
+            "year": "2026v1"
         },
         {
             "proceeding_url": "https://dl.acm.org/doi/proceedings/10.1145/3718958",
@@ -109,6 +103,66 @@ if __name__ == "__main__":
         {
             "proceeding_url": "https://dl.acm.org/doi/proceedings/10.1145/3719027",
             "conference": "ACM_CCS",
+            "year": "2025"
+        },
+        {
+            "proceeding_url": "https://dl.acm.org/doi/proceedings/10.1145/3736252",
+            "conference": "ACM_EC",
+            "year": "2025"
+        },
+        {
+            "proceeding_url": "https://dl.acm.org/doi/proceedings/10.1145/3696630",
+            "conference": "ACM_FSE",
+            "year": "2025"
+        },
+        {
+            "proceeding_url": "https://dl.acm.org/doi/proceedings/10.1145/3695053",
+            "conference": "ACM_ISCA",
+            "year": "2025"
+        },
+        {
+            "proceeding_url": "https://dl.acm.org/doi/proceedings/10.1145/3680207",
+            "conference": "ACM_MOBICOM",
+            "year": "2025"
+        },
+        {
+            "proceeding_url": "https://dl.acm.org/doi/proceedings/10.1145/3732772",
+            "conference": "ACM_PODC",
+            "year": "2025"
+        },
+        {
+            "proceeding_url": "https://dl.acm.org/doi/proceedings/10.1145/3722234",
+            "conference": "ACM_PODS",
+            "year": "2025"
+        },
+        {
+            "proceeding_url": "https://dl.acm.org/doi/proceedings/10.1145/3721238",
+            "conference": "ACM_SIGGRAPH",
+            "year": "2025"
+        },
+        {
+            "proceeding_url": "https://dl.acm.org/doi/proceedings/10.1145/3726302",
+            "conference": "ACM_SIGIR",
+            "year": "2025"
+        },
+        {
+            "proceeding_url": "https://dl.acm.org/doi/proceedings/10.1145/3722212",
+            "conference": "ACM_SIGMOD",
+            "year": "2025"
+        },
+        {
+            "proceeding_url": "https://dl.acm.org/doi/proceedings/10.1145/3731569",
+            "conference": "ACM_SOSP",
+            "year": "2025"
+        },
+        {
+            "proceeding_url": "https://dl.acm.org/doi/proceedings/10.1145/3717823",
+            "conference": "ACM_STOC",
+            "year": "2025"
+        },
+        {
+            "proceeding_url": "https://dl.acm.org/doi/proceedings/10.1145/3746058",
+            "conference": "ACM_UIST",
             "year": "2025"
         },
         {
@@ -129,4 +183,3 @@ if __name__ == "__main__":
             resume_from=0,
             delay=10
         )
-    
