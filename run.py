@@ -7,16 +7,28 @@ Environment variables to set before running:
     LLM_API_KEY=your_key_here
     LLM_BASE_URL=https://integrate.api.nvidia.com/v1
 
+    OPENREVIEW_USERNAME=your_openreview_email    (only needed for venue_id entries)
+    OPENREVIEW_PASSWORD=your_openreview_password
+
 No other config needed. No Agent-E. No browser agent.
+
+Each entry in conferences_to_run is EITHER:
+    - a "proceeding_url" entry  → routed through main_driver.run_pipeline,
+      which fetches/scrapes the proceedings page then hands off to
+      pipeline.run_pipeline with a resolved input_links_path.
+    - a "venue_id" entry        → routed straight to pipeline.run_pipeline's
+      OpenReview API path — no scraping, no main_driver involvement at all,
+      since OpenReview needs neither HTML fetching nor a browser.
 """
 from dotenv import load_dotenv
 load_dotenv()
 
-from main_driver import run_pipeline
+from main_driver import run_pipeline as run_scraped_pipeline
+from pipeline import run_pipeline as run_openreview_pipeline
 
 if __name__ == "__main__":
-    # List of all conference pipeline configurations[cite: 2]
-    conferences_to_run = [
+    # List of all conference pipeline configurations
+    '''conferences_to_run = [
         {
             "proceeding_url": "https://ieeexplore.ieee.org/xpl/conhome/11391637/proceeding",
             "conference": "IEEE-ICDM",
@@ -32,49 +44,41 @@ if __name__ == "__main__":
             "conference": "IEEE-FOCS",
             "year": "2025"
         },
-
         {
             "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/10973274/proceeding",
             "conference": "IEEE-HRI",
             "year": "2025"
         },
-
         {
             "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/11443115/proceeding",
             "conference": "IEEE-ICCV",
             "year": "2025"
         },
-
         {
             "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/11127273/proceeding",
             "conference": "IEEE-ICRA",
             "year": "2025"
         },
-
         {
             "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/11220258/proceeding",
             "conference": "IEEE-ISMAR",
             "year": "2025"
         },
-
         {
             "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/11186120/proceeding",
             "conference": "IEEE-LICS",
             "year": "2025"
         },
-
         {
             "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/11524112/proceeding",
             "conference": "IEEE-PERCOM",
             "year": "2025"
         },
-
         {
             "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/11023178/proceeding",
             "conference": "IEEE-SP",
             "year": "2025"
         },
-
         {
             "proceeding_url" : "https://ieeexplore.ieee.org/xpl/conhome/10937339/proceeding",
             "conference": "IEEE-CV",
@@ -165,21 +169,54 @@ if __name__ == "__main__":
             "conference": "ACM_UIST",
             "year": "2025"
         },
+
+        # ── OpenReview conferences — venue_id routes straight to
+        #    pipeline.run_pipeline's API path, no proceeding_url needed. ──
         {
-            "proceeding_url": "https://openreview.net/group?id=ICML.cc/2026/Conference#tab-accept-spotlight",
+            "venue_id": "ICML.cc/2026/Conference",
             "conference": "ICML",
-            "year": "2026"
-        }
+            "year": "2026",
+            "skip_venue_keywords": ["Workshop", "Tutorial"],
+        },
+        {
+            "venue_id": "ICLR.cc/2026/Conference",
+            "conference": "ICLR",
+            "year": "2026",
+            "skip_venue_keywords": ["Workshop", "Tutorial"],
+        },
     ]
 
     # Dynamically loop and execute each pipeline configuration sequentially
     for conf in conferences_to_run:
         print(f"Starting pipeline processing for: {conf['conference']} ({conf['year']})...")
-        run_pipeline(
-            proceeding_url=conf["proceeding_url"],
-            conference=conf["conference"],
-            year=conf["year"],
-            max_papers=None,
-            resume_from=0,
-            delay=10
-        )
+
+        if "venue_id" in conf:
+            run_openreview_pipeline(
+                conference=conf["conference"],
+                year=conf["year"],
+                venue_id=conf["venue_id"],
+                skip_venue_keywords=conf.get("skip_venue_keywords"),
+                include_only_venue_keywords=conf.get("include_only_venue_keywords"),
+                max_papers=None,
+                resume_from=0,
+                delay=10,
+            )
+        else:
+            run_scraped_pipeline(
+                proceeding_url=conf["proceeding_url"],
+                conference=conf["conference"],
+                year=conf["year"],
+                max_papers=None,
+                resume_from=0,
+                delay=10
+            )'''
+    
+    run_openreview_pipeline(
+        conference="ICLR",
+        year="2026",
+        venue_id="ICLR.cc/2026/Conference",
+        skip_venue_keywords=["Workshop", "Tutorial"],
+        max_papers=None,
+        resume_from=0,
+        delay=10,
+    )

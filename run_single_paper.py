@@ -11,7 +11,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from extractors.llm_extractor import LLMExtractor
-from pipeline import process_paper
+from pipeline import process_paper, process_openreview_paper
+from workflows.link_extractors.openreview_api_fetcher import fetch_single_openreview_paper
 
 
 SYNTHETIC_INDIAN_CONTENT = """
@@ -44,11 +45,20 @@ def main():
         if not args.url:
             parser.error("provide a paper URL or use --synthetic-indian")
 
+        # OpenReview URLs go through the ground-truth API path (fetch note +
+        # author profiles, classify affiliation from real institution data,
+        # LLM only called for area_of_research on positive/ambiguous papers)
+        # — NOT process_paper()'s tiered scrapers, which would otherwise
+        # fall through to the old Playwright+PDF approach for these URLs.
+        if "openreview.net" in args.url:
+            paper = fetch_single_openreview_paper(args.url)
+            info = process_openreview_paper(paper)
+
         # ACM DL needs a fresh Cloudflare session before scraping — warm up
         # cookies here if they're missing or stale. This only affects ACM
-        # URLs; all other URLs (OpenReview, IEEE, NeurIPS, etc.) skip this
-        # block entirely and go straight to process_paper() below.
-        if "dl.acm.org" in args.url:
+        # URLs; all other URLs (IEEE, NeurIPS, etc.) skip this block
+        # entirely and go straight to process_paper() below.
+        elif "dl.acm.org" in args.url:
             from pathlib import Path
             import time
 
@@ -73,11 +83,11 @@ def main():
             else:
                 print("[INFO] Using existing ACM cookies.")
 
-        # Process the paper — runs for every URL, ACM or otherwise.
-        # This was previously nested inside the ACM-only `if` block above,
-        # which meant non-ACM URLs (including OpenReview) never reached this
-        # line and `info` was left unbound, causing the crash at print() time.
-        info = process_paper(args.url)
+        # Process the paper via the tiered scrapers — for every URL EXCEPT
+        # OpenReview, which was already handled above via the API path and
+        # must not be overwritten here.
+        else:
+            info = process_paper(args.url)
 
     print(json.dumps(asdict(info), indent=2, ensure_ascii=False))
 
