@@ -41,11 +41,31 @@ def detect_structure(conference: str, proceeding_url: str = "") -> dict:
 def run_pipeline(
     conference: str,
     year: str,
-    proceeding_url: str,
+    proceeding_url: str = None,
+    venue_id: str = None,
     delay: int = 10,
     skip_track_keywords: list = None,
     include_track_keywords: list = None,
+    skip_venue_keywords: list = None,
+    include_only_venue_keywords: list = None,
 ) -> dict:
+    """
+    Exactly one of proceeding_url / venue_id should be given — use venue_id
+    for OpenReview-hosted conferences (ICML/ICLR/...), which resolve_conference_url
+    returns a venue_id for rather than a proceeding_url. venue_id runs bypass
+    scraping entirely (OpenReview's API + ground-truth affiliation data) and
+    use skip_venue_keywords/include_only_venue_keywords instead of the
+    track-keyword params, which only apply to scraped/grouped conferences.
+    """
+    if venue_id:
+        return runner.start_run_openreview(
+            conference=conference,
+            year=year,
+            venue_id=venue_id,
+            delay=delay,
+            skip_venue_keywords=skip_venue_keywords,
+            include_only_venue_keywords=include_only_venue_keywords,
+        )
     return runner.start_run(
         conference=conference,
         year=year,
@@ -220,8 +240,15 @@ TOOL_SCHEMAS = [
                 "Start the AEGIS extraction pipeline for one conference/year "
                 "in the background and return immediately — a full run over "
                 "hundreds of papers can take a long time, so poll "
-                "get_run_status afterwards rather than waiting here. For "
-                "grouped/track-based conferences, optionally filter which "
+                "get_run_status afterwards rather than waiting here. "
+                "IMPORTANT: for OpenReview-hosted conferences (ICML, ICLR, "
+                "and their oral/spotlight variants — resolve_conference_url "
+                "returns mode='openreview_api' with a venue_id for these), "
+                "pass venue_id instead of proceeding_url — that mode calls "
+                "OpenReview's API directly with no scraping/browser involved "
+                "at all, and uses skip_venue_keywords/include_only_venue_keywords "
+                "instead of the track-keyword params below. For every other "
+                "conference, pass proceeding_url and optionally filter which "
                 "tracks get scraped by keyword."
             ),
             "parameters": {
@@ -229,7 +256,17 @@ TOOL_SCHEMAS = [
                 "properties": {
                     "conference": {"type": "string"},
                     "year": {"type": "string"},
-                    "proceeding_url": {"type": "string"},
+                    "proceeding_url": {
+                        "type": "string",
+                        "description": "For scraped-mode conferences only — omit when using venue_id.",
+                    },
+                    "venue_id": {
+                        "type": "string",
+                        "description": (
+                            "For OpenReview-hosted conferences only, e.g. "
+                            "'ICML.cc/2025/Conference'. Omit when using proceeding_url."
+                        ),
+                    },
                     "delay": {
                         "type": "integer",
                         "description": "Seconds to wait between papers. Default 10.",
@@ -238,19 +275,33 @@ TOOL_SCHEMAS = [
                         "type": "array",
                         "items": {"type": "string"},
                         "description": (
-                            "Track/session titles containing any of these "
-                            "(case-insensitive) are excluded from scraping, "
-                            "e.g. ['workshop', 'tutorial']. Only affects "
-                            "grouped conferences."
+                            "Scraped/grouped conferences only. Track/session "
+                            "titles containing any of these (case-insensitive) "
+                            "are excluded from scraping, e.g. ['workshop', 'tutorial']."
                         ),
                     },
                     "include_track_keywords": {
                         "type": "array",
                         "items": {"type": "string"},
-                        "description": "If given, ONLY tracks containing one of these are included.",
+                        "description": "Scraped/grouped conferences only. If given, ONLY tracks containing one of these are included.",
+                    },
+                    "skip_venue_keywords": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": (
+                            "venue_id/OpenReview mode only. Same idea as "
+                            "skip_track_keywords but filters OpenReview venue "
+                            "groups instead. Defaults to ['Workshop', 'Tutorial'] "
+                            "if not given."
+                        ),
+                    },
+                    "include_only_venue_keywords": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "venue_id/OpenReview mode only. If given, ONLY venue groups containing one of these are included.",
                     },
                 },
-                "required": ["conference", "year", "proceeding_url"],
+                "required": ["conference", "year"],
             },
         },
     },

@@ -27,7 +27,11 @@ class RunRecord:
     conference: str
     year: str
     proceeding_url: str = ""
-    state: str = "not_started"      # not_started | queued | running | completed | failed
+    mode: str = "scraped"           # "scraped" (main_driver) | "openreview_api" (pipeline direct)
+    venue_id: Optional[str] = None
+    skip_venue_keywords: list = field(default_factory=list)
+    include_only_venue_keywords: list = field(default_factory=list)
+    state: str = "not_started"      # not_started | queued | running | completed | failed | blocked
     stage: str = ""                 # queued | link_extraction | paper_processing | retrying_errors | done
     input_links_path: Optional[str] = None
     track_skip_keywords: list = field(default_factory=list)
@@ -66,10 +70,36 @@ class RunRegistry:
                 conference=conference,
                 year=str(year),
                 proceeding_url=proceeding_url,
+                mode="scraped",
                 state="queued",
                 stage="queued",
                 track_skip_keywords=list(track_skip_keywords or []),
                 track_include_keywords=list(track_include_keywords or []),
+            )
+            self._runs[_key(conference, year)] = rec
+            return rec
+
+    def enqueue_openreview(
+        self,
+        conference: str,
+        year: str,
+        venue_id: str,
+        skip_venue_keywords=None,
+        include_only_venue_keywords=None,
+    ) -> RunRecord:
+        """Same as enqueue(), for the venue_id/OpenReview-API mode — no
+        proceeding_url, no track-selection file, just the venue_id and its
+        keyword filters (needed later if this run needs retrying)."""
+        with self._lock:
+            rec = RunRecord(
+                conference=conference,
+                year=str(year),
+                mode="openreview_api",
+                venue_id=venue_id,
+                skip_venue_keywords=list(skip_venue_keywords or []),
+                include_only_venue_keywords=list(include_only_venue_keywords or []),
+                state="queued",
+                stage="queued",
             )
             self._runs[_key(conference, year)] = rec
             return rec
@@ -114,6 +144,21 @@ class RunRegistry:
                     error=error,
                     finished_at=datetime.now().isoformat(),
                 )
+
+    def mark_blocked(self, conference: str, year: str, message: str) -> None:
+        """Distinct from mark_failed — the run stopped itself deliberately
+        because a domain's circuit breaker tripped (pipeline.RunBlockedError),
+        not because of an unexpected crash. get_run_status surfaces this
+        differently so the person knows to wait before retrying rather than
+        treating it like an ordinary bug."""
+        with self._lock:
+            rec = self._runs.get(_key(conference, year))
+            if rec is None:
+                rec = RunRecord(conference=conference, year=str(year))
+                self._runs[_key(conference, year)] = rec
+            rec.state = "blocked"
+            rec.error = message
+            rec.finished_at = datetime.now().isoformat()
 
     def mark_retry_queued(self, conference: str, year: str) -> RunRecord:
         with self._lock:

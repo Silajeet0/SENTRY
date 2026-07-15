@@ -16,9 +16,22 @@ from urllib.parse import urlparse
 
 import requests
 
-from main_driver import OPENREVIEW_CONFERENCES
 from workflows.html_fetcher import USER_AGENT
 from workflows.track_detector import is_track_grouped
+
+# Conferences hosted on OpenReview. IMPORTANT: as of the venue_id/API
+# rework, these bypass main_driver.run_pipeline ENTIRELY — no proceeding_url,
+# no HTML fetch, no browser, no track-selection file. They go straight to
+# pipeline.run_pipeline(venue_id=..., skip_venue_keywords=..., ...), which
+# fetches from OpenReview's API and checks affiliations against ground-truth
+# author-profile data before any LLM call. main_driver.py still carries an
+# OPENREVIEW_CONFERENCES constant for backward compatibility, but it's dead
+# code there now — this orchestrator owns its own copy rather than depending
+# on a constant nothing else in main_driver actually branches on anymore.
+OPENREVIEW_CONFERENCES = {
+    "ICLR", "ICML", "ICLR_ORAL", "ICLR_SPOTLIGHT",
+    "ICML_ORAL", "ICML_SPOTLIGHT",
+}
 
 # ---------------------------------------------------------------------------
 # Name normalization
@@ -90,27 +103,52 @@ _KNOWN_INSTANCES: dict[tuple[str, str], str] = {
 
 
 def _pattern_url(key: str, year: str) -> Optional[str]:
-    """Stable, derivable-from-year-alone URL patterns."""
+    """Stable, derivable-from-year-alone URL patterns (non-OpenReview only —
+    OpenReview conferences resolve to a venue_id instead, see resolve_conference_url)."""
     if key == "NeurIPS":
         return f"https://papers.nips.cc/paper_files/paper/{year}"
     if key in {"ACL", "EMNLP", "NAACL"}:
         return f"https://aclanthology.org/events/{key.lower()}-{year}/"
-    if key in OPENREVIEW_CONFERENCES:
-        return f"https://openreview.net/group?id={key}.cc/{year}/Conference"
     return None
 
 
 def resolve_conference_url(conference: str, year: str) -> dict:
-    """Resolve a conference name + year to its proceedings URL."""
+    """
+    Resolve a conference name + year to what run_pipeline actually needs.
+
+    Two shapes, depending on mode:
+      - OpenReview conferences (ICML/ICLR/...): mode="openreview_api",
+        venue_id set, proceeding_url=None — pipeline.run_pipeline is called
+        with venue_id directly, no scraping involved at all.
+      - Everything else: mode="scraped", proceeding_url set — goes through
+        main_driver.run_pipeline as before.
+    """
     raw = (conference or "").strip()
     key = _ALIASES.get(raw.upper(), raw)
     year = str(year).strip()
+
+    if key in OPENREVIEW_CONFERENCES:
+        return {
+            "conference": key,
+            "year": year,
+            "mode": "openreview_api",
+            "venue_id": f"{key}.cc/{year}/Conference",
+            "proceeding_url": None,
+            "resolved": True,
+            "method": "pattern",
+            "notes": (
+                "OpenReview-hosted — call run_pipeline with venue_id (not "
+                "proceeding_url). Filter tracks with skip_venue_keywords "
+                "(default recommendation: [\"Workshop\", \"Tutorial\"])."
+            ),
+        }
 
     known = _KNOWN_INSTANCES.get((key, year))
     if known:
         return {
             "conference": key,
             "year": year,
+            "mode": "scraped",
             "proceeding_url": known,
             "resolved": True,
             "method": "known_instance",
@@ -121,6 +159,7 @@ def resolve_conference_url(conference: str, year: str) -> dict:
         return {
             "conference": key,
             "year": year,
+            "mode": "scraped",
             "proceeding_url": pattern_url,
             "resolved": True,
             "method": "pattern",
@@ -129,6 +168,7 @@ def resolve_conference_url(conference: str, year: str) -> dict:
     return {
         "conference": key,
         "year": year,
+        "mode": "scraped",
         "proceeding_url": None,
         "resolved": False,
         "method": "none",
@@ -178,20 +218,28 @@ def validate_url(url: str) -> dict:
 
 def detect_structure(conference: str, proceeding_url: str = "") -> dict:
     """
-    Determine which of AEGIS's three scraping paths a conference will take.
-    Mirrors main_driver.run_pipeline's own branch selection exactly, so the
-    orchestrator's mental model can't drift from what will actually run.
+    Determine which of AEGIS's scraping/fetching paths a conference will
+    take. Mirrors the real routing exactly, so the orchestrator's mental
+    model can't drift from what will actually run:
+      - openreview_api: pipeline.run_pipeline(venue_id=...) directly — no
+        scraping tiers, no browser, no main_driver involvement at all.
+      - acm_dl / generic_grouped / generic_flat: main_driver.run_pipeline
+        with a proceeding_url, same as before.
     """
     base = (conference or "").upper().split("_")[0]
 
     if base in OPENREVIEW_CONFERENCES:
         return {
             "conference": conference,
-            "structure": "grouped",
-            "handler": "openreview",
+            "structure": "api",
+            "handler": "openreview_api",
             "notes": (
-                "Fetched via Playwright group-page load + clicking each "
-                "Accept tab, then track selection."
+                "OpenReview API path — no scraping tiers, no browser, no "
+                "main_driver involvement. Papers, abstracts, and author "
+                "affiliations come directly from OpenReview's API; "
+                "affiliations are checked against ground-truth profile data "
+                "before any LLM call is made. Call run_pipeline with "
+                "venue_id (from resolve_conference_url), not proceeding_url."
             ),
         }
 

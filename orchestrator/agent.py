@@ -45,6 +45,14 @@ Guidelines:
 - Before starting a run for a conference, resolve its URL and validate it. \
 If resolve_conference_url comes back resolved=false, ask the person for the \
 URL instead of guessing one.
+- resolve_conference_url returns mode="openreview_api" with a venue_id for \
+OpenReview-hosted conferences (ICML, ICLR, and their oral/spotlight \
+variants) instead of a proceeding_url. For those, call run_pipeline with \
+venue_id (not proceeding_url) — that mode goes straight to OpenReview's \
+API with no scraping or browser involved, and uses skip_venue_keywords / \
+include_only_venue_keywords instead of skip_track_keywords / \
+include_track_keywords. There's nothing to validate_url for venue_id mode \
+— skip straight to run_pipeline once you have the venue_id.
 - run_pipeline and retry_errors return immediately and run in the \
 background — they do not block. After starting one or more runs, call \
 get_run_status for each of them to report back what's actually happening; \
@@ -64,6 +72,14 @@ disk are leftover from a PREVIOUS run of that conference/year, not live \
 progress of a run currently queued/extracting links. Say so plainly \
 ("still extracting links, no progress to report yet") rather than \
 repeating the stale numbers as if they were current.
+- get_run_status may report orchestrator_state "blocked" — this means the \
+run detected repeated bot-challenge/rate-limit signals from the target \
+site and stopped itself deliberately rather than continuing to hit a \
+domain that's blocking this IP. Tell the person plainly that the site \
+appears to be rate-limiting/blocking, that continuing to retry \
+immediately is likely to make it worse, and suggest waiting a while \
+(at least 30-60 minutes, longer for a harder block) before calling \
+retry_errors — don't just retry immediately yourself.
 - Never describe, suggest, or show a tool's name/arguments as something \
 the person should run themselves — you have direct access to every tool \
 listed here. If a tool call is the right next step, make it yourself; \
@@ -106,14 +122,44 @@ class Orchestrator:
         self.messages.append({"role": "user", "content": user_message})
         client = self._client()
 
-        for _ in range(self.max_tool_iterations):
-            response = client.chat.completions.create(
-                model=self.model,
-                messages=self.messages,
-                tools=TOOL_SCHEMAS,
-                tool_choice="auto",
-                temperature=0.2,
-            )
+        for iteration in range(self.max_tool_iterations):
+            try:
+                response = client.chat.completions.create(
+                    model=self.model,
+                    messages=self.messages,
+                    tools=TOOL_SCHEMAS,
+                    tool_choice="auto",
+                    temperature=0.2,
+                )
+            except Exception as e:  # noqa: BLE001
+                # gpt-oss-20b via Groq occasionally hallucinates a tool call
+                # to a name that isn't in TOOL_SCHEMAS (seen in practice:
+                # inventing a "json" tool to wrap its own summary instead of
+                # just replying in plain text). Groq validates tool calls
+                # server-side and rejects it with 400 before we ever see a
+                # message object, so this raises here — not in the
+                # tool-dispatch try/except below, and not something that
+                # means any real tool calls made earlier this turn failed.
+                log.warning(f"LLM call failed ({type(e).__name__}: {e}) — retrying with tool_choice='none'")
+                try:
+                    response = client.chat.completions.create(
+                        model=self.model,
+                        messages=self.messages,
+                        tools=TOOL_SCHEMAS,
+                        tool_choice="none",
+                        temperature=0.2,
+                    )
+                except Exception as e2:  # noqa: BLE001
+                    log.exception("LLM call failed on retry too")
+                    return (
+                        "I hit an error talking to the model while wrapping "
+                        "up this turn. Any tool calls made earlier in this "
+                        "turn (starting a run, checking status, etc.) may "
+                        "have already succeeded regardless — check "
+                        f"get_run_status if that's a concern. Underlying "
+                        f"error: {type(e2).__name__}: {e2}"
+                    )
+
             message = response.choices[0].message
             tool_calls = getattr(message, "tool_calls", None)
 

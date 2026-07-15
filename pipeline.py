@@ -23,6 +23,7 @@ processed_papers.json / summary.json shape via the shared _save() — nothing
 downstream needs to know which mode produced a given conference's output.
 """
 import json
+import random
 import time
 import logging
 from datetime import datetime
@@ -61,6 +62,57 @@ EXTRACTOR = LLMExtractor()
 
 # Delay between papers (seconds) — be polite to servers
 INTER_PAPER_DELAY = 3
+
+# ---------------------------------------------------------------------------
+# Block detection / circuit breaker
+# ---------------------------------------------------------------------------
+# Substrings that indicate the *server* is refusing us (bot challenge, IP
+# rate-limit, outright block) as opposed to a normal per-paper failure
+# (malformed content, LLM hiccup, missing DOI). Only the former should ever
+# trip the breaker — a run shouldn't stop just because a few individual
+# papers had bad metadata. Only relevant to the tiered-scraper path
+# (input_links_path) — the OpenReview API path's errors won't match these
+# and the breaker simply never trips there, which is correct: there's no
+# per-domain HTTP scraping to be blocked from in that mode.
+BLOCK_SIGNAL_SUBSTRINGS = [
+    "bot challenge detected",
+    "just a moment",
+    "access denied",
+    "unusual traffic",
+    "temporarily blocked",
+    "forbidden",
+    "429",
+    "too many requests",
+]
+
+# Consecutive block-looking failures *from the same domain* before the run
+# stops itself rather than continuing to hammer a domain that's actively
+# blocking this IP — burning through the rest of the queue against a dead
+# connection wastes hours and can extend the block.
+MAX_CONSECUTIVE_BLOCK_SIGNALS = 4
+
+
+class RunBlockedError(Exception):
+    """Raised when a domain trips the circuit breaker — the run stopped
+    itself early rather than continuing to hit a domain that's blocking
+    this IP. Distinct from a generic per-paper error."""
+
+    def __init__(self, domain: str, consecutive_signals: int, papers_attempted: int):
+        self.domain = domain
+        self.consecutive_signals = consecutive_signals
+        self.papers_attempted = papers_attempted
+        super().__init__(
+            f"Stopped after {consecutive_signals} consecutive block-like "
+            f"failures from {domain} ({papers_attempted} papers attempted "
+            "this run before stopping)."
+        )
+
+
+def _looks_like_block(error: str) -> bool:
+    if not error:
+        return False
+    e = error.lower()
+    return any(sig in e for sig in BLOCK_SIGNAL_SUBSTRINGS)
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -261,6 +313,11 @@ def run_pipeline(
         processed_urls.update(r["paper_url"] for r in processed_records)
         log.info(f"Processed checkpoint — {len(processed_records)} total papers already attempted")
 
+    # Consecutive block-like failures per domain — see RunBlockedError above.
+    # Stays empty (never trips) for the venue_id/OpenReview-API path, since
+    # that path makes no per-domain scraping requests to be blocked from.
+    consecutive_block_signals: dict[str, int] = {}
+
     for i, item in enumerate(work_items, start=resume_from + 1):
         url = item_url(item)
         if url in processed_urls:
@@ -270,6 +327,7 @@ def run_pipeline(
         log.info(f"[{i}/{resume_from + len(work_items)}] {url}")
 
         info = processor(item)
+        domain = urlparse(url).netloc
 
         if info.error:
             log.warning(f"  ✗ {info.error}")
@@ -281,7 +339,28 @@ def run_pipeline(
                 "error": info.error,
                 "processed_at": datetime.now().isoformat(),
             })
+
+            if _looks_like_block(info.error):
+                consecutive_block_signals[domain] = consecutive_block_signals.get(domain, 0) + 1
+                if consecutive_block_signals[domain] >= MAX_CONSECUTIVE_BLOCK_SIGNALS:
+                    log.error(
+                        f"🛑 {consecutive_block_signals[domain]} consecutive "
+                        f"block-like failures from {domain} — stopping this "
+                        "run now instead of continuing to hit a domain "
+                        "that's likely blocking this IP. Save your progress "
+                        "and wait before retrying (retry_errors will pick up "
+                        "exactly where this left off)."
+                    )
+                    _save(output_file, errors_file, processed_file, results, errors,
+                          processed_records, all_urls, start, resume_from, max_papers)
+                    raise RunBlockedError(domain, consecutive_block_signals[domain], i)
+            else:
+                # A non-block error (bad metadata, LLM hiccup, etc.) doesn't
+                # indicate the domain is blocking us — don't let it count
+                # toward the breaker.
+                consecutive_block_signals[domain] = 0
         elif info.authors_with_indian_affiliations:
+            consecutive_block_signals[domain] = 0
             result_dict = {
                 "paper_number": i,
                 "paper_url": info.paper_url,
@@ -303,6 +382,7 @@ def run_pipeline(
             })
             log.info(f"  ✅ Indian authors: {info.authors_with_indian_affiliations}")
         else:
+            consecutive_block_signals[domain] = 0
             processed_records.append({
                 "paper_number": i,
                 "paper_url": url,
@@ -320,7 +400,11 @@ def run_pipeline(
         # service call to be polite to, so skip the delay for those —
         # applies to the majority of papers in that mode.
         if venue_id is None or info.source != "openreview_api" or info.paper_title or info.error:
-            time.sleep(delay)
+            # Jittered delay — a perfectly regular request interval is
+            # itself a bot signal on top of raw volume; +/-30%
+            # randomization breaks that pattern without meaningfully
+            # slowing the run down.
+            time.sleep(delay + random.uniform(-0.3 * delay, 0.3 * delay))
 
     log.info(f"Done — {len(results)} Indian-affiliated papers found")
     log.info(f"Output: {output_file.resolve()}")
