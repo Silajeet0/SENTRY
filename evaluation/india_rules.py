@@ -47,6 +47,26 @@ AMBIGUOUS_PATTERNS = [
     r"\bjaipur\b",
 ]
 
+# Explicit, unambiguous country names other than India. Used only to VETO a
+# weak match (a short acronym like "isi", or a city name) when the SAME
+# affiliation string also names a different country outright — e.g.
+# "Pasteur Labs - ISI, United States" should not be "positive" just because
+# it contains the substring "isi", when the string itself already says
+# where the institution actually is. This does NOT override
+# EXPLICIT_POSITIVE_PATTERNS — a literal "india"/"indian institute of X"
+# match stays authoritative regardless (those aren't short/ambiguous
+# tokens, so a stray co-occurring country name isn't grounds to doubt them).
+NON_INDIA_COUNTRY_PATTERNS = [
+    r"\bunited states\b", r"\busa\b",
+    r"\bunited kingdom\b", r"\bengland\b", r"\bscotland\b",
+    r"\bchina\b", r"\bgermany\b", r"\bfrance\b", r"\bjapan\b",
+    r"\bsouth korea\b", r"\bcanada\b", r"\baustralia\b",
+    r"\bsingapore\b", r"\bswitzerland\b", r"\bnetherlands\b",
+    r"\bitaly\b", r"\bspain\b", r"\bisrael\b",
+    r"\bhong kong\b", r"\btaiwan\b",
+    r"\bunited arab emirates\b", r"\bsaudi arabia\b",
+]
+
 
 @dataclass
 class AffiliationDecision:
@@ -56,22 +76,28 @@ class AffiliationDecision:
 
 def classify_affiliation(affiliation: str) -> AffiliationDecision:
     text = f" {affiliation.lower()} "
-    matches = []
 
-    for pattern in EXPLICIT_POSITIVE_PATTERNS:
-        if re.search(pattern, text):
-            matches.append(pattern)
+    # Explicit, unambiguous Indian institution names are authoritative —
+    # nothing overrides these, including a stray co-occurring country name.
+    explicit_matches = [p for p in EXPLICIT_POSITIVE_PATTERNS if re.search(p, text)]
+    if explicit_matches:
+        return AffiliationDecision(label="positive", matches=explicit_matches)
 
-    for pattern in KNOWN_INDIAN_INSTITUTION_PATTERNS:
-        if re.search(pattern, text):
-            matches.append(pattern)
+    weak_matches = [p for p in KNOWN_INDIAN_INSTITUTION_PATTERNS if re.search(p, text)]
+    ambiguous_matches = [p for p in AMBIGUOUS_PATTERNS if re.search(p, text)]
 
-    if matches:
-        return AffiliationDecision(label="positive", matches=matches)
-
-    ambiguous = [pattern for pattern in AMBIGUOUS_PATTERNS if re.search(pattern, text)]
-    if ambiguous:
-        return AffiliationDecision(label="ambiguous", matches=ambiguous)
+    if weak_matches or ambiguous_matches:
+        # Short acronyms (e.g. "isi") and city names alone are weak signals
+        # that collide with unrelated institutions elsewhere. If the same
+        # string also names a different country explicitly, that's strong
+        # contradicting evidence — for OpenReview's structured
+        # "Institution, Country" strings in particular, the country comes
+        # straight from the author's own profile data, not an inference.
+        if any(re.search(p, text) for p in NON_INDIA_COUNTRY_PATTERNS):
+            return AffiliationDecision(label="negative", matches=[])
+        if weak_matches:
+            return AffiliationDecision(label="positive", matches=weak_matches)
+        return AffiliationDecision(label="ambiguous", matches=ambiguous_matches)
 
     return AffiliationDecision(label="negative", matches=[])
 

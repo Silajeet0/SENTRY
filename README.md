@@ -176,6 +176,85 @@ python run_single_paper.py --synthetic-indian
 
 ---
 
+## Agentic Orchestrator
+
+On top of the deterministic pipeline above, `orchestrator/` adds an LLM-driven
+tool-calling layer that decides *which* conferences to run, *in what order*,
+with *what track filters*, and *when to retry failures* — by calling the
+same `main_driver` / `pipeline` functions you'd call by hand. Nothing about
+the scraping/extraction pipeline itself became less deterministic: the agent
+only ever chooses which deterministic tool to call next.
+
+```bash
+python orchestrator_cli.py
+```
+
+```
+you> Extract Indian-affiliated papers from NeurIPS 2025, ICML 2025, and
+     ACL 2025. Skip workshop tracks.
+  ⚙️  resolve_conference_url(conference='NeurIPS', year='2025')
+     → {'proceeding_url': 'https://papers.nips.cc/paper_files/paper/2025', 'resolved': True, ...}
+  ⚙️  detect_structure(conference='NeurIPS')
+     → {'structure': 'flat', 'handler': 'generic_flat', ...}
+  ⚙️  run_pipeline(conference='NeurIPS', year='2025', proceeding_url='...')
+     → {'status': 'started', ...}
+  ...
+
+you> what's the status?
+  ⚙️  get_run_status(conference='NeurIPS', year='2025')
+     → {'papers_attempted': 812, 'progress_pct': 14.2, 'status_breakdown': {...}}
+
+you> retry the errors
+  ⚙️  list_runs()
+  ⚙️  retry_errors(conference='ACL', year='2025')
+     → {'status': 'started', 'retrying_count': 44, ...}
+```
+
+### Tools
+
+| Tool | What it does |
+|---|---|
+| `resolve_conference_url(conference, year)` | Resolves a name+year to a proceedings URL from a known/pattern catalog. **Never guesses** ACM/IEEE URLs (per-instance DOIs/conhome IDs) — returns `resolved: false` and asks for the URL instead. |
+| `validate_url(url)` | Lightweight reachability check before committing to a run. |
+| `detect_structure(conference, proceeding_url)` | Reports `flat` vs `grouped` and which of `main_driver`'s three code paths (`openreview` / `acm_dl` / `generic`) will handle it. |
+| `run_pipeline(conference, year, proceeding_url, skip_track_keywords, include_track_keywords, delay)` | Starts a run **in the background** and returns immediately — a full run over hundreds of papers can take hours. Track filtering (e.g. `skip_track_keywords=["workshop"]`) replaces the old interactive CLI prompt with keyword matching. |
+| `get_run_status(conference, year)` | Polls the same `summary.json` / `errors.json` / `processed_papers.json` files the pipeline already saves after every paper — live progress, no separate tracking needed. |
+| `retry_errors(conference, year)` | Re-runs only the papers that previously failed, in the background, using the exact links file from the original run. |
+| `list_runs()` | Lists every run the orchestrator session knows about — used to resolve a vague "retry the errors" with no conference named. |
+
+### How retries actually work
+
+`pipeline.run_pipeline` already tracks every attempted URL in
+`processed_papers.json` (crash-safe resume). `retry_errors` backs that file
+up, strips out just the entries with `status: "error"`, and calls
+`pipeline.run_pipeline` again against the same links file — successful
+papers stay skipped, only the previously-failed ones get reprocessed.
+
+### Configuration
+
+Same `.env` as the rest of AEGIS (`LLM_PROVIDER` / `LLM_MODEL` /
+`LLM_API_KEY` / `LLM_BASE_URL`) — the orchestrator's LLM just needs to
+support OpenAI-style function calling (Groq's `openai/gpt-oss-20b` does).
+
+### Using main_driver.run_pipeline non-interactively yourself
+
+`main_driver.run_pipeline` grew three new optional parameters, all
+backward-compatible (default `interactive=True` preserves the exact old
+CLI-prompt behavior for `run.py`):
+
+```python
+run_pipeline(
+    proceeding_url="https://aclanthology.org/events/acl-2025/",
+    conference="ACL",
+    year="2025",
+    interactive=False,                        # no blocking input() prompt
+    track_skip_keywords=["workshop"],         # keyword-filtered track selection
+    on_links_ready=lambda path: print(path),  # fires once links.json is resolved
+)
+```
+
+---
+
 ## Form Filler (Standalone)
 
 After running the pipeline, use the Selenium-based form filler to submit results to the IKDD data-sharing portal:

@@ -105,9 +105,35 @@ class Orchestrator:
         self.max_tool_iterations = max_tool_iterations
         self.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
 
+        # How long a single LLM call is allowed to run before giving up, and
+        # how many times the SDK retries transient failures on its own
+        # before that. Default SDK timeout is 600s (10 min) with no
+        # visibility into *why* a call is slow — that reads as "hung" from
+        # the UI either way, so some cap matters regardless of backend.
+        # But the RIGHT cap differs by backend:
+        #   - Remote/rate-limited (e.g. Groq): the orchestrator's own calls
+        #     share the same API key/quota as the pipeline's own per-paper
+        #     extraction calls, so a saturated rate limit is the likely
+        #     slow-call cause — failing fast (short timeout) surfaces that
+        #     quickly via the retry/error-message handling below.
+        #   - Local (e.g. Ollama serving gpt-oss-20b on-device): there's no
+        #     rate limit, but genuine compute contention is real if the
+        #     pipeline's own extraction calls are hitting the same local
+        #     model concurrently — a tool-schema-heavy prompt can
+        #     legitimately take a while under load. A short timeout here
+        #     would kill valid slow generations, not just stuck ones.
+        # Overridable via env rather than hardcoded to either case.
+        self.request_timeout_seconds = float(os.getenv("LLM_REQUEST_TIMEOUT_SECONDS", "120"))
+        self.request_max_retries = int(os.getenv("LLM_REQUEST_MAX_RETRIES", "1"))
+
     def _client(self):
         from openai import OpenAI
-        return OpenAI(api_key=self.api_key, base_url=self.base_url)
+        return OpenAI(
+            api_key=self.api_key,
+            base_url=self.base_url,
+            timeout=self.request_timeout_seconds,
+            max_retries=self.request_max_retries,
+        )
 
     def chat(self, user_message: str, on_tool_call=None) -> str:
         """
