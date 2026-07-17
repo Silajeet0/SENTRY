@@ -22,6 +22,17 @@ log = logging.getLogger(__name__)
 IKDD_BASE          = "https://ikdd.acm.org"
 LOGIN_URL          = f"{IKDD_BASE}/ikdd-login.php"
 APPROVED_LIST_URL  = f"{IKDD_BASE}/premier-papers-list.php?status=2"
+# NOTE: guessed as status=1 by analogy with status=2 for Approved — verify
+# against the actual URL behind the "New" tile on the Premier Papers dashboard
+# and correct this if it doesn't match.
+NEW_LIST_URL       = f"{IKDD_BASE}/premier-papers-list.php?status=1"
+
+# Every status list we scrape into the dedup cache. Add/remove entries here
+# if IKDD ever exposes more statuses worth checking (e.g. Declined).
+LIST_URLS_TO_SCRAPE = {
+    "new": NEW_LIST_URL,
+    "approved": APPROVED_LIST_URL,
+}
 
 CACHE_PATH         = Path("data/ikdd_cache/approved_titles.json")
 
@@ -58,20 +69,142 @@ def _similarity(a: str, b: str) -> float:
 
 
 # scraper
+def _login(page, username: str, password: str) -> None:
+    """
+    Logs in to IKDD using an already-open Playwright page.
+    Raises RuntimeError if login fails.
+    """
+    from playwright.sync_api import TimeoutError as PWTimeout
+
+    log.info(f"Navigating to login: {LOGIN_URL}")
+    page.goto(LOGIN_URL, wait_until="domcontentloaded", timeout=30000)
+
+    # Fill credentials
+    # attributes adjusted according to the actual DOM of the login page
+    page.fill("input[name='username'], input[type='email'], input[name='email']", username)
+    page.fill("input[name='password'], input[type='password']", password)
+    page.click("input[type='button'], button[type='login']")
+
+    try:
+        # Wait for post-login redirect — dashboard has "indexDashboard" in URL
+        page.wait_for_url("**/indexDashboard**", timeout=15000)
+        log.info("Login successful")
+    except PWTimeout:
+        # if redirected to a different URL — check we're no longer on login, this is a failsafe
+        current = page.url
+        if "ikdd-login.php" in current or "login" in current.lower():
+            raise RuntimeError(
+                "Login failed — still on login page. "
+                "Check IKDD_USERNAME and IKDD_PASSWORD in your .env"
+            )
+        log.info(f"Login succeeded (redirected to {current})")
+
+
+def _scrape_titles_from_list(page, list_url: str, label: str) -> list[str]:
+    """
+    Given an already-logged-in Playwright page, navigates to list_url and
+    scrapes every Premier Paper title across all paginated pages.
+    Returns a list of raw title strings as they appear in the UI.
+    """
+    titles = []
+
+    log.info(f"Fetching {label} papers: {list_url}")
+    page.goto(list_url, wait_until="domcontentloaded", timeout=30000)
+
+    # select 100 papers per page; if unavailable fall back to pagination (failsafe for future).
+    try:
+        select = page.locator("select").first
+        select.select_option(value="100")
+        page.wait_for_timeout(1000)
+        log.info("Set rows per page to 100")
+    except Exception:
+        log.warning("Could not set rows-per-page dropdown — will paginate")
+
+    # Paginate and collect titles
+    page_num = 1
+    last_page_first_title = None  # content-change sentinel
+
+    while True:
+        log.info(f"Scraping {label} page {page_num}...")
+
+        # Wait for table rows to be present
+        page.wait_for_selector("table tbody tr", timeout=15000)
+
+        rows = page.locator("table tbody tr")
+        count = rows.count()
+        log.info(f"  Found {count} rows on page {page_num}")
+
+        page_titles = []
+        for i in range(count):
+            row = rows.nth(i)
+            cells = row.locator("td")
+            if cells.count() < 2:
+                continue
+            title_cell = None
+            for j in range(cells.count()):
+                cell = cells.nth(j)
+                text = (cell.inner_text() or "").strip()
+                if len(text) > 10 and not text.isdigit() and not cell.locator("input").count():
+                    title_cell = text
+                    break
+            if title_cell:
+                page_titles.append(title_cell)
+
+        # Content-change sentinel: if the first title on this page matches
+        # the first title from the previous page, DataTables didn't advance
+        # we've hit the end and should stop
+        current_first = page_titles[0] if page_titles else None
+        if page_num > 1 and current_first == last_page_first_title:
+            log.info(f"Page content unchanged — reached last {label} page after {page_num - 1} real pages.")
+            break
+
+        last_page_first_title = current_first
+        titles.extend(page_titles)
+
+        # DataTables wraps the Next button in a <li class="next disabled"> (identified from DOM)
+        # when on the last page. is_enabled() is unreliable — check the
+        # parent <li> for the "disabled" class instead.
+        next_li = page.locator("li.next")
+        if next_li.count() > 0:
+            li_class = next_li.first.get_attribute("class") or ""
+            if "disabled" in li_class:
+                log.info(f"Next button disabled — no more {label} pages. Total: {len(titles)}")
+                break
+            # Click the <a> inside the <li>
+            next_li.first.locator("a").click()
+            page.wait_for_timeout(1500)
+            page_num += 1
+        else:
+            # Fallback: try generic Next button text
+            next_btn = page.locator("a:has-text('Next'), button:has-text('Next')")
+            if next_btn.count() > 0:
+                next_btn.first.click()
+                page.wait_for_timeout(1500)
+                page_num += 1
+            else:
+                log.info(f"No Next button found — done with {label}. Total: {len(titles)}")
+                break
+
+    return titles
+
+
 def _scrape_approved_titles(username: str, password: str) -> list[str]:
     """
-    Logs in to IKDD and scrapes all approved Premier Paper titles.
+    Logs in to IKDD and scrapes Premier Paper titles across every status
+    listed in LIST_URLS_TO_SCRAPE (currently New + Approved), deduplicating
+    the combined result.
     Returns a list of raw title strings as they appear in the UI.
     """
     try:
-        from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
+        from playwright.sync_api import sync_playwright
     except ImportError:
         raise RuntimeError(
             "playwright is required. "
             "Install with: pip install playwright && playwright install chromium"
         )
 
-    titles = []
+    all_titles = []
+    seen = set()
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -84,112 +217,22 @@ def _scrape_approved_titles(username: str, password: str) -> list[str]:
         )
         page = context.new_page()
 
-        # Login
-        log.info(f"Navigating to login: {LOGIN_URL}")
-        page.goto(LOGIN_URL, wait_until="domcontentloaded", timeout=30000)
-
-        # Fill credentials
-        # attributes adjusted according to the actual DOM of the login page
-        page.fill("input[name='username'], input[type='email'], input[name='email']", username)
-        page.fill("input[name='password'], input[type='password']", password)
-        page.click("input[type='button'], button[type='login']")
-
         try:
-            # Wait for post-login redirect — dashboard has "indexDashboard" in URL
-            page.wait_for_url("**/indexDashboard**", timeout=15000)
-            log.info("Login successful")
-        except PWTimeout:
-            # if redirected to a different URL — check we're no longer on login, this is a failsafe
-            current = page.url
-            if "ikdd-login.php" in current or "login" in current.lower():
-                browser.close()
-                raise RuntimeError(
-                    "Login failed — still on login page. "
-                    "Check IKDD_USERNAME and IKDD_PASSWORD in your .env"
-                )
-            log.info(f"Login succeeded (redirected to {current})")
+            _login(page, username, password)
+        except RuntimeError:
+            browser.close()
+            raise
 
-        # Navigate to approved list of premier papers
-        log.info(f"Fetching approved papers: {APPROVED_LIST_URL}")
-        page.goto(APPROVED_LIST_URL, wait_until="domcontentloaded", timeout=30000)
-
-        # select 100 papers per page; if unavailable fall back to pagination (failsafe for future).
-        try:
-            select = page.locator("select").first
-            select.select_option(value="100")
-            page.wait_for_timeout(1000)
-            log.info("Set rows per page to 100")
-        except Exception:
-            log.warning("Could not set rows-per-page dropdown — will paginate")
-
-        # Paginate and collect title
-        page_num = 1
-        last_page_first_title = None  # content-change sentinel
-
-        while True:
-            log.info(f"Scraping page {page_num}...")
-
-            # Wait for table rows to be present
-            page.wait_for_selector("table tbody tr", timeout=15000)
-
-            rows = page.locator("table tbody tr")
-            count = rows.count()
-            log.info(f"  Found {count} rows on page {page_num}")
-
-            page_titles = []
-            for i in range(count):
-                row = rows.nth(i)
-                cells = row.locator("td")
-                if cells.count() < 2:
-                    continue
-                title_cell = None
-                for j in range(cells.count()):
-                    cell = cells.nth(j)
-                    text = (cell.inner_text() or "").strip()
-                    if len(text) > 10 and not text.isdigit() and not cell.locator("input").count():
-                        title_cell = text
-                        break
-                if title_cell:
-                    page_titles.append(title_cell)
-
-            # Content-change sentinel: if the first title on this page matches
-            # the first title from the previous page, DataTables didn't advance
-            # we've hit the end and should stop
-            current_first = page_titles[0] if page_titles else None
-            if page_num > 1 and current_first == last_page_first_title:
-                log.info(f"Page content unchanged — reached last page after {page_num - 1} real pages.")
-                break
-
-            last_page_first_title = current_first
-            titles.extend(page_titles)
-
-            # DataTables wraps the Next button in a <li class="next disabled"> (identified from DOM)
-            # when on the last page. is_enabled() is unreliable — check the
-            # parent <li> for the "disabled" class instead.
-            next_li = page.locator("li.next")
-            if next_li.count() > 0:
-                li_class = next_li.first.get_attribute("class") or ""
-                if "disabled" in li_class:
-                    log.info(f"Next button disabled — no more pages. Total: {len(titles)}")
-                    break
-                # Click the <a> inside the <li>
-                next_li.first.locator("a").click()
-                page.wait_for_timeout(1500)
-                page_num += 1
-            else:
-                # Fallback: try generic Next button text
-                next_btn = page.locator("a:has-text('Next'), button:has-text('Next')")
-                if next_btn.count() > 0:
-                    next_btn.first.click()
-                    page.wait_for_timeout(1500)
-                    page_num += 1
-                else:
-                    log.info(f"No Next button found — done. Total: {len(titles)}")
-                    break
+        for label, url in LIST_URLS_TO_SCRAPE.items():
+            titles = _scrape_titles_from_list(page, url, label)
+            for t in titles:
+                if t not in seen:
+                    seen.add(t)
+                    all_titles.append(t)
 
         browser.close()
 
-    return titles
+    return all_titles
 
 
 
