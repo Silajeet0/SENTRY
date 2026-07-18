@@ -13,9 +13,15 @@ Two input modes, one output contract:
     B) venue_id given          → OpenReview API flow (no scraping tiers)
        fetch_openreview_papers() → ground-truth affiliation check
                                         ↓
-                          only positive/ambiguous papers → LLM (area_of_research)
+                              only positive papers → LLM (area_of_research)
                                         ↓
                                     PaperInfo
+
+    "ambiguous" (a collision-prone acronym like IIT/ISI/NIT/VIT with no
+    stronger corroboration — see evaluation/india_rules.py) is treated the
+    same as "negative" everywhere in this file: it never counts as an
+    Indian affiliation in the output, and never triggers an LLM call on
+    its own.
 
 Exactly one of input_links_path / venue_id must be provided to run_pipeline.
 Both modes write the identical indian_papers_structured.json / errors.json /
@@ -199,18 +205,23 @@ def process_openreview_paper(paper: dict) -> PaperInfo:
     decisions = [classify_affiliation(a["affiliation"]) for a in paper["authors"]]
     overall_label = combine_author_decisions(decisions)
 
-    if overall_label == "negative":
+    if overall_label in ("negative", "ambiguous"):
         # No LLM call at all — same shape as the tiered path's prefilter
         # skip (empty area_of_research, empty Indian-affiliation fields).
+        # "ambiguous" (e.g. an author's affiliation only matches a
+        # collision-prone acronym like "IIT"/"ISI"/"NIT"/"VIT" with no
+        # stronger corroboration) is treated identically to "negative"
+        # here — it will never produce an Indian-affiliated author below,
+        # so there's no reason to spend an LLM call on it.
         return PaperInfo(
             paper_url=paper["paper_url"],
             raw_content_source="openreview_api",
             source="openreview_api",
         )
 
-    # At least one author flagged positive/ambiguous — one LLM call, mainly
-    # for area_of_research (and a second opinion on the author list, though
-    # our own ground-truth data below takes precedence over its guess).
+    # At least one author flagged positive — one LLM call, mainly for
+    # area_of_research (and a second opinion on the author list, though our
+    # own ground-truth data below takes precedence over its guess).
     content = _build_openreview_llm_content(paper)
     info = EXTRACTOR.extract(content, paper["paper_url"], content_source="openreview_api")
     info.source = "openreview_api"
@@ -223,19 +234,23 @@ def process_openreview_paper(paper: dict) -> PaperInfo:
     if not info.paper_title:
         info.paper_title = paper["title"]
 
-    positive_or_ambiguous = [
+    # Only "positive" decisions count as Indian-affiliated — "ambiguous"
+    # authors on an otherwise-positive paper must NOT be pulled in just
+    # because the paper as a whole made the cut. A collision-prone acronym
+    # match on one co-author's affiliation is not evidence about them.
+    positive_authors = [
         a["name"] for a, d in zip(paper["authors"], decisions)
-        if d.label in ("positive", "ambiguous")
+        if d.label == "positive"
     ]
     positive_institutions = [
         a["affiliation"] for a, d in zip(paper["authors"], decisions)
-        if d.label in ("positive", "ambiguous")
+        if d.label == "positive"
     ]
     # Overwrite rather than merge with the LLM's own guess — ground-truth
     # profile data is what we trust here, and the LLM's version can differ
     # in formatting (e.g. "Adamas University" vs "Adamas University, India"
     # for the same author), which set-union would keep as two entries.
-    info.authors_with_indian_affiliations = sorted(set(positive_or_ambiguous))
+    info.authors_with_indian_affiliations = sorted(set(positive_authors))
     info.indian_institutions = sorted(set(positive_institutions))
 
     return info

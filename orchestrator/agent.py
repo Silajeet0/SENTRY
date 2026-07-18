@@ -86,6 +86,32 @@ listed here. If a tool call is the right next step, make it yourself; \
 don't print its arguments as an example and tell the person to invoke it.
 - Be concise. Report concrete numbers (papers found, errors, progress %) \
 rather than vague status updates.
+
+IKDD form-filler / RPA submission — a SEPARATE, downstream step from \
+extraction: once run_pipeline has completed for a conference/year, the \
+person may separately ask to "initiate the RPA process", "submit to IKDD", \
+"upload the papers", or similar for that conference/year. That maps to \
+initiate_form_filler, NOT run_pipeline — don't re-run extraction for a \
+request like this, and don't start a form-filler run for a conference/year \
+that hasn't been extracted yet (initiate_form_filler will fail cleanly if \
+the extracted-papers file doesn't exist yet; if so, tell the person to run \
+extraction first rather than retrying blindly).
+- initiate_form_filler needs venue/month (the IKDD form's exact dropdown \
+text) — if the person didn't give them, just call initiate_form_filler \
+without them; it resolves them itself via resolve_ikdd_form_metadata and \
+tells you plainly (status="needs_input") if it can't, at which point ask \
+the person for the exact dropdown text. Never guess venue/month yourself.
+- initiate_form_filler also runs in the background and returns immediately \
+— poll get_rpa_status the same way you'd poll get_run_status, and report \
+real submitted/skipped/failed counts once it finishes rather than assuming \
+it's done right after queuing it.
+- initiate_form_filler always re-checks IKDD's current New + Approved \
+lists before submitting anything and skips papers already there — so it's \
+safe to call again later (e.g. after a partial failure) without creating \
+duplicate submissions.
+- For a vague "check the upload status" or "retry the RPA" without a named \
+conference, call list_rpa_runs first, the same way you'd call list_runs \
+for a vague extraction-retry request.
 """
 
 
@@ -126,6 +152,19 @@ class Orchestrator:
         self.request_timeout_seconds = float(os.getenv("LLM_REQUEST_TIMEOUT_SECONDS", "120"))
         self.request_max_retries = int(os.getenv("LLM_REQUEST_MAX_RETRIES", "1"))
 
+        # Separate from the SDK-level retries above: a Groq 429 (TPM budget
+        # exhausted, common on the on_demand free tier — see class docstring)
+        # is NOT the same failure as the model hallucinating an invalid tool
+        # call, and shouldn't be handled the same way. Retrying with
+        # tool_choice="none" (the fallback further down, meant for that
+        # other case) does nothing to fix a token-budget deficit, and can
+        # itself 400 if the model tries to call a tool anyway despite
+        # tool_choice="none" — seen in practice with gpt-oss-20b. So a 429
+        # gets its own backoff-and-retry loop with tool_choice="auto"
+        # unchanged, waiting for the budget to actually refill.
+        self.rate_limit_max_retries = int(os.getenv("LLM_RATE_LIMIT_MAX_RETRIES", "3"))
+        self.rate_limit_base_delay_seconds = float(os.getenv("LLM_RATE_LIMIT_BASE_DELAY_SECONDS", "20"))
+
     def _client(self):
         from openai import OpenAI
         return OpenAI(
@@ -134,6 +173,73 @@ class Orchestrator:
             timeout=self.request_timeout_seconds,
             max_retries=self.request_max_retries,
         )
+
+    def _rate_limit_delay_seconds(self, error, attempt: int) -> float:
+        """
+        Groq's 429 body usually includes a concrete "Please try again in
+        19.5525s" (or "...885ms") hint — honor that plus a small buffer
+        when present, since it's the actual TPM-window reset time. Fall
+        back to a growing fixed delay otherwise.
+        """
+        import re
+        match = re.search(r"try again in ([\d.]+)\s*(ms|s)\b", str(error))
+        if match:
+            value, unit = match.groups()
+            seconds = float(value) / 1000.0 if unit == "ms" else float(value)
+            return seconds + 1.0
+        return self.rate_limit_base_delay_seconds * (attempt + 1)
+
+    def _call_llm(self, client):
+        """
+        One resilient LLM call, covering the two failure modes seen in
+        practice with Groq's gpt-oss-20b separately rather than through one
+        shared fallback:
+          - RateLimitError (429): back off for the API's own suggested
+            window and retry with tool_choice UNCHANGED (still "auto") —
+            the problem is token budget, not tool-calling behavior.
+          - Anything else (e.g. a hallucinated/invalid tool call name,
+            which Groq rejects server-side before we see a message): retry
+            once with tool_choice="none" as before.
+        Raises the last error if every retry is exhausted.
+        """
+        from openai import RateLimitError
+        import time
+
+        last_error = None
+        for attempt in range(self.rate_limit_max_retries + 1):
+            try:
+                return client.chat.completions.create(
+                    model=self.model,
+                    messages=self.messages,
+                    tools=TOOL_SCHEMAS,
+                    tool_choice="auto",
+                    temperature=0.2,
+                )
+            except RateLimitError as e:
+                last_error = e
+                if attempt >= self.rate_limit_max_retries:
+                    break
+                delay = self._rate_limit_delay_seconds(e, attempt)
+                log.warning(
+                    f"Rate limited (attempt {attempt + 1}/{self.rate_limit_max_retries + 1}) "
+                    f"— waiting {delay:.1f}s for the TPM budget to refill: {e}"
+                )
+                time.sleep(delay)
+            except Exception as e:  # noqa: BLE001
+                log.warning(f"LLM call failed ({type(e).__name__}: {e}) — retrying with tool_choice='none'")
+                try:
+                    return client.chat.completions.create(
+                        model=self.model,
+                        messages=self.messages,
+                        tools=TOOL_SCHEMAS,
+                        tool_choice="none",
+                        temperature=0.2,
+                    )
+                except Exception as e2:  # noqa: BLE001
+                    last_error = e2
+                    break
+
+        raise last_error
 
     def chat(self, user_message: str, on_tool_call=None) -> str:
         """
@@ -150,41 +256,17 @@ class Orchestrator:
 
         for iteration in range(self.max_tool_iterations):
             try:
-                response = client.chat.completions.create(
-                    model=self.model,
-                    messages=self.messages,
-                    tools=TOOL_SCHEMAS,
-                    tool_choice="auto",
-                    temperature=0.2,
-                )
+                response = self._call_llm(client)
             except Exception as e:  # noqa: BLE001
-                # gpt-oss-20b via Groq occasionally hallucinates a tool call
-                # to a name that isn't in TOOL_SCHEMAS (seen in practice:
-                # inventing a "json" tool to wrap its own summary instead of
-                # just replying in plain text). Groq validates tool calls
-                # server-side and rejects it with 400 before we ever see a
-                # message object, so this raises here — not in the
-                # tool-dispatch try/except below, and not something that
-                # means any real tool calls made earlier this turn failed.
-                log.warning(f"LLM call failed ({type(e).__name__}: {e}) — retrying with tool_choice='none'")
-                try:
-                    response = client.chat.completions.create(
-                        model=self.model,
-                        messages=self.messages,
-                        tools=TOOL_SCHEMAS,
-                        tool_choice="none",
-                        temperature=0.2,
-                    )
-                except Exception as e2:  # noqa: BLE001
-                    log.exception("LLM call failed on retry too")
-                    return (
-                        "I hit an error talking to the model while wrapping "
-                        "up this turn. Any tool calls made earlier in this "
-                        "turn (starting a run, checking status, etc.) may "
-                        "have already succeeded regardless — check "
-                        f"get_run_status if that's a concern. Underlying "
-                        f"error: {type(e2).__name__}: {e2}"
-                    )
+                log.exception("LLM call failed after all retries")
+                return (
+                    "I hit an error talking to the model while wrapping "
+                    "up this turn. Any tool calls made earlier in this "
+                    "turn (starting a run, checking status, etc.) may "
+                    "have already succeeded regardless — check "
+                    f"get_run_status if that's a concern. Underlying "
+                    f"error: {type(e).__name__}: {e}"
+                )
 
             message = response.choices[0].message
             tool_calls = getattr(message, "tool_calls", None)

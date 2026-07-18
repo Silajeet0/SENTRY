@@ -22,7 +22,7 @@ Two design choices worth calling out:
 import json
 from pathlib import Path
 
-from orchestrator import conference_catalog, runner
+from orchestrator import conference_catalog, ikdd_form_catalog, runner, rpa_runner
 from orchestrator.registry import REGISTRY
 
 
@@ -161,6 +161,71 @@ def list_runs() -> dict:
 
 
 # ---------------------------------------------------------------------------
+# RPA / IKDD form-filler tools
+#
+# These are deliberately separate from run_pipeline/get_run_status/list_runs
+# above: run_pipeline extracts and classifies papers (scraping + LLM), while
+# initiate_form_filler is a downstream, independent step that takes papers
+# ALREADY extracted (data/final_output/<conference>/<year>/indian_papers_
+# structured.json must already exist) and submits the new ones to IKDD via
+# Selenium. A person can ask for one without the other, e.g. re-running the
+# form filler after fixing a rejected submission without re-scraping.
+# ---------------------------------------------------------------------------
+def resolve_ikdd_form_metadata(conference: str, year: str) -> dict:
+    return ikdd_form_catalog.resolve(conference, year)
+
+
+def initiate_form_filler(
+    conference: str,
+    year: str,
+    venue: str = None,
+    month: str = None,
+    form_url: str = None,
+    refresh_dedup_cache: bool = True,
+) -> dict:
+    """
+    Starts the IKDD Selenium form-filler (RPA) for one conference/year in
+    the background and returns immediately — hundreds of papers at several
+    seconds each adds up, so poll get_rpa_status afterwards rather than
+    waiting here, same pattern as run_pipeline/get_run_status.
+
+    venue/month must be the EXACT text of the form's dropdown options. If
+    either is omitted, this looks them up via resolve_ikdd_form_metadata
+    first and only proceeds if that resolves cleanly — never guesses, since
+    a wrong dropdown value fails Selenium hard mid-run instead of cleanly
+    upfront.
+    """
+    if not venue or not month:
+        meta = ikdd_form_catalog.resolve(conference, year)
+        if not meta["resolved"]:
+            return {
+                "status": "needs_input",
+                "conference": conference,
+                "year": year,
+                "message": meta["message"],
+            }
+        venue = venue or meta["venue"]
+        month = month or meta["month"]
+
+    return rpa_runner.start_form_filler(
+        conference=conference,
+        year=year,
+        month=month,
+        venue=venue,
+        form_url=form_url,
+        refresh_dedup_cache=refresh_dedup_cache,
+    )
+
+
+def get_rpa_status(conference: str, year: str) -> dict:
+    return rpa_runner.get_status(conference, year)
+
+
+def list_rpa_runs() -> dict:
+    return rpa_runner.list_runs()
+
+
+# ---------------------------------------------------------------------------
 # Dispatch table + OpenAI-style function-calling schemas
 # ---------------------------------------------------------------------------
 TOOL_FUNCTIONS = {
@@ -171,6 +236,10 @@ TOOL_FUNCTIONS = {
     "get_run_status": get_run_status,
     "retry_errors": retry_errors,
     "list_runs": list_runs,
+    "resolve_ikdd_form_metadata": resolve_ikdd_form_metadata,
+    "initiate_form_filler": initiate_form_filler,
+    "get_rpa_status": get_rpa_status,
+    "list_rpa_runs": list_rpa_runs,
 }
 
 TOOL_SCHEMAS = [
@@ -351,11 +420,126 @@ TOOL_SCHEMAS = [
         "function": {
             "name": "list_runs",
             "description": (
-                "List every conference/year run this orchestrator session "
-                "knows about, with current state. Useful when the person "
-                "gives a vague follow-up like 'retry the errors' without "
-                "naming a conference — call this first to see which runs "
-                "actually have errors."
+                "List every EXTRACTION (scraping/classification) conference/"
+                "year run this orchestrator session knows about, with "
+                "current state. Useful when the person gives a vague "
+                "follow-up like 'retry the errors' without naming a "
+                "conference — call this first to see which runs actually "
+                "have errors. For IKDD form-filler/RPA submission runs, use "
+                "list_rpa_runs instead — the two are tracked separately."
+            ),
+            "parameters": {"type": "object", "properties": {}},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "resolve_ikdd_form_metadata",
+            "description": (
+                "Resolve a conference name + year to the EXACT 'venue' and "
+                "'month' dropdown text the IKDD submission form expects. "
+                "Never guesses — returns resolved=false and asks for the "
+                "exact text directly if this conference isn't on file, "
+                "since a wrong dropdown value fails Selenium hard mid-run "
+                "rather than cleanly upfront. Call this before "
+                "initiate_form_filler if you don't already have venue/month "
+                "from the person."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "conference": {"type": "string", "description": "e.g. 'NeurIPS', 'IEEE-ICDM'."},
+                    "year": {"type": "string", "description": "e.g. '2025'."},
+                },
+                "required": ["conference", "year"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "initiate_form_filler",
+            "description": (
+                "Start the IKDD Selenium form-filler (RPA) for one "
+                "conference/year in the background and return immediately — "
+                "poll get_rpa_status afterwards rather than waiting here. "
+                "Requires that run_pipeline has ALREADY completed for this "
+                "conference/year (it reads data/final_output/<conference>/"
+                "<year>/indian_papers_structured.json). Before submitting "
+                "anything, this dedup-checks every candidate paper against "
+                "IKDD's current New + Approved lists and skips anything "
+                "already present — only genuinely new papers get submitted. "
+                "If venue/month are omitted, they're looked up via "
+                "resolve_ikdd_form_metadata; if that can't resolve them "
+                "either, this returns status='needs_input' asking the "
+                "person for the exact dropdown text instead of guessing."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "conference": {"type": "string"},
+                    "year": {"type": "string"},
+                    "venue": {
+                        "type": "string",
+                        "description": "Exact IKDD form dropdown text, e.g. 'ICDM'. Omit to auto-resolve via resolve_ikdd_form_metadata.",
+                    },
+                    "month": {
+                        "type": "string",
+                        "description": "Exact IKDD form dropdown text, e.g. 'Nov'. Omit to auto-resolve via resolve_ikdd_form_metadata.",
+                    },
+                    "form_url": {
+                        "type": "string",
+                        "description": "Override the default IKDD submission form URL. Omit unless the person gives a different one.",
+                    },
+                    "refresh_dedup_cache": {
+                        "type": "boolean",
+                        "description": "Re-scrape IKDD's New+Approved lists before checking (default true). Set false only to reuse a recently-refreshed local cache for speed.",
+                    },
+                },
+                "required": ["conference", "year"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_rpa_status",
+            "description": (
+                "Get current progress/results for an IKDD form-filler (RPA) "
+                "run — submitted/skipped/failed counts — whether it's still "
+                "running or finished. Also checks disk for this conference/"
+                "year's data/final_output/.../indian_papers_structured.json "
+                "independent of run history: if no RPA run has ever been "
+                "started but that file exists, state comes back "
+                "'ready_to_submit' (with extracted_candidates count) instead "
+                "of a misleading 'not_started'. has_extracted_data/"
+                "extracted_candidates are included alongside any tracked "
+                "run's own state too. Separate from get_run_status, which "
+                "covers extraction runs."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "conference": {"type": "string"},
+                    "year": {"type": "string"},
+                },
+                "required": ["conference", "year"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "list_rpa_runs",
+            "description": (
+                "List every IKDD form-filler (RPA) run this orchestrator "
+                "session knows about, with current state — PLUS every "
+                "conference/year on disk under data/final_output/ that has "
+                "an indian_papers_structured.json but was never submitted "
+                "in this session (state 'ready_to_submit', with an "
+                "extracted_candidates count). Use this to discover what's "
+                "available to submit, not just what's already been run. "
+                "Separate from list_runs, which covers extraction runs."
             ),
             "parameters": {"type": "object", "properties": {}},
         },

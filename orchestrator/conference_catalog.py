@@ -102,6 +102,17 @@ _KNOWN_INSTANCES: dict[tuple[str, str], str] = {
 }
 
 
+def normalize_conference_name(conference: str) -> str:
+    """
+    Public helper — the same alias table resolve_conference_url uses
+    internally, exposed so other modules that need the same canonical
+    conference key (e.g. ikdd_form_catalog, which has nothing to do with
+    proceeding URLs) don't have to re-derive or duplicate this table.
+    """
+    raw = (conference or "").strip()
+    return _ALIASES.get(raw.upper(), raw)
+
+
 def _pattern_url(key: str, year: str) -> Optional[str]:
     """Stable, derivable-from-year-alone URL patterns (non-OpenReview only —
     OpenReview conferences resolve to a venue_id instead, see resolve_conference_url)."""
@@ -123,8 +134,7 @@ def resolve_conference_url(conference: str, year: str) -> dict:
       - Everything else: mode="scraped", proceeding_url set — goes through
         main_driver.run_pipeline as before.
     """
-    raw = (conference or "").strip()
-    key = _ALIASES.get(raw.upper(), raw)
+    key = normalize_conference_name(conference)
     year = str(year).strip()
 
     if key in OPENREVIEW_CONFERENCES:

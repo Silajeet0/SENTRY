@@ -39,12 +39,14 @@ AREAS OF RESEARCH (pick exactly one):
 
 INDIAN AFFILIATION INDICATORS & RULES:
 - "India" mentioned explicitly in the affiliation block.
-- Indian Academic/Research Institutions: IITs, IISc, ISI, NITs, IIMs, BITS Pilani, Anna University, Jadavpur, VIT, Amrita, Manipal, DRDO, ISRO, CSIR, BARC, Tata Research, Infosys Research, Wipro Research.
+- Unambiguous Indian institution names/acronyms (safe to trust alone): IISc, IIIT, IIM, BITS Pilani, Anna University, Jadavpur University, Amrita, Manipal, DRDO, ISRO, CSIR, BARC, TIFR, IISER, Tata Research, Infosys Research, Wipro Research.
+- STRICT RULE ON AMBIGUOUS ACRONYMS: "IIT", "NIT", "ISI", and "VIT" are NOT safe to trust alone. Each is also the real, in-use abbreviation for a well-known NON-Indian institution somewhere in the world — for example "IIT" is Istituto Italiano di Tecnologia in Italy (e.g. "IIT Genova"), and also the Institute of Informatics & Telecommunications at NCSR Demokritos in Greece; "ISI" is Istituto Superiore di Sanità in Italy. Do NOT mark an author Indian-affiliated from a bare "IIT"/"NIT"/"ISI"/"VIT" match by itself. Only count it as Indian if the SAME affiliation string also explicitly says "India", names an Indian city/state, or spells out the full name (e.g. "Indian Institute of Technology Bombay", "Vellore Institute of Technology") — otherwise leave that author out.
 - STRICT RULE 1: Evaluate affiliations ONLY based on the official institutional affiliation strings (typically denoted by superscripts matching the author names). 
 - STRICT RULE 2: Ignore email addresses entirely when determining affiliation. Do not infer institutional affiliation from email handles or domains (e.g., ignore "iitd" in "xyz.iitd@gmail.com").
 - STRICT RULE 3: For multinational companies (e.g., General Motors, Google, Microsoft), do NOT assume an Indian affiliation unless an Indian city or "India" is explicitly stated in the affiliation string itself.
 - STRICT RULE 4: Do NOT assume Indian affiliation from an author's name alone.
 - STRICT RULE 5: Do NOT mark an affiliation Indian from a city name or company name alone unless the affiliation also contains an explicit Indian institution pattern or "India".
+- STRICT RULE 6: When genuinely unsure whether an affiliation is Indian (e.g. it only matches an ambiguous acronym per the rule above, with no corroborating "India"/Indian city/full name), do NOT include that author — leaving an uncertain author out is always preferred over guessing.
 
 PAGE CONTENT:
 {content}
@@ -173,11 +175,30 @@ class LLMExtractor:
 
     def _verify_indian_affiliations(self, info: PaperInfo) -> PaperInfo:
         """
-        scan all affiliations for India keywords.
-        Catches cases where the LLM missed an affiliation.
+        Two-way deterministic safety net around the LLM's own India-affiliation
+        call, using evaluation.india_rules as ground truth:
+
+        1. ADD authors the LLM missed whose affiliation is an unambiguous
+           ("positive") Indian-institution match.
+        2. DEMOTE (remove) authors the LLM flagged whose OWN affiliation
+           string is only "ambiguous" — i.e. it matched purely on a
+           collision-prone acronym (IIT/NIT/ISI/VIT — see india_rules.py's
+           AMBIGUOUS_ACRONYM_INSTITUTION_PATTERNS) or a bare Indian
+           city/company name, with no corroborating "India"/full name. The
+           prompt already instructs the LLM not to do this, but a smaller
+           model can still slip (this is exactly how "IIT" = Istituto
+           Italiano di Tecnologia / a Greek NCSR Demokritos institute ended
+           up misclassified as Indian in practice) — catch it
+           deterministically rather than trusting the instruction alone.
         """
         if not info.all_authors:
             return info
+
+        aff_by_name = {
+            author.get("name", ""): author.get("affiliation", "")
+            for author in info.all_authors
+            if author.get("name")
+        }
 
         missed_authors = []
         missed_institutions = set()
@@ -188,10 +209,30 @@ class LLMExtractor:
                 name = author.get("name", "")
                 if name not in info.authors_with_indian_affiliations:
                     missed_authors.append(name)
-                    missed_institutions.add(author.get("affiliation", ""))
+                    missed_institutions.add(aff)
 
         if missed_authors:
             info.authors_with_indian_affiliations.extend(missed_authors)
             info.indian_institutions.extend(list(missed_institutions))
+
+        demoted = {
+            name for name in info.authors_with_indian_affiliations
+            if name in aff_by_name and classify_affiliation(aff_by_name[name]).label == "ambiguous"
+        }
+        if demoted:
+            info.authors_with_indian_affiliations = [
+                name for name in info.authors_with_indian_affiliations if name not in demoted
+            ]
+            # indian_institutions is free text (sometimes the LLM's own
+            # cleaned-up name, sometimes a raw affiliation string), so we
+            # can't always tie an entry back to the demoted author with
+            # certainty. What we CAN safely drop is a bare ambiguous
+            # acronym standing alone as an "institution" — e.g. "IIT" with
+            # nothing else — which is itself the exact failure pattern
+            # being corrected here, never a legitimate full institution name.
+            info.indian_institutions = [
+                inst for inst in info.indian_institutions
+                if inst.strip().lower() not in {"iit", "nit", "isi", "vit"}
+            ]
 
         return info

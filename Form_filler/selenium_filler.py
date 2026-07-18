@@ -85,11 +85,17 @@ def fill_single_paper(driver: webdriver.Chrome, paper_data: dict, form_config: d
         return False
 
 
-def process_papers_with_selenium(papers: list, form_config: dict):
+def process_papers_with_selenium(papers: list, form_config: dict) -> list:
     """
     Main processing function. Sets up a single browser instance and loops through
     all papers, filling the form for each one.
+
+    Returns a list of per-paper result dicts:
+        [{"paper_title": str, "status": "submitted" | "failed"}, ...]
+    so callers (e.g. the orchestrator's RPA tool) can report real submission
+    counts back to the person instead of only reading stdout.
     """
+    results = []
     driver = None
     try:
         print("🚀 Starting browser for the entire session...")
@@ -100,13 +106,15 @@ def process_papers_with_selenium(papers: list, form_config: dict):
         print(f"Found {total_papers} paper(s) to process.")
 
         for i, paper in enumerate(papers):
-            print(f"\n--- Processing Paper {i+1}/{total_papers}: {paper.get('paper_title', 'No Title')} ---")
+            title = paper.get('paper_title', 'No Title')
+            print(f"\n--- Processing Paper {i+1}/{total_papers}: {title} ---")
             
             # Navigate to the form for each paper to start fresh
             driver.get(form_config["form_url"])
             
             # Call the function to fill the form for this specific paper
             success = fill_single_paper(driver, paper, form_config)
+            results.append({"paper_title": title, "status": "submitted" if success else "failed"})
             
             if success and i < total_papers - 1:
                 print("--- Pausing for 5 seconds before next paper ---")
@@ -121,3 +129,5 @@ def process_papers_with_selenium(papers: list, form_config: dict):
         if driver:
             print("\nClosing browser...")
             driver.quit()
+
+    return results
