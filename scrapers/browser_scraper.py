@@ -35,18 +35,6 @@ every call):
     full process shutdown); if the browser/context ever dies unexpectedly
     (crash, killed process), _ensure_browser() detects that and relaunches
     once automatically rather than failing every subsequent call.
-
-NOTE ON OPENREVIEW — deliberately NOT handled here:
-    OpenReview-hosted conferences go through
-    workflows/link_extractors/openreview_api_fetcher.py's authenticated
-    API path (pipeline.process_openreview_paper) instead — title, abstract,
-    and ground-truth author/institution data come straight from the API,
-    with no scraping, no browser, no Cloudflare-style challenge handling
-    needed. openreview.net is intentionally absent from BROWSER_DOMAINS
-    below so an openreview.net URL can never silently land here (a caller
-    bug routing one to process_paper() instead of process_openreview_paper()
-    will cleanly fail "all tiers failed" instead of quietly running the old,
-    now-unsupported cookie-reuse-and-PDF-download approach).
 """
 import re
 import json
