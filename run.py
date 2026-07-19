@@ -211,12 +211,12 @@ if __name__ == "__main__":
                 delay=10
             )'''
     
-    run_openreview_pipeline(
-        conference="ICLR",
-        year="2026",
-        venue_id="ICLR.cc/2026/Conference",
-        skip_venue_keywords=["Workshop", "Tutorial"],
-        max_papers=None,
-        resume_from=0,
-        delay=10,
-    )
+    run_scraped_pipeline(
+                proceeding_url="https://dl.acm.org/doi/proceedings/10.1145/3770854",
+                conference="ACM_KDD",
+                year="2026v1",
+                max_papers=None,
+                resume_from=0,
+                delay=10
+            )
+    
