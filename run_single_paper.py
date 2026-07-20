@@ -56,34 +56,13 @@ def main():
             info = process_openreview_paper(paper)
 
         else:
-            # ACM DL needs a fresh Cloudflare session before scraping — warm
-            # up cookies here if they're missing or stale. This only affects
-            # ACM URLs; all other URLs (IEEE, NeurIPS, etc.) skip this block
-            # entirely and fall through to process_paper() below unchanged.
-            if "dl.acm.org" in args.url:
-                from pathlib import Path
-                import time
-
-                cookie_path = Path("data/acm_session_cookies.json")
-                cookies_fresh = (
-                    cookie_path.exists()
-                    and (time.time() - cookie_path.stat().st_mtime) / 60 < 30
-                )
-
-                if not cookies_fresh:
-                    print("[INFO] No fresh ACM cookies — warming up via proceedings page...")
-                    import re
-                    match = re.search(r"10\.1145/(\d+)\.\d+", args.url)
-                    if match:
-                        from workflows.link_extractors.acm_api_fetcher import warmup_acm_cookies
-                        proceedings_url = f"https://dl.acm.org/doi/proceedings/10.1145/{match.group(1)}"
-                        try:
-                            warmup_acm_cookies(proceedings_url)
-                            print("[INFO] ACM cookies refreshed.")
-                        except Exception as e:
-                            print(f"[WARN] Cookie warmup failed: {e} — scraping may fall through to SS")
-                else:
-                    print("[INFO] Using existing ACM cookies.")
+            # ACM DL cookie freshness is no longer pre-checked here on a
+            # wall-clock timer — process_paper() below (via
+            # scrapers/browser_scraper.py's BrowserScraper) tries with
+            # whatever session cookies are on disk first, and only refreshes
+            # them itself, reactively, if it actually gets a Cloudflare
+            # challenge back. That's strictly cheaper when the existing
+            # cookies are still good, and no less correct when they aren't.
 
             # Process the paper via the tiered scrapers — runs for every URL
             # that isn't OpenReview (ACM, IEEE, NeurIPS, ACL, etc). Kept

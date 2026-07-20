@@ -60,6 +60,7 @@ To find the exact SESSION heading texts for a new conference:
 import re
 import json
 import logging
+import concurrent.futures
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
@@ -67,6 +68,26 @@ log = logging.getLogger(__name__)
 
 # Where session cookies are saved for browser_scraper.py to reuse
 COOKIE_PATH = Path("data/acm_session_cookies.json")
+
+
+def _run_isolated(fn, *args, **kwargs):
+    """
+    Run fn (which opens sync_playwright()) in a brand-new, dedicated thread
+    and block for its result.
+
+    Playwright's sync API refuses to start ("It looks like you are using
+    Playwright Sync API inside the asyncio loop") if the *calling* thread
+    already has an asyncio event loop running in it. Whatever ends up
+    calling into this module — a plain script, the FastAPI orchestrator
+    (orchestrator_api.py), an agent runtime, a notebook — may or may not be
+    such a thread, and that can vary between machines/setups even when the
+    calling code looks identical. Rather than relying on every caller's
+    context happening to be safe, we always hand the actual Playwright call
+    off to a fresh OS thread with no asyncio history of its own, so this
+    never depends on how this module happened to be invoked.
+    """
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+        return pool.submit(fn, *args, **kwargs).result()
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -241,13 +262,31 @@ def _wait_for_page_ready(page) -> None:
     """
     log.info("Waiting for Cloudflare challenge to clear (solve in browser if prompted)...")
 
-    page.wait_for_function(
-        """() => {
-            const t = document.title.toLowerCase();
-            return t.length > 5 && !t.includes('just a moment');
-        }""",
-        timeout=120000,
-    )
+    try:
+        page.wait_for_function(
+            """() => {
+                const t = document.title.toLowerCase();
+                return t.length > 5 && !t.includes('just a moment');
+            }""",
+            timeout=120000,
+        )
+    except Exception as e:
+        raise RuntimeError(
+            "Cloudflare challenge never cleared after 120s. This launches a "
+            "real (non-headless) Chromium window, so it needs an actual "
+            "connected display/WindowServer session to render and pass the "
+            "Turnstile check — a plain `ssh` session on macOS does NOT give "
+            "the child process access to the logged-in user's WindowServer, "
+            "so the browser can open but never really render/be interactive, "
+            "and the challenge hangs forever. If you're driving this over "
+            "SSH on macOS, run it inside the logged-in GUI session's "
+            "bootstrap context instead, e.g.:\n"
+            "    ssh user@host 'launchctl asuser $(id -u user) "
+            "sudo -u user /path/to/venv/bin/python run.py'\n"
+            "or connect via Screen Sharing/VNC and run it from a real "
+            "logged-in terminal there. (Original error: "
+            f"{type(e).__name__}: {e})"
+        ) from e
 
     try:
         page.wait_for_selector(
@@ -296,6 +335,14 @@ def _filter_paper_links(raw: list[dict], seen: set) -> list[str]:
 
 
 def _fetch_conference_links(
+    proceeding_url: str,
+    conference: str,
+) -> tuple[list[str], list[dict]]:
+    """Thread-isolated entry point — see _run_isolated() for why."""
+    return _run_isolated(_fetch_conference_links_impl, proceeding_url, conference)
+
+
+def _fetch_conference_links_impl(
     proceeding_url: str,
     conference: str,
 ) -> tuple[list[str], list[dict]]:
@@ -446,9 +493,16 @@ def fetch_acm_links(
 
 
 def warmup_acm_cookies(proceeding_url: str) -> None:
+    """Thread-isolated entry point — see _run_isolated() for why."""
+    _run_isolated(_warmup_acm_cookies_impl, proceeding_url)
+
+
+def _warmup_acm_cookies_impl(proceeding_url: str) -> None:
     """
     Visit the ACM proceedings page to clear Cloudflare and save session
-    cookies. Does not extract links — used by run_single_paper.py.
+    cookies. Does not extract links — used by run_single_paper.py and
+    reactively by scrapers/browser_scraper.py when it detects a Cloudflare
+    challenge on a stored session.
     """
     with sync_playwright() as p:
         browser = p.chromium.launch(

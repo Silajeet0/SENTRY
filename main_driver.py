@@ -1,19 +1,15 @@
 # main_driver.py
-import time
 from pathlib import Path
 from typing import Callable, Optional
 from workflows.html_fetcher import fetch_and_save_html
 from workflows.track_detector import is_track_grouped
 from workflows.link_extractors.flat_link_extractor import extract_flat_links_with_base
 from workflows.link_extractors.grouped_link_extractor import extract_grouped_links
-from workflows.link_extractors.acm_api_fetcher import fetch_acm_links, COOKIE_PATH
+from workflows.link_extractors.acm_api_fetcher import fetch_acm_links
 
 from utils.track_selector_cli import select_tracks_cli
 from utils.track_selector_auto import select_tracks_auto
 from pipeline import run_pipeline as run_paper_pipeline
-
-ACM_COOKIE_MAX_AGE_MINUTES = 30
-OPENREVIEW_COOKIE_MAX_AGE_MINUTES = 30
 
 # NOTE: kept only for backward compatibility with any old code still
 # importing this — OpenReview conferences (ICLR/ICML) are no longer routed
@@ -77,9 +73,14 @@ def run_pipeline(
     # The proceedings page visit clears Cloudflare and saves session
     # cookies so per-paper scraping doesn't re-challenge.
     #
-    # Cookie freshness check: if cookies are stale (>30min), re-run
-    # link extraction to refresh them before per-paper scraping starts.
-    # This ensures resumed runs don't hit Cloudflare cold.
+    # Cookie/session freshness is handled reactively, not on a wall-clock
+    # timer: if cached links already exist we reuse them outright. Per-paper
+    # scraping (scrapers/browser_scraper.py) is what actually notices if the
+    # stored cookies no longer clear Cloudflare — it re-visits the
+    # proceedings page to refresh the session only when a real challenge is
+    # hit, and retries that one paper. That's strictly cheaper than
+    # re-running the whole session-link extraction here just because some
+    # amount of wall-clock time passed on cookies that might still be fine.
     #
     # Covers all A* ACM conferences:
     # KDD, SIGMOD, SIGIR, SIGCOMM, STOC, FOCS, SOSP, OSDI, CCS,
@@ -89,25 +90,12 @@ def run_pipeline(
         print("[🔎] ACM DL proceedings detected — using Playwright.")
 
         links_json_path = Path(f"data/links_raw/{conference}/{year}/grouped_links.json")
-        links_already_exist = links_json_path.exists()
 
-        cookies_are_stale = True
-        if COOKIE_PATH.exists():
-            age_minutes = (time.time() - COOKIE_PATH.stat().st_mtime) / 60
-            cookies_are_stale = age_minutes > ACM_COOKIE_MAX_AGE_MINUTES
-            if not cookies_are_stale:
-                print(f"[✅] ACM session cookies fresh ({age_minutes:.0f}m old).")
-
-        if not links_already_exist or cookies_are_stale:
-            if cookies_are_stale and links_already_exist:
-                print(
-                    f"[⚠️] ACM session cookies stale — re-visiting proceedings "
-                    f"page to refresh Cloudflare clearance."
-                )
-            grouped_json_path = fetch_acm_links(proceeding_url, conference, year)
-        else:
+        if links_json_path.exists():
             print("[✅] Using cached ACM links.")
             grouped_json_path = str(links_json_path.resolve())
+        else:
+            grouped_json_path = fetch_acm_links(proceeding_url, conference, year)
 
         links_json_path = _select_tracks(grouped_json_path)
 
