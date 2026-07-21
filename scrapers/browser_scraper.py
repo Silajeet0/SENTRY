@@ -14,17 +14,27 @@ NOTE ON HEADLESS MODE:
     Cloudflare clearance from the proceedings page is reused here,
     making per-paper scraping reliable without re-challenging.
 
-NOTE ON OPENREVIEW — deliberately NOT handled here:
-    OpenReview-hosted conferences go through
-    workflows/link_extractors/openreview_api_fetcher.py's authenticated
-    API path (pipeline.process_openreview_paper) instead — title, abstract,
-    and ground-truth author/institution data come straight from the API,
-    with no scraping, no browser, no Cloudflare-style challenge handling
-    needed. openreview.net is intentionally absent from BROWSER_DOMAINS
-    below so an openreview.net URL can never silently land here (a caller
-    bug routing one to process_paper() instead of process_openreview_paper()
-    will cleanly fail "all tiers failed" instead of quietly running the old,
-    now-unsupported cookie-reuse-and-PDF-download approach).
+NOTE ON PERSISTENT BROWSER (why scrape() no longer launches Chromium fresh
+every call):
+    A brand-new headless=False Chromium process + a brand-new TLS handshake
+    to dl.acm.org, repeated every ~10-15s for an hour straight, is a very
+    regular, very fingerprintable traffic pattern — independent of raw
+    request volume, this is itself a strong bot signal. One Chromium
+    process + one browser context is now launched lazily on first use and
+    reused for every subsequent scrape() call (only a fresh Page is opened
+    and closed per paper, which is cheap and keeps one paper's DOM state
+    from leaking into the next). This also means cookies accumulated during
+    the session persist naturally in the context's own cookie jar, on top
+    of the existing load-from-disk logic below — closer to how a real
+    browsing session actually behaves.
+
+    The browser is intentionally NOT torn down between conferences/runs —
+    under the orchestrator (a long-lived process), this lets one browser
+    process serve the entire session's ACM scraping rather than relaunching
+    per run. call .close() explicitly if you want to release it (e.g. at
+    full process shutdown); if the browser/context ever dies unexpectedly
+    (crash, killed process), _ensure_browser() detects that and relaunches
+    once automatically rather than failing every subsequent call.
 """
 import re
 import json
@@ -75,6 +85,13 @@ PAYWALL_SIGNALS = [
 
 class BrowserScraper(BaseScraper):
 
+    def __init__(self):
+        # Lazily launched on first scrape() call, then reused — see module
+        # docstring "NOTE ON PERSISTENT BROWSER" above.
+        self._playwright = None
+        self._browser = None
+        self._context = None
+
     def can_handle(self, url: str) -> bool:
         return any(domain in url for domain in BROWSER_DOMAINS)
     
@@ -90,167 +107,230 @@ class BrowserScraper(BaseScraper):
             return None
         return f"https://dl.acm.org/doi/proceedings/10.1145/{m.group(1)}"
 
-    def scrape(self, url: str, _retry: bool = False) -> ScrapeResult:
+    def _load_acm_cookies_into_context(self) -> None:
+        """Best-effort refresh of ACM cookies into the persistent context.
+        Cheap even when nothing changed — safe to call before every ACM
+        scrape (matches the original per-call behavior), and picks up a
+        newly-warmed cookie file mid-run without needing a browser relaunch."""
+        if ACM_COOKIE_PATH.exists():
+            try:
+                cookies = json.loads(ACM_COOKIE_PATH.read_text())
+                self._context.add_cookies(cookies)
+                log.debug(f"Loaded {len(cookies)} ACM session cookies into persistent context")
+            except Exception as e:
+                log.warning(f"Failed to load ACM cookies into context: {e}")
+
+    def _ensure_browser(self):
+        """
+        Lazily launch the persistent Chromium instance on first use, or
+        after it's been closed/died. Reused across every subsequent
+        scrape() call — see module docstring "NOTE ON PERSISTENT BROWSER".
+        """
+        if self._browser is not None:
+            try:
+                # is_connected() is the cheap way to detect a browser that
+                # crashed or was killed out from under us since last use.
+                if self._browser.is_connected():
+                    return
+                log.warning("Persistent browser disconnected — relaunching.")
+            except Exception:
+                log.warning("Persistent browser in a bad state — relaunching.")
+            self.close()
+
+        from playwright.sync_api import sync_playwright
+
+        self._playwright = sync_playwright().start()
+        # headless=False unconditionally (unchanged from before) — ACM's
+        # bot challenge wall detects and blocks headless Chromium; running
+        # every domain this way is simplest and already what the code did.
+        self._browser = self._playwright.chromium.launch(
+            headless=False,
+            args=["--disable-blink-features=AutomationControlled"]
+        )
+        self._context = self._browser.new_context(
+            viewport={"width": 1920, "height": 1080}
+        )
+        self._context.add_init_script("""
+            Object.defineProperty(navigator, 'webdriver', {
+                get: () => undefined
+            });
+        """)
+        self._load_acm_cookies_into_context()
+        log.info("Launched persistent browser instance (reused across papers).")
+
+    def close(self) -> None:
+        """Explicitly release the persistent browser. Not called between
+        papers or between runs by design — only when a caller genuinely
+        wants to release resources (e.g. full process shutdown), or
+        internally by _ensure_browser() when recovering from a dead browser."""
+        for closer, obj in (
+            ("context", self._context),
+            ("browser", self._browser),
+        ):
+            try:
+                if obj:
+                    obj.close()
+            except Exception as e:
+                log.debug(f"Error closing {closer} (non-fatal): {e}")
         try:
-            from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
+            if self._playwright:
+                self._playwright.stop()
+        except Exception as e:
+            log.debug(f"Error stopping playwright (non-fatal): {e}")
+        self._context = None
+        self._browser = None
+        self._playwright = None
+
+    def scrape(self, url: str, _retry: bool = False) -> ScrapeResult:
+        page = None
+        try:
+            from playwright.sync_api import TimeoutError as PWTimeout
 
             is_acm = "dl.acm.org" in url
 
-            # ACM requires headless=False — its bot challenge wall detects
-            # and blocks headless Chromium. IEEE and others work fine headless.
-            use_headless = False
+            # NOTE: ACM cookie freshness is no longer checked on a wall-clock
+            # timer. We go straight to _ensure_browser()/_load_acm_cookies_
+            # into_context() below with whatever's on disk (even if it's old
+            # — it may well still be valid), and only pay for a full
+            # Cloudflare re-clearance if we actually get challenged (see the
+            # title check further down). That's strictly cheaper than
+            # unconditionally re-warming every ~30 minutes.
 
-            # NOTE: cookie freshness is checked reactively, not on a wall-clock
-            # timer. We try the scrape with whatever cookies are on disk (even
-            # if they're old — they may well still be valid), and only pay the
-            # cost of a full Cloudflare re-clearance if we actually get
-            # challenged (see the title check below). This avoids the old
-            # behaviour of unconditionally re-warming every ~30 minutes even
-            # when the existing session was still perfectly good.
+            self._ensure_browser()
 
-            with sync_playwright() as p:
-                browser = p.chromium.launch(
-                    headless=use_headless,
-                    args=["--disable-blink-features=AutomationControlled"]
-                )
+            # Refresh cookies into the persistent context before every ACM
+            # scrape (cheap; picks up any warmup_acm_cookies() write above,
+            # or one triggered by an earlier paper this run, without a
+            # browser relaunch).
+            if is_acm:
+                self._load_acm_cookies_into_context()
 
-                context = browser.new_context(
-                    viewport={"width": 1920, "height": 1080}
-                )
+            page = self._context.new_page()
 
-                # Load ACM session cookies if fresh — avoids re-challenging
-                # Cloudflare on every paper after link extraction
-                if is_acm and ACM_COOKIE_PATH.exists():
-                    cookies = json.loads(ACM_COOKIE_PATH.read_text())
-                    context.add_cookies(cookies)
-                    log.debug(f"Loaded {len(cookies)} ACM session cookies")
+            try:
+                page.goto(url, wait_until="domcontentloaded", timeout=30000)
+                page.wait_for_timeout(5000)
 
-                page = context.new_page()
+                title = page.title()
+                log.debug(f"Page title: {title}")
 
-                page.add_init_script("""
-                    Object.defineProperty(navigator, 'webdriver', {
-                        get: () => undefined
-                    });
-                """)
-
-                try:
-                    page.goto(url, wait_until="domcontentloaded", timeout=30000)
-                    page.wait_for_timeout(5000)
-
-                    title = page.title()
-                    log.debug(f"Page title: {title}")
-
-                    # Detect bot challenge. Covers Cloudflare's
-                    # "Just a moment..." (ACM). For ACM specifically, this is
-                    # the ONE place a cookie refresh gets triggered — reactively,
-                    # because we just proved the stored session no longer
-                    # clears Cloudflare — rather than pre-emptively on a timer.
-                    if self._is_challenge_title(title):
-                        browser.close()
-
-                        if is_acm and not _retry:
-                            log.warning(
-                                f"ACM bot challenge detected (title: {title!r}) — "
-                                "stored session cookies no longer clear Cloudflare. "
-                                "Refreshing session and retrying once."
-                            )
-                            base_url = self._acm_proceedings_url(url)
-                            if not base_url:
-                                return ScrapeResult(
-                                    content="", source="browser", url=url,
-                                    success=False,
-                                    error=(
-                                        "Bot challenge detected and could not derive "
-                                        "the ACM proceedings URL to refresh cookies from"
-                                    ),
-                                )
-                            try:
-                                warmup_acm_cookies(base_url)
-                            except Exception as e:
-                                log.warning(f"ACM cookie refresh failed: {e}")
-                                return ScrapeResult(
-                                    content="", source="browser", url=url,
-                                    success=False,
-                                    error=f"Bot challenge detected; cookie refresh failed: {e}",
-                                )
-                            return self.scrape(url, _retry=True)
-
-                        return ScrapeResult(
-                            content="", source="browser", url=url,
-                            success=False,
-                            error=(
-                                "Bot challenge detected even after a session refresh"
-                                if _retry else
-                                "Bot challenge detected — session cookies stale or missing"
-                            ),
+                # Detect bot challenge. Covers Cloudflare's
+                # "Just a moment..." (ACM). For ACM specifically, this is
+                # the ONE place a cookie refresh gets triggered — reactively,
+                # because we just proved the persistent context's session no
+                # longer clears Cloudflare — rather than pre-emptively on a
+                # timer. The browser/context themselves are NOT torn down;
+                # only this page is, and warmup_acm_cookies() writes fresh
+                # cookies that _load_acm_cookies_into_context() (called again
+                # on the retried scrape() call below) merges straight into
+                # the same persistent context.
+                if self._is_challenge_title(title):
+                    if is_acm and not _retry:
+                        log.warning(
+                            f"ACM bot challenge detected (title: {title!r}) — "
+                            "persistent session no longer clears Cloudflare. "
+                            "Refreshing session and retrying once."
                         )
+                        try:
+                            page.close()
+                        except Exception:
+                            pass
+                        page = None
 
-                except PWTimeout:
-                    browser.close()
+                        base_url = self._acm_proceedings_url(url)
+                        if not base_url:
+                            return ScrapeResult(
+                                content="", source="browser", url=url,
+                                success=False,
+                                error=(
+                                    "Bot challenge detected and could not derive "
+                                    "the ACM proceedings URL to refresh cookies from"
+                                ),
+                            )
+                        try:
+                            warmup_acm_cookies(base_url)
+                        except Exception as e:
+                            log.warning(f"ACM cookie refresh failed: {e}")
+                            return ScrapeResult(
+                                content="", source="browser", url=url,
+                                success=False,
+                                error=f"Bot challenge detected; cookie refresh failed: {e}",
+                            )
+                        return self.scrape(url, _retry=True)
+
                     return ScrapeResult(
                         content="", source="browser", url=url,
-                        success=False, error="Page load timeout"
+                        success=False,
+                        error=(
+                            "Bot challenge detected even after a session refresh"
+                            if _retry else
+                            "Bot challenge detected — session cookies stale or missing"
+                        ),
                     )
 
-                # Domain-specific interactions
-                domain = self._get_domain(url)
-                for action, value in DOMAIN_INTERACTIONS.get(domain, []):
-                    try:
-                        if action == "click":
-                            page.click(value, timeout=5000)
-                        elif action == "wait":
-                            page.wait_for_timeout(int(value))
-                        elif action == "scroll":
-                            page.evaluate(f"window.scrollBy(0, {value})")
-                    except Exception:
-                        pass
+            except PWTimeout:
+                return ScrapeResult(
+                    content="", source="browser", url=url,
+                    success=False, error="Page load timeout"
+                )
 
-                # Extract citation meta tags
-                metadata = page.evaluate("""
-                    () => Array.from(document.querySelectorAll('meta[name^="citation_"]'))
-                        .map(meta => {
-                            const name = meta.getAttribute('name') || '';
-                            const content = meta.getAttribute('content') || '';
-                            return content ? `${name}: ${content}` : '';
-                        })
-                        .filter(Boolean)
-                        .join('\\n')
-                """)
+            # Domain-specific interactions
+            domain = self._get_domain(url)
+            for action, value in DOMAIN_INTERACTIONS.get(domain, []):
+                try:
+                    if action == "click":
+                        page.click(value, timeout=5000)
+                    elif action == "wait":
+                        page.wait_for_timeout(int(value))
+                    elif action == "scroll":
+                        page.evaluate(f"window.scrollBy(0, {value})")
+                except Exception:
+                    pass
 
-                body_text = page.inner_text("body")
-                content = "\n".join(part for part in [metadata, body_text] if part)
+            # Extract citation meta tags
+            metadata = page.evaluate("""
+                () => Array.from(document.querySelectorAll('meta[name^="citation_"]'))
+                    .map(meta => {
+                        const name = meta.getAttribute('name') || '';
+                        const content = meta.getAttribute('content') || '';
+                        return content ? `${name}: ${content}` : '';
+                    })
+                    .filter(Boolean)
+                    .join('\\n')
+            """)
 
-                # IEEE — navigate to /authors sub-page for affiliations
-                if "ieeexplore.ieee.org/document/" in url:
-                    authors_text = self._scrape_ieee_authors_page(page, url)
-                    if authors_text:
-                        content = (
-                            "[IEEE authors and affiliations]\n"
-                            + authors_text
-                            + "\n\n[IEEE page metadata]\n"
-                            + content
-                        )
+            body_text = page.inner_text("body")
+            content = "\n".join(part for part in [metadata, body_text] if part)
 
-                # ACM — click Authors Info & Claims panel for affiliations,
-                # extract only title + abstract (discard nav/footer noise)
-                if "dl.acm.org/doi/10.1145/" in url:
-                    authors_text = self._scrape_acm_authors_page(page, url)
-                    acm_content = self._extract_acm_essentials(page)
-                    if authors_text:
-                        content = (
-                            "[ACM authors and affiliations]\n"
-                            + authors_text
-                            + "\n\n[ACM paper content]\n"
-                            + acm_content
-                        )
-                    else:
-                        content = "[ACM paper content]\n" + acm_content
+            # IEEE — navigate to /authors sub-page for affiliations
+            if "ieeexplore.ieee.org/document/" in url:
+                authors_text = self._scrape_ieee_authors_page(page, url)
+                if authors_text:
+                    content = (
+                        "[IEEE authors and affiliations]\n"
+                        + authors_text
+                        + "\n\n[IEEE page metadata]\n"
+                        + content
+                    )
 
-                # OpenReview intentionally not handled here — see module
-                # docstring. openreview.net is absent from BROWSER_DOMAINS,
-                # so this branch is unreachable in normal operation.
+            # ACM — click Authors Info & Claims panel for affiliations,
+            # extract only title + abstract (discard nav/footer noise)
+            if "dl.acm.org/doi/10.1145/" in url:
+                authors_text = self._scrape_acm_authors_page(page, url)
+                acm_content = self._extract_acm_essentials(page)
+                if authors_text:
+                    content = (
+                        "[ACM authors and affiliations]\n"
+                        + authors_text
+                        + "\n\n[ACM paper content]\n"
+                        + acm_content
+                    )
+                else:
+                    content = "[ACM paper content]\n" + acm_content
 
-                browser.close()
+            # OpenReview intentionally not handled here — see module
+            # docstring. openreview.net is absent from BROWSER_DOMAINS,
+            # so this branch is unreachable in normal operation.
 
             self._debug_dump(url, content)
 
@@ -284,10 +364,25 @@ class BrowserScraper(BaseScraper):
                 error="playwright not installed. Run: pip install playwright && playwright install chromium"
             )
         except Exception as e:
+            # If the persistent browser died mid-scrape (crashed, killed,
+            # connection dropped), close() so the NEXT call's
+            # _ensure_browser() relaunches fresh instead of every
+            # subsequent paper failing against a dead handle.
+            err_text = str(e).lower()
+            if any(s in err_text for s in ("target closed", "browser has been closed", "connection closed")):
+                log.warning(f"Persistent browser appears dead ({e}) — will relaunch on next scrape.")
+                self.close()
             return ScrapeResult(
                 content="", source="browser", url=url,
                 success=False, error=str(e)
             )
+        finally:
+            # Only the page is per-paper — the browser/context persist.
+            if page is not None:
+                try:
+                    page.close()
+                except Exception:
+                    pass
 
     # -----------------------------------------------------------------------
     # ACM helpers
