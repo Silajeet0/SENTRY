@@ -9,11 +9,11 @@ from typing import Optional
 from evaluation.india_rules import classify_affiliation
 
 AREA_LIST = [
-    "AI", "Database", "Machine Learning", "Deep Learning", "NLP", "Speech", "Vision",
+    "AI", "Database", "Machine Learning", "NLP", "Speech", "Vision",
     "Extreme Classification", "Game Theory and Economic Paradigms",
     "Graph Analytics", "Image captioning", "Information Retrieval/Ranking",
-    "Machine Learning for Computer Graphics", "Security", "System Reliability",
-    "Systems and Infrastructure for Web, Mobile Web, and Web of Things", "Others"
+    "Machine Learning for Computer Graphics", "Open Domain Generalization", "Security",
+    "Systems and Infrastructure for Web, Mobile Web, and Web of Things", "System Reliability", "Others"
 ]
 
 

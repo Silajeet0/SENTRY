@@ -176,7 +176,32 @@ def _should_skip_llm_by_prefilter(url, content, content_source) -> bool:
     if domain not in PDF_PREFILTER_DOMAINS:
         return False
 
-    return classify_affiliation(content).label != "positive"
+    return not _has_positive_pdf_affiliation_evidence(content)
+
+
+def _has_positive_pdf_affiliation_evidence(content: str) -> bool:
+    """
+    PDF text is a page-level blob, not a single affiliation. Checking the
+    whole blob can accidentally veto valid local evidence such as "IIT
+    Kanpur" because another author on the same first page has "Singapore" in
+    their affiliation. Prefer local lines/windows, with the original whole-
+    content check kept as a fast positive path.
+    """
+    if classify_affiliation(content).label == "positive":
+        return True
+
+    lines = [line.strip() for line in content.splitlines() if line.strip()]
+    for line in lines:
+        if classify_affiliation(line).label == "positive":
+            return True
+
+    for window_size in (2, 3):
+        for start in range(len(lines) - window_size + 1):
+            window = " ".join(lines[start:start + window_size])
+            if classify_affiliation(window).label == "positive":
+                return True
+
+    return False
 
 
 # ─────────────────────────────────────────────────────────────────────────
