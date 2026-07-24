@@ -16,6 +16,27 @@ AREA_LIST = [
     "Systems and Infrastructure for Web, Mobile Web, and Web of Things", "System Reliability", "Others"
 ]
 
+#to prevent non-determinisim in the RPA
+AREA_ALIASES = {
+    "deep learning": "Machine Learning",
+    "neural networks": "Machine Learning",
+    "representation learning": "Machine Learning",
+    "self-supervised learning": "Machine Learning",
+    "reinforcement learning": "Machine Learning",
+    "large language models": "NLP",
+    "llms": "NLP",
+    "language models": "NLP",
+    "generative ai": "AI",
+    "computer vision": "Vision",
+    "object detection": "Vision",
+    "image generation": "Vision",
+    "diffusion models": "Vision",
+    "speech recognition": "Speech",
+    "speech synthesis": "Speech",
+    "search": "Information Retrieval/Ranking",
+    "retrieval": "Information Retrieval/Ranking",
+}
+
 
 @dataclass
 class PaperInfo:
@@ -107,7 +128,9 @@ class LLMExtractor:
                 raise last_error or ValueError(f"No valid JSON found in LLM response: {raw[:200]}")
 
             info.paper_title = parsed.get("paper_title", "")
-            info.area_of_research = parsed.get("area_of_research", "Others")
+            info.area_of_research = self._normalize_area_of_research(
+                parsed.get("area_of_research", "Others")
+            )
             info.total_authors = parsed.get("total_authors", 0)
             info.all_authors = parsed.get("all_authors", [])
             info.authors_with_indian_affiliations = parsed.get(
@@ -172,6 +195,23 @@ class LLMExtractor:
             return json.loads(match.group(0))
 
         raise ValueError(f"No valid JSON found in LLM response: {raw[:200]}")
+
+    def _normalize_area_of_research(self, area: object) -> str:
+        """Return an IKDD form-safe area value from the LLM's free text."""
+        if not isinstance(area, str):
+            return "Others"
+
+        cleaned = re.sub(r"\s+", " ", area).strip()
+        valid_by_lower = {valid.lower(): valid for valid in AREA_LIST}
+        lowered = cleaned.lower()
+
+        if lowered in valid_by_lower:
+            return valid_by_lower[lowered]
+
+        if lowered in AREA_ALIASES:
+            return AREA_ALIASES[lowered]
+
+        return "Others"
 
     def _verify_indian_affiliations(self, info: PaperInfo) -> PaperInfo:
         """
