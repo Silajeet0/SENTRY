@@ -22,7 +22,7 @@ Two design choices worth calling out:
 import json
 from pathlib import Path
 
-from orchestrator import conference_catalog, ikdd_form_catalog, runner, rpa_runner
+from orchestrator import conference_catalog, ikdd_form_catalog, runner, rpa_runner, summary_runner
 from orchestrator.registry import REGISTRY
 
 
@@ -226,6 +226,33 @@ def list_rpa_runs() -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Email-summary tools
+#
+# A THIRD downstream, independent step alongside initiate_form_filler —
+# same relationship to run_pipeline: it reads papers ALREADY extracted
+# (data/final_output/<conference>/<year>/indian_papers_structured.json must
+# already exist) rather than re-scraping/re-classifying anything. Fetches
+# each paper's abstract (OpenReview API directly for ICML/ICLR/..., the
+# same four-tier scraper as run_pipeline for everything else — see
+# summarizer/abstract_fetcher.py), then writes a cited email-body summary
+# via a SEPARATE summarization LLM (see summarizer/email_summarizer.py for
+# why — a different model/temperature than the main extraction/orchestrator
+# LLM). Runs in the background like run_pipeline/initiate_form_filler —
+# poll get_summary_status rather than waiting here.
+# ---------------------------------------------------------------------------
+def summarize_indian_authors(conference: str, year: str, refresh_cache: bool = False) -> dict:
+    return summary_runner.start_summary(conference=conference, year=year, refresh_cache=refresh_cache)
+
+
+def get_summary_status(conference: str, year: str) -> dict:
+    return summary_runner.get_status(conference, year)
+
+
+def list_summary_runs() -> dict:
+    return summary_runner.list_runs()
+
+
+# ---------------------------------------------------------------------------
 # Dispatch table + OpenAI-style function-calling schemas
 # ---------------------------------------------------------------------------
 TOOL_FUNCTIONS = {
@@ -240,6 +267,9 @@ TOOL_FUNCTIONS = {
     "initiate_form_filler": initiate_form_filler,
     "get_rpa_status": get_rpa_status,
     "list_rpa_runs": list_rpa_runs,
+    "summarize_indian_authors": summarize_indian_authors,
+    "get_summary_status": get_summary_status,
+    "list_summary_runs": list_summary_runs,
 }
 
 TOOL_SCHEMAS = [
@@ -540,6 +570,98 @@ TOOL_SCHEMAS = [
                 "extracted_candidates count). Use this to discover what's "
                 "available to submit, not just what's already been run. "
                 "Separate from list_runs, which covers extraction runs."
+            ),
+            "parameters": {"type": "object", "properties": {}},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "summarize_indian_authors",
+            "description": (
+                "Summarize the work of Indian-affiliated authors at a "
+                "conference/year as a cited email body — e.g. 'summarize "
+                "the works of the Indian authors in ICML 2025'. Requires "
+                "that run_pipeline has ALREADY completed for this "
+                "conference/year (reads data/final_output/<conference>/"
+                "<year>/indian_papers_structured.json) — if it hasn't, this "
+                "returns status='no_extracted_data' and extraction should "
+                "be run first, NOT this tool. Fetches each paper's abstract "
+                "(from OpenReview's API directly for OpenReview-hosted "
+                "conferences, or by scraping otherwise) and writes a short "
+                "plain-English summary of each one, with the paper title, "
+                "Indian author names/institutions, and a link — the summary "
+                "text itself is model-written but every citation detail "
+                "(title/authors/institutions/link) comes straight from the "
+                "already-verified extraction data, not from the summarizing "
+                "model. Runs in the BACKGROUND and returns immediately — "
+                "poll get_summary_status for progress and the final "
+                "subject/body once done, the same pattern as run_pipeline/"
+                "get_run_status."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "conference": {"type": "string"},
+                    "year": {"type": "string"},
+                    "refresh_cache": {
+                        "type": "boolean",
+                        "description": (
+                            "Re-fetch every paper's abstract instead of reusing "
+                            "the cached ones from a previous summary run for this "
+                            "conference/year. Default false — abstracts don't "
+                            "change once a paper is published, so there's "
+                            "normally no reason to re-scrape."
+                        ),
+                    },
+                },
+                "required": ["conference", "year"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_summary_status",
+            "description": (
+                "Get progress/results for an email-summary run — whether "
+                "it's still fetching abstracts, writing the summary, or "
+                "done. Once state is 'completed', the result field has the "
+                "full subject/body ready to hand back to the person (or "
+                "pass to a 'send this' step) — read it from here rather "
+                "than assuming success just because summarize_indian_authors "
+                "returned 'queued'. Also checks disk independent of run "
+                "history, the same way get_rpa_status does for form-filler "
+                "runs: if no summary run has been started this session but "
+                "email_summary.json already exists (from an earlier process) "
+                "or indian_papers_structured.json exists but no summary has "
+                "been generated yet, state comes back 'completed' or "
+                "'ready_to_summarize' respectively instead of a misleading "
+                "'not_started'."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "conference": {"type": "string"},
+                    "year": {"type": "string"},
+                },
+                "required": ["conference", "year"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "list_summary_runs",
+            "description": (
+                "List every email-summary run this orchestrator session "
+                "knows about, with current state — PLUS every conference/"
+                "year on disk under data/final_output/ that has an "
+                "indian_papers_structured.json but no summary generated yet "
+                "in this session (state 'ready_to_summarize'). Use this for "
+                "a vague 'summarize what we've got' request with no "
+                "conference named, the same way list_runs/list_rpa_runs "
+                "resolve vague follow-ups for their own steps."
             ),
             "parameters": {"type": "object", "properties": {}},
         },

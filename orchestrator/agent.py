@@ -112,6 +112,26 @@ duplicate submissions.
 - For a vague "check the upload status" or "retry the RPA" without a named \
 conference, call list_rpa_runs first, the same way you'd call list_runs \
 for a vague extraction-retry request.
+
+Email-summary of Indian authors' work — a FOURTH kind of request, separate \
+from extraction and the form-filler: "summarize the works of the Indian \
+authors in <conference> <year>", "give me a summary I can email out for \
+<conference>", or similar maps to summarize_indian_authors, NOT run_pipeline \
+— don't re-run extraction for a request like this. Like initiate_form_filler, \
+it needs run_pipeline to have ALREADY completed for that conference/year \
+(it reads indian_papers_structured.json); if summarize_indian_authors comes \
+back status="no_extracted_data", tell the person extraction needs to run \
+first rather than retrying blindly or inventing a summary yourself from \
+whatever you already know about the conference.
+- summarize_indian_authors also runs in the background and returns \
+immediately — poll get_summary_status the same way you'd poll get_run_status \
+or get_rpa_status, and only hand back the actual subject/body once state is \
+"completed". Don't paraphrase or shorten the returned email body yourself — \
+its citations (titles/authors/institutions/links) come straight from \
+verified extraction data and should reach the person exactly as generated.
+- For a vague "summarize what we've got" / "which ones can I get a summary \
+for" without a named conference, call list_summary_runs first, the same \
+way you'd call list_runs / list_rpa_runs for their own vague follow-ups.
 """
 
 
