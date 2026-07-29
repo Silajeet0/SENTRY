@@ -48,6 +48,7 @@ def run_pipeline(
     include_track_keywords: list = None,
     skip_venue_keywords: list = None,
     include_only_venue_keywords: list = None,
+    force: bool = False,
 ) -> dict:
     """
     Exactly one of proceeding_url / venue_id should be given — use venue_id
@@ -56,7 +57,48 @@ def run_pipeline(
     scraping entirely (OpenReview's API + ground-truth affiliation data) and
     use skip_venue_keywords/include_only_venue_keywords instead of the
     track-keyword params, which only apply to scraped/grouped conferences.
+
+    Guards against redundant re-extraction: if
+    data/final_output/<conference>/<year>/indian_papers_structured.json
+    already exists, this returns status="already_extracted" (with the
+    existing paper count) INSTEAD of starting a new run. A fresh run means
+    re-scraping every paper AND re-running the extraction LLM call on each
+    one — on the tiered/scraped path that's one MAIN-orchestrator-model call
+    per paper, which for a few dozen papers is genuinely expensive and, if
+    the main model shares a tight rate-limited quota (e.g. a free-tier cloud
+    endpoint), can tie it up for a long time. There's no reason to pay that
+    cost again for a conference/year that's already sitting on disk — a
+    request to summarize/email/submit an already-extracted conference should
+    go straight to the tool that reads existing data (summarize_indian_authors,
+    initiate_form_filler), not through here first. Pass force=True only when
+    a fresh extraction is actually wanted (e.g. the source proceedings page
+    has new papers since the last run, or a scraping bug is being re-tested).
     """
+    if not force:
+        existing_path = Path(f"data/final_output/{conference}/{year}/indian_papers_structured.json")
+        if existing_path.exists():
+            try:
+                existing_count = len(json.loads(existing_path.read_text(encoding="utf-8")))
+            except Exception:
+                existing_count = None
+            return {
+                "status": "already_extracted",
+                "conference": conference,
+                "year": str(year),
+                "existing_paper_count": existing_count,
+                "message": (
+                    f"{conference} {year} already has "
+                    f"{existing_count if existing_count is not None else 'some'} extracted "
+                    "Indian-affiliated paper(s) on disk — not starting a new extraction run "
+                    "automatically. Re-scraping and re-running extraction on every paper again "
+                    "is expensive and unnecessary if this data is what was actually wanted. If "
+                    "the request was to summarize, email, or submit these papers, use the "
+                    "existing data directly (summarize_indian_authors / initiate_form_filler) "
+                    "instead of extracting again. Only call run_pipeline again with force=True "
+                    "if a genuinely fresh extraction is needed."
+                ),
+            }
+
     if venue_id:
         return runner.start_run_openreview(
             conference=conference,
@@ -253,6 +295,36 @@ def list_summary_runs() -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Standalone affiliation-gate tool
+#
+# initiate_form_filler ALREADY runs this gate internally (see
+# Form_filler/run_selenium_filler.py) before ever submitting anything — this
+# standalone version exists so the gate can be previewed/re-run on its own,
+# independent of and before committing to an actual RPA run (e.g. "check
+# which ICML 2025 papers would need human review before you submit them").
+# Deterministic, regex-only, no LLM call — see evaluation/affiliation_gate.py.
+# ---------------------------------------------------------------------------
+def verify_indian_affiliations(conference: str, year: str) -> dict:
+    from evaluation.affiliation_gate import run_gate
+
+    try:
+        result = run_gate(conference=conference, year=year)
+    except FileNotFoundError as e:
+        return {"status": "no_extracted_data", "conference": conference, "year": year, "message": str(e)}
+
+    return {
+        "status": "checked",
+        "conference": conference,
+        "year": year,
+        "total_papers": result["total_papers"],
+        "verified_count": result["verified_count"],
+        "flagged_count": result["flagged_count"],
+        "flagged_papers": result["flagged_papers"],
+        "need_human_review_path": result["need_human_review_path"],
+    }
+
+
+# ---------------------------------------------------------------------------
 # Dispatch table + OpenAI-style function-calling schemas
 # ---------------------------------------------------------------------------
 TOOL_FUNCTIONS = {
@@ -270,6 +342,7 @@ TOOL_FUNCTIONS = {
     "summarize_indian_authors": summarize_indian_authors,
     "get_summary_status": get_summary_status,
     "list_summary_runs": list_summary_runs,
+    "verify_indian_affiliations": verify_indian_affiliations,
 }
 
 TOOL_SCHEMAS = [
@@ -340,6 +413,22 @@ TOOL_SCHEMAS = [
                 "in the background and return immediately — a full run over "
                 "hundreds of papers can take a long time, so poll "
                 "get_run_status afterwards rather than waiting here. "
+                "IMPORTANT — checks for existing data first: if "
+                "indian_papers_structured.json already exists for this "
+                "conference/year, this returns status='already_extracted' "
+                "with the existing paper count INSTEAD of starting a new run "
+                "— it does NOT silently re-extract. If the actual goal is to "
+                "summarize/email/submit an already-extracted conference, call "
+                "summarize_indian_authors / initiate_form_filler directly "
+                "instead of calling run_pipeline first 'to be safe' — those "
+                "tools already handle a missing-data case themselves by "
+                "returning status='no_extracted_data', so there's no need to "
+                "extraction-check ahead of them. Only pass force=True when a "
+                "fresh extraction is genuinely wanted despite existing data "
+                "(e.g. the source proceedings page has new papers since last "
+                "time, or a scraping bug is being re-tested) — never set "
+                "force=True automatically just because a request mentions "
+                "summarizing or submitting. "
                 "IMPORTANT: for OpenReview-hosted conferences (ICML, ICLR, "
                 "and their oral/spotlight variants — resolve_conference_url "
                 "returns mode='openreview_api' with a venue_id for these), "
@@ -355,6 +444,17 @@ TOOL_SCHEMAS = [
                 "properties": {
                     "conference": {"type": "string"},
                     "year": {"type": "string"},
+                    "force": {
+                        "type": "boolean",
+                        "description": (
+                            "Re-extract even if indian_papers_structured.json "
+                            "already exists for this conference/year. Default "
+                            "false. Only set true when the person has actually "
+                            "asked for a fresh/re-run extraction, or explicitly "
+                            "confirmed they want one after being told data "
+                            "already exists — not as a default/safe choice."
+                        ),
+                    },
                     "proceeding_url": {
                         "type": "string",
                         "description": "For scraped-mode conferences only — omit when using venue_id.",
@@ -664,6 +764,37 @@ TOOL_SCHEMAS = [
                 "resolve vague follow-ups for their own steps."
             ),
             "parameters": {"type": "object", "properties": {}},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "verify_indian_affiliations",
+            "description": (
+                "Deterministic, regex-only, NO-LLM re-check of every paper's "
+                "'has Indian-affiliated authors' claim for a conference/year "
+                "— e.g. 'check ICML 2025 for false positives before we "
+                "submit'. Requires run_pipeline to have already completed "
+                "(reads indian_papers_structured.json); returns "
+                "status='no_extracted_data' if it hasn't. Re-classifies each "
+                "claimed author's own affiliation string independently "
+                "against evaluation.india_rules — any paper where a claimed "
+                "author's affiliation doesn't independently re-confirm as "
+                "Indian gets written to need_human_review.json with the "
+                "specific reason, and is NOT auto-submitted. "
+                "initiate_form_filler already runs this gate internally "
+                "before it ever opens a browser — call this tool separately "
+                "only to PREVIEW what would be flagged, without starting an "
+                "actual submission run."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "conference": {"type": "string"},
+                    "year": {"type": "string"},
+                },
+                "required": ["conference", "year"],
+            },
         },
     },
 ]

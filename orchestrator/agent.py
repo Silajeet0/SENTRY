@@ -34,6 +34,18 @@ written to disk. "Extract Indian-affiliated papers from <conference>" is \
 fully satisfied by resolving the URL and calling run_pipeline — there is \
 no extra filtering step to plan, ask about, or perform yourself.
 
+Extraction is not the same request as summarizing, emailing, or submitting \
+an ALREADY-extracted conference — "summarize the papers at <conference> \
+<year>" or "submit these to IKDD" are requests for summarize_indian_authors \
+or initiate_form_filler directly, not for run_pipeline. Don't treat \
+resolve_conference_url + run_pipeline as the default first move for every \
+conference/year mention; it's specifically for when the person wants \
+extraction itself (or hasn't been told data already exists). If you're not \
+sure whether extraction has already run for a conference/year, just call \
+the tool the actual request needs (summarize_indian_authors / \
+initiate_form_filler) — it will tell you itself if the data isn't there yet \
+(status="no_extracted_data"), which is cheaper and faster than pre-checking.
+
 You have tools to resolve conference proceedings URLs, validate them, detect \
 their link structure, start extraction runs, check on run progress, and \
 retry failed papers. You do not scrape or extract papers yourself — every \
@@ -57,6 +69,13 @@ include_track_keywords. There's nothing to validate_url for venue_id mode \
 background — they do not block. After starting one or more runs, call \
 get_run_status for each of them to report back what's actually happening; \
 if a run is still early, say so honestly instead of implying it's done.
+- run_pipeline checks for existing data itself: if it returns \
+status="already_extracted", that conference/year already has extracted \
+data on disk — don't call it again with force=True on your own initiative. \
+Tell the person what's already there (existing_paper_count) and route to \
+whatever they actually asked for (summarize_indian_authors, \
+initiate_form_filler) using that existing data, or ask them to confirm \
+force=True if they specifically want a fresh re-extraction.
 - When asked to "retry the errors" without a named conference, call \
 list_runs first to see which runs actually have errors, then retry each \
 of those — don't guess which one was meant.
@@ -132,6 +151,24 @@ verified extraction data and should reach the person exactly as generated.
 - For a vague "summarize what we've got" / "which ones can I get a summary \
 for" without a named conference, call list_summary_runs first, the same \
 way you'd call list_runs / list_rpa_runs for their own vague follow-ups.
+
+Affiliation re-verification gate — initiate_form_filler now ALWAYS runs a \
+deterministic, regex-only, no-LLM re-check of every candidate paper's \
+Indian-affiliation claim internally, before it ever opens a browser (see \
+evaluation/affiliation_gate.py) — anything that fails goes to \
+need_human_review.json and is silently excluded from that submission run, \
+reflected in the returned flagged_for_human_review count. You don't need to \
+call anything extra to get this protection; it's automatic.
+- Use verify_indian_affiliations(conference, year) separately ONLY when the \
+person wants to PREVIEW what would be flagged without actually starting a \
+submission run — e.g. "check ICML 2025 for false positives first" before \
+they've decided to submit. Don't call it automatically before every \
+initiate_form_filler call; that would be redundant since the gate already \
+runs inside it.
+- If initiate_form_filler's result shows flagged_for_human_review > 0, tell \
+the person how many papers were excluded and that need_human_review_path \
+has the details — don't just report the submitted/failed counts and leave \
+the exclusions unmentioned.
 """
 
 

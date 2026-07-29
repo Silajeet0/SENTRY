@@ -80,6 +80,26 @@ def _job(conference: str, year: str, refresh_cache: bool, delay_seconds: float) 
     from summarizer.abstract_fetcher import fetch_abstracts_for_papers
     from summarizer.email_summarizer import SummaryLLM, build_email
 
+    # Print the ACTUALLY-RESOLVED config for this run, not what .env
+    # currently says on disk. load_dotenv() only runs once, at process
+    # start — if orchestrator_api.py has been running since before
+    # SUMMARY_LLM_* was added/changed in .env, os.getenv() here will
+    # silently fall back to LLM_* (the SAME model the orchestrator's own
+    # tool-calling loop uses), and the two compete for one quota. This line
+    # makes that visible immediately in the server's own log instead of only
+    # being inferable from which model name shows up in the HTTP request
+    # logs — if this doesn't say what you expect, restart orchestrator_api.py
+    # so it picks up the current .env.
+    _probe = SummaryLLM()
+    print(
+        f"[summary_runner] {conference} {year}: summarizer resolved to "
+        f"model={_probe.model!r} base_url={_probe.base_url!r} "
+        f"temperature={_probe.temperature} — if this looks like your MAIN "
+        f"orchestrator model rather than a distinct summarizer model, "
+        f"SUMMARY_LLM_* likely isn't set (or this process needs restarting "
+        f"to pick up a recent .env change)."
+    )
+
     papers = _load_papers(conference, year)
     if papers is None:
         SUMMARY_REGISTRY.mark_failed(

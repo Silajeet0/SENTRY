@@ -110,38 +110,38 @@ PAPERS:
 
 Return ONLY the JSON described in your instructions — one summary per paper index above."""
 
-INTRO_SYSTEM_PROMPT = """You are a research-communications assistant. You write a longer, illustrative lead-in \
+INTRO_SYSTEM_PROMPT = """You are a research-communications assistant. You write a short, thematic lead-in \
 for an email that summarizes a batch of academic papers, based only on their titles and a one-line summary \
 of each.
 
-Rules:
-- Base everything ONLY on the titles and summaries given below. Never invent details, subareas, or claims \
-not evident from them.
-- Open with 1-2 sentences stating the number of papers and the conference/year plainly.
-- Then, in flowing prose (not a list, not bullet points, not numbered), briefly touch on EVERY paper's core \
-idea or finding — a short clause or sentence each is enough, but every paper given below should get a \
-mention, so the reader gets a quick preview of the whole set before reading the fuller numbered list further \
-down. Group or connect related papers in the same sentence where it reads naturally (e.g. two papers on \
-related topics can share a sentence), rather than mechanically restating "Paper N is about X" for every one.
-- Aim for roughly 150-250 words for a typical batch (around 10-15 papers) — noticeably longer and more \
-substantive than a short summary paragraph, since its job is to actually preview every paper's idea, not \
-just name the general topic areas. For a larger batch, extend the length as needed so every paper still \
-gets at least a brief mention — keep each individual mention to a short clause rather than a full sentence \
-to manage the extra length, rather than dropping papers to stay within the 150-250 word target.
-- Do NOT claim a specific track (e.g. "main track") unless it's explicitly stated below — you aren't given \
-that information.
-- Do NOT mention specific author names or institutions — those are handled in the numbered list right after \
-this paragraph. You MAY reference a paper by a short recognizable phrase from its title if it helps the \
-prose flow, but you don't need to quote titles in full.
-- Return ONLY the paragraph(s) themselves as plain text — no heading, no markdown, no quotation marks, no \
-commentary before or after it. One or two paragraphs is fine if that reads better than a single long block."""
+Your job is NOT to narrate each paper one by one — that reads like a list stitched into prose, which is \
+exactly what to avoid. Instead:
+- Read across ALL the papers given below and identify the small number of overarching research areas or \
+themes they cluster into (e.g. "bandit problems", "diffusion models", "fairness in selection", "online \
+convex optimization") — usually somewhere between 3 and 7 themes depending on how many papers there are.
+- Open with 1 sentence stating the number of papers and the conference/year plainly.
+- Then, in 1-3 further sentences, name the thematic areas the papers span — a concise, flowing "they spanned \
+the areas of X, Y, and Z" style sentence (or two), not a paper-by-paper walkthrough.
+- Optionally close with one more sentence noting any genuine, evident overall pattern across the set (e.g. \
+"much of the work leans theoretical" or "several papers focus on efficiency/scaling") — ONLY if it's actually \
+evident from the titles/summaries given, never invented.
+- Base everything ONLY on the titles and summaries given below. Never invent papers, subareas, or claims not \
+evident from them, and never claim a specific track (e.g. "main track") unless it's explicitly stated below.
+- Keep the WHOLE thing concise — roughly 4-7 sentences total, regardless of how many papers are in the batch. \
+More papers should mean identifying broader/coarser themes to stay concise, not covering more individual \
+papers.
+- Do NOT mention specific author names, institutions, or individual paper titles — save that detail for the \
+numbered list that follows this paragraph.
+- Return ONLY the paragraph itself as plain text — no heading, no markdown, no quotation marks, no commentary \
+before or after it."""
 
 INTRO_USER_PROMPT_TEMPLATE = """{conference} {year} — {count} paper(s) with Indian-affiliated authors.
 
 PAPERS (title — one-line summary):
 {paper_lines}
 
-Write the introductory lead-in now — remember, every paper above should get at least a brief mention."""
+Identify the overarching themes across these papers and write the thematic lead-in now — a concise synthesis \
+of the areas covered, not a walkthrough of each paper."""
 
 
 class SummaryLLM:
@@ -154,7 +154,26 @@ class SummaryLLM:
         self.temperature = float(os.getenv("SUMMARY_LLM_TEMPERATURE", "0.4"))
         self.batch_size = int(os.getenv("SUMMARY_BATCH_SIZE", "15"))
         self.max_abstract_chars = int(os.getenv("SUMMARY_MAX_ABSTRACT_CHARS", "900"))
-        self.intro_max_tokens = int(os.getenv("SUMMARY_INTRO_MAX_TOKENS", "1200"))
+        # Not 300 words worth of budget — 300 TOKENS, and it's genuinely too
+        # low for a reasoning model. gpt-oss (and similar "harmony format")
+        # models spend part of max_tokens on an internal reasoning pass
+        # BEFORE writing the visible answer, all counted against the same
+        # budget; at a low max_tokens the reasoning alone can consume the
+        # entire allowance, leaving finish_reason="length" with
+        # completion_tokens maxed out but message.content completely empty
+        # — a documented gpt-oss/vLLM behavior, not a bug in this code. 800
+        # leaves real headroom for that case while still being nowhere near
+        # the batch call's 4000. If you're using a non-reasoning model, feel
+        # free to turn this back down via the env var.
+        self.intro_max_tokens = int(os.getenv("SUMMARY_INTRO_MAX_TOKENS", "800"))
+        # Only ever included in the request if explicitly set — Groq's
+        # gpt-oss models accept "low"/"medium"/"high" here to control how
+        # much of max_tokens goes to internal reasoning before the visible
+        # answer; "low" leaves more of a modest max_tokens budget for the
+        # actual output. Left empty by default since non-gpt-oss models (and
+        # some other providers/endpoints) may reject an unrecognized param
+        # outright rather than silently ignoring it.
+        self.reasoning_effort = os.getenv("SUMMARY_LLM_REASONING_EFFORT", "").strip().lower()
         # Rate-limit resilience — a bigger conference means more batch calls
         # (and one intro call), each of which can independently collide with
         # a provider's per-minute limit. A small, unconditional pacing delay
@@ -197,12 +216,43 @@ class SummaryLLM:
         )
         if json_mode and self._should_request_json_mode():
             request["response_format"] = {"type": "json_object"}
+        if self.reasoning_effort:
+            request["reasoning_effort"] = self.reasoning_effort
         try:
             response = client.chat.completions.create(**request)
         except Exception:
             request.pop("response_format", None)
             response = client.chat.completions.create(**request)
-        return (response.choices[0].message.content or "").strip()
+
+        choice = response.choices[0]
+        text = (choice.message.content or "").strip()
+
+        if not text:
+            # Distinguish "the model legitimately declined to answer" from
+            # "the model burned the whole budget on internal reasoning and
+            # never got to the visible answer" — finish_reason == "length"
+            # with completion_tokens at or near max_tokens is the fingerprint
+            # of the latter (see reasoning_effort/max_tokens comment above),
+            # and is fixed by raising max_tokens or setting reasoning_effort,
+            # NOT by treating it as a generic failure and moving on.
+            finish_reason = getattr(choice, "finish_reason", "unknown")
+            usage = getattr(response, "usage", None)
+            completion_tokens = getattr(usage, "completion_tokens", "unknown") if usage else "unknown"
+            if finish_reason == "length":
+                raise RuntimeError(
+                    f"Model returned empty content with finish_reason='length' "
+                    f"(completion_tokens={completion_tokens}, max_tokens requested={max_tokens}) "
+                    f"— this is the signature of a reasoning model spending its entire token "
+                    f"budget on internal reasoning before writing the visible answer. Raise "
+                    f"max_tokens for this call, or set SUMMARY_LLM_REASONING_EFFORT=low if "
+                    f"you're using a gpt-oss-style model."
+                )
+            raise RuntimeError(
+                f"Model returned empty content (finish_reason={finish_reason!r}, "
+                f"completion_tokens={completion_tokens})."
+            )
+
+        return text
 
     def _should_request_json_mode(self) -> bool:
         value = os.getenv("SUMMARY_LLM_RESPONSE_FORMAT_JSON", "auto").lower()
