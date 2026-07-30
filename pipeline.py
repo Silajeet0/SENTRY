@@ -406,6 +406,7 @@ def run_pipeline(
                 "paper_url": info.paper_url,
                 "paper_title": info.paper_title,
                 "area_of_research": info.area_of_research,
+                "area_of_research_other": info.area_of_research_other,
                 "total_authors": info.total_authors,
                 "all_authors": info.all_authors,
                 "authors_with_indian_affiliations": info.authors_with_indian_affiliations,

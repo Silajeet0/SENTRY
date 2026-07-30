@@ -43,6 +43,14 @@ class PaperInfo:
     paper_url: str
     paper_title: str = ""
     area_of_research: str = ""
+    # Populated ONLY when area_of_research falls back to "Others" and the
+    # LLM's own free-text answer had something more specific to say than
+    # that (e.g. "Federated Learning") — the IKDD form reveals a follow-up
+    # "Enter the area of research" text box the moment "Others" is picked
+    # on the dropdown, and Form_filler needs this to fill it in. Left ""
+    # when area_of_research is one of the fixed AREA_LIST options, or when
+    # the LLM's raw answer was itself just some spelling of "other"/unknown.
+    area_of_research_other: str = ""
     total_authors: int = 0
     all_authors: list = field(default_factory=list)
     authors_with_indian_affiliations: list = field(default_factory=list)
@@ -57,6 +65,12 @@ Extract the requested information from the page content below and return ONLY va
 
 AREAS OF RESEARCH (pick exactly one):
 {area_list}
+
+If the paper's topic does not clearly fit any option above other than "Others", set
+"area_of_research" to "Others" AND set "area_of_research_other" to a short (2-6 word)
+specific description of the paper's actual research area, e.g. "Algebraic Complexity
+Theory", "Cryptographic Protocols", "Federated Learning". If "area_of_research" is
+anything OTHER than "Others", leave "area_of_research_other" as an empty string "".
 
 INDIAN AFFILIATION INDICATORS & RULES:
 - "India" mentioned explicitly in the affiliation block.
@@ -76,6 +90,7 @@ Return ONLY this JSON (no markdown, no explanation):
 {{
   "paper_title": "exact title as it appears",
   "area_of_research": "one area from the list above",
+  "area_of_research_other": "short specific area description, ONLY if area_of_research is 'Others', otherwise empty string",
   "total_authors": 0,
   "all_authors": [
     {{"name": "Full Name", "affiliation": "Full affiliation string or Unknown"}}
@@ -128,8 +143,12 @@ class LLMExtractor:
                 raise last_error or ValueError(f"No valid JSON found in LLM response: {raw[:200]}")
 
             info.paper_title = parsed.get("paper_title", "")
-            info.area_of_research = self._normalize_area_of_research(
+            normalized_area, derived_other = self._normalize_area_of_research(
                 parsed.get("area_of_research", "Others")
+            )
+            info.area_of_research = normalized_area
+            info.area_of_research_other = self._resolve_other_text(
+                parsed.get("area_of_research_other", ""), derived_other, normalized_area
             )
             info.total_authors = parsed.get("total_authors", 0)
             info.all_authors = parsed.get("all_authors", [])
@@ -196,22 +215,65 @@ class LLMExtractor:
 
         raise ValueError(f"No valid JSON found in LLM response: {raw[:200]}")
 
-    def _normalize_area_of_research(self, area: object) -> str:
-        """Return an IKDD form-safe area value from the LLM's free text."""
+    # Raw LLM answers that mean "no more specific term than Others itself" —
+    # not worth surfacing back as the "Others" follow-up text.
+    _EMPTY_OTHER_VALUES = {"other", "others", "n/a", "na", "none", "unknown", ""}
+
+    def _normalize_area_of_research(self, area: object) -> tuple[str, str]:
+        """
+        Return (area_of_research, area_of_research_other) — an IKDD
+        form-safe dropdown value from the LLM's free text, plus (when the
+        dropdown value is "Others") the LLM's original wording so it can
+        go into the form's follow-up "Enter the area of research" text box
+        instead of being thrown away.
+        """
         if not isinstance(area, str):
-            return "Others"
+            return "Others", ""
 
         cleaned = re.sub(r"\s+", " ", area).strip()
         valid_by_lower = {valid.lower(): valid for valid in AREA_LIST}
         lowered = cleaned.lower()
 
         if lowered in valid_by_lower:
-            return valid_by_lower[lowered]
+            return valid_by_lower[lowered], ""
 
         if lowered in AREA_ALIASES:
-            return AREA_ALIASES[lowered]
+            return AREA_ALIASES[lowered], ""
 
-        return "Others"
+        if lowered in self._EMPTY_OTHER_VALUES:
+            return "Others", ""
+
+        return "Others", cleaned
+
+    def _resolve_other_text(self, explicit_other: object, derived_other: str, area: str) -> str:
+        """
+        Pick the text to show in the IKDD form's follow-up "Enter the area
+        of research" box, when area_of_research is "Others". Two sources:
+
+        1. explicit_other — the LLM's answer to the prompt's dedicated
+           area_of_research_other field. This is the expected path: the
+           prompt now asks for it explicitly whenever the LLM picks
+           "Others", since AREA_LIST's own "Others" entry means a
+           compliant model otherwise has no reason to say anything more
+           specific in area_of_research itself (it's a valid list choice
+           on its own) — that was the actual root cause of this field
+           coming back empty even after area_of_research_other existed.
+        2. derived_other — _normalize_area_of_research's fallback, for
+           models that don't reliably follow the JSON schema and instead
+           put a free-text, off-list term directly in area_of_research.
+
+        Returns "" if area isn't "Others" at all, or if neither source has
+        anything usable.
+        """
+        if area != "Others":
+            return ""
+
+        if isinstance(explicit_other, str):
+            cleaned = re.sub(r"\s+", " ", explicit_other).strip()
+            if cleaned and cleaned.lower() not in self._EMPTY_OTHER_VALUES:
+                return cleaned
+
+        return derived_other
 
     def _verify_indian_affiliations(self, info: PaperInfo) -> PaperInfo:
         """

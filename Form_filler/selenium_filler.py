@@ -6,6 +6,83 @@ from selenium.webdriver.support.ui import Select, WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
+def _is_others_area(selected_area: str) -> bool:
+    return isinstance(selected_area, str) and selected_area.strip().lower() == "others"
+
+
+def _fill_other_area_field(driver: webdriver.Chrome, other_text: str):
+    """
+    IKDD's form reveals a follow-up free-text box directly below the Area
+    of research dropdown the instant "Others" is selected — it isn't
+    present/visible before that:
+        <input type="text" class="form-control main" name="areaResearchOther"
+               id="areaResearchOther" placeholder="Enter the area of research">
+    Previously the filler only selected "Others" on the dropdown and left
+    this box untouched, so every "Others"-classified paper submitted with
+    that field blank.
+
+    Locator strategy, in order:
+      1. name="areaResearchOther" — confirmed against the live form's DOM.
+      2. Placeholder match, in case a future markup change drops/renames
+         the name/id but keeps the visible placeholder text.
+      3. DOM-proximity fallback via JS: walk up from the areaResearch
+         <select> looking for the nearest visible text input that isn't
+         the select itself — last resort if both of the above miss.
+    Raises NoSuchElementException if none of these find anything visible,
+    so this surfaces through fill_single_paper's existing except block
+    exactly like any other missing-element failure, instead of silently
+    submitting with the field empty.
+    """
+    text_to_enter = (other_text or "").strip()
+    if not text_to_enter:
+        text_to_enter = "Others"
+        print("   -> ⚠️  No specific 'Others' area text available from "
+              f"extraction; falling back to '{text_to_enter}' in the "
+              "follow-up box. Consider reviewing this paper's area "
+              "classification manually after submission.")
+
+    field = None
+    try:
+        field = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.NAME, "areaResearchOther"))
+        )
+    except TimeoutException:
+        try:
+            field = WebDriverWait(driver, 5).until(
+                EC.visibility_of_element_located(
+                    (By.CSS_SELECTOR, "input[placeholder='Enter the area of research']")
+                )
+            )
+        except TimeoutException:
+            area_select = driver.find_element(By.NAME, "areaResearch")
+            field = driver.execute_script(
+                """
+                const select = arguments[0];
+                let container = select.closest('form') || select.parentElement;
+                let node = select.parentElement;
+                while (node && node !== container) {
+                    const input = node.querySelector(
+                        "input[type='text']:not([name='areaResearch'])"
+                    );
+                    if (input && input.offsetParent !== null) return input;
+                    node = node.parentElement;
+                }
+                return null;
+                """,
+                area_select,
+            )
+            if field is None:
+                raise NoSuchElementException(
+                    "Could not locate the 'areaResearchOther' text field "
+                    "that IKDD's form should reveal after selecting "
+                    "'Others' — the form's markup may have changed."
+                )
+
+    driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", field)
+    field.clear()
+    field.send_keys(text_to_enter)
+
+
 def fill_single_paper(driver: webdriver.Chrome, paper_data: dict, form_config: dict):
     """
     Fills the form for a single paper using an active browser instance.
@@ -57,7 +134,12 @@ def fill_single_paper(driver: webdriver.Chrome, paper_data: dict, form_config: d
         Select(driver.find_element(By.NAME, "venue")).select_by_visible_text(form_config['venue'])
         Select(driver.find_element(By.NAME, "year")).select_by_visible_text(form_config['year'])
         Select(driver.find_element(By.NAME, "month")).select_by_visible_text(form_config['month'])
-        Select(driver.find_element(By.NAME, "areaResearch")).select_by_visible_text(paper_data['area_of_research'])
+        selected_area = paper_data['area_of_research']
+        Select(driver.find_element(By.NAME, "areaResearch")).select_by_visible_text(selected_area)
+
+        if _is_others_area(selected_area):
+            print("   -> 'Others' selected — filling the follow-up area-of-research text box...")
+            _fill_other_area_field(driver, paper_data.get('area_of_research_other', ''))
 
         # --- PHASE 3: SUBMIT ---
         print("   -> Submitting form...")
