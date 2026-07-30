@@ -39,6 +39,7 @@ every call):
 import re
 import json
 import logging
+import threading
 from pathlib import Path
 from urllib.parse import urlparse
 from .base import BaseScraper, ScrapeResult
@@ -91,6 +92,17 @@ class BrowserScraper(BaseScraper):
         self._playwright = None
         self._browser = None
         self._context = None
+        # OS thread that _ensure_browser() launched the persistent browser
+        # on. Playwright's sync API binds every object it returns to a
+        # single greenlet ("dispatcher fiber") that lives on whichever OS
+        # thread called sync_playwright().start() — calling any Playwright
+        # method from a *different* thread raises
+        # "greenlet.error: cannot switch to a different thread", and
+        # Browser.is_connected() (a local flag, not a real round-trip) has
+        # no way to detect that on its own. We track the owning thread
+        # explicitly so a caller from a different thread forces a clean
+        # relaunch instead of reusing a browser it can never actually use.
+        self._browser_thread_id = None
 
     def can_handle(self, url: str) -> bool:
         return any(domain in url for domain in BROWSER_DOMAINS)
@@ -126,16 +138,33 @@ class BrowserScraper(BaseScraper):
         after it's been closed/died. Reused across every subsequent
         scrape() call — see module docstring "NOTE ON PERSISTENT BROWSER".
         """
+        current_thread_id = threading.get_ident()
+
         if self._browser is not None:
-            try:
-                # is_connected() is the cheap way to detect a browser that
-                # crashed or was killed out from under us since last use.
-                if self._browser.is_connected():
-                    return
-                log.warning("Persistent browser disconnected — relaunching.")
-            except Exception:
-                log.warning("Persistent browser in a bad state — relaunching.")
-            self.close()
+            if self._browser_thread_id != current_thread_id:
+                # is_connected() would return True here — the browser IS
+                # still alive, just permanently unusable from this thread.
+                # Checking it first would mask exactly the bug we're
+                # guarding against, so the thread check must come first.
+                log.warning(
+                    "Persistent browser was launched on thread "
+                    f"{self._browser_thread_id} but is now being called "
+                    f"from thread {current_thread_id} — Playwright's sync "
+                    "API can't be used across threads. Relaunching a fresh "
+                    "browser bound to this thread."
+                )
+                self.close()
+            else:
+                try:
+                    # is_connected() is the cheap way to detect a browser
+                    # that crashed or was killed out from under us since
+                    # last use (same-thread case only — see above).
+                    if self._browser.is_connected():
+                        return
+                    log.warning("Persistent browser disconnected — relaunching.")
+                except Exception:
+                    log.warning("Persistent browser in a bad state — relaunching.")
+                self.close()
 
         from playwright.sync_api import sync_playwright
 
@@ -155,8 +184,12 @@ class BrowserScraper(BaseScraper):
                 get: () => undefined
             });
         """)
+        self._browser_thread_id = current_thread_id
         self._load_acm_cookies_into_context()
-        log.info("Launched persistent browser instance (reused across papers).")
+        log.info(
+            f"Launched persistent browser instance on thread {current_thread_id} "
+            "(reused across papers on this thread)."
+        )
 
     def close(self) -> None:
         """Explicitly release the persistent browser. Not called between
@@ -180,6 +213,7 @@ class BrowserScraper(BaseScraper):
         self._context = None
         self._browser = None
         self._playwright = None
+        self._browser_thread_id = None
 
     def scrape(self, url: str, _retry: bool = False) -> ScrapeResult:
         page = None
@@ -369,7 +403,10 @@ class BrowserScraper(BaseScraper):
             # _ensure_browser() relaunches fresh instead of every
             # subsequent paper failing against a dead handle.
             err_text = str(e).lower()
-            if any(s in err_text for s in ("target closed", "browser has been closed", "connection closed")):
+            if any(s in err_text for s in (
+                "target closed", "browser has been closed", "connection closed",
+                "cannot switch to a different thread", "greenlet",
+            )):
                 log.warning(f"Persistent browser appears dead ({e}) — will relaunch on next scrape.")
                 self.close()
             return ScrapeResult(
