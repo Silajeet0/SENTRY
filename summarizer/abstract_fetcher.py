@@ -72,35 +72,49 @@ def extract_abstract_from_content(content: str) -> tuple[str, bool]:
     FALLBACK_WINDOW_CHARS leading-text fallback was used instead of a real
     'Abstract' heading match — callers surface this so a degraded abstract
     is visible rather than silently indistinguishable from a clean one.
+
+    Pages (IEEE Xplore in particular) often contain the word "Abstract"
+    twice: once as a tab/nav link near the top of the page ("...Full Text
+    Views Abstract Document Sections 1. Introduction...") and once as the
+    real heading further down ("Abstract: Deep learning models..."). The
+    nav occurrence is immediately followed by a stop marker, so matching
+    only the FIRST occurrence silently grabs the nav link instead of the
+    real abstract. Evaluate every occurrence and keep whichever yields the
+    longest text before its nearest stop marker — the real heading is the
+    one with an actual paragraph after it.
     """
     if not content:
         return "", False
 
-    match = re.search(r"\babstract\b\s*[:\-—]?\s*", content, re.IGNORECASE)
-    if not match:
+    matches = list(re.finditer(r"\babstract\b\s*[:\-—]?\s*", content, re.IGNORECASE))
+    if not matches:
         fallback = re.sub(r"\s+", " ", content[:FALLBACK_WINDOW_CHARS]).strip()
         return fallback, False
 
-    after = content[match.end():]
-    lower_after = after.lower()
+    best_abstract = ""
+    for match in matches:
+        after = content[match.end():]
+        lower_after = after.lower()
 
-    cut = len(after)
-    for marker in ABSTRACT_STOP_MARKERS:
-        idx = lower_after.find(marker)
-        if idx != -1:
-            cut = min(cut, idx)
+        cut = len(after)
+        for marker in ABSTRACT_STOP_MARKERS:
+            idx = lower_after.find(marker)
+            if idx != -1:
+                cut = min(cut, idx)
 
-    abstract = re.sub(r"\s+", " ", after[:cut]).strip()
+        candidate = re.sub(r"\s+", " ", after[:cut]).strip()
+        if len(candidate) > len(best_abstract):
+            best_abstract = candidate
 
     # A heading match with almost nothing after it before the next marker
     # (e.g. "Abstract" as a nav link, immediately followed by "Keywords")
     # isn't a real abstract — fall back to the leading-window heuristic
     # instead of returning a near-empty string.
-    if len(abstract) < 40:
+    if len(best_abstract) < 40:
         fallback = re.sub(r"\s+", " ", content[:FALLBACK_WINDOW_CHARS]).strip()
         return fallback, False
 
-    return abstract, True
+    return best_abstract, True
 
 
 def fetch_abstract_for_paper(paper: dict, delay_seconds: float = DEFAULT_SCRAPE_DELAY_SECONDS) -> dict:
