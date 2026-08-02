@@ -212,9 +212,9 @@ if __name__ == "__main__":
             )'''
     
     run_scraped_pipeline(
-                proceeding_url="https://dl.acm.org/doi/proceedings/10.1145/3770854",
-                conference="ACM_KDD",
-                year="2026v1",
+                proceeding_url="https://aaai.org/proceeding/aaai-40-2026/",
+                conference="AAAI",
+                year="2026",
                 max_papers=None,
                 resume_from=0,
                 delay=10

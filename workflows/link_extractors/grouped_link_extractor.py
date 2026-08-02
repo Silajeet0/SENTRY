@@ -113,6 +113,16 @@ def extract_grouped_links(html_path: str, conference: str, year: str) -> str:
                     "paper_links": paper_links
                 })
 
+    elif "aaai" in conf:
+        raise ValueError(
+            "[ERROR] AAAI proceedings use a two-level landing-page → "
+            "per-volume-OJS-issue structure that this generic single-page "
+            "extractor can't handle. This should already be routed around "
+            "in main_driver.run_pipeline — use "
+            "workflows.link_extractors.aaai_link_extractor.extract_aaai_links "
+            "directly instead."
+        )
+
     else:
         raise ValueError(f"[ERROR] Unsupported grouped conference: {conference}")
 

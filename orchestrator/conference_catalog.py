@@ -40,6 +40,7 @@ _ALIASES = {
     "NEURIPS": "NeurIPS", "NIPS": "NeurIPS",
     "ICML": "ICML", "ICLR": "ICLR",
     "ACL": "ACL", "EMNLP": "EMNLP", "NAACL": "NAACL",
+    "AAAI": "AAAI",
     "KDD": "ACM_KDD", "ACM-KDD": "ACM_KDD", "ACM KDD": "ACM_KDD", "ACM_KDD": "ACM_KDD",
     "SIGCOMM": "ACM_SIGCOMM", "ACM-SIGCOMM": "ACM_SIGCOMM", "ACM_SIGCOMM": "ACM_SIGCOMM",
     "CCS": "ACM_CCS", "ACM_CCS": "ACM_CCS",
@@ -113,6 +114,24 @@ def normalize_conference_name(conference: str) -> str:
     return _ALIASES.get(raw.upper(), raw)
 
 
+def _aaai_number_for_year(year: str) -> Optional[int]:
+    """
+    AAAI's conference number has incremented by exactly 1 every year since
+    the modern era (e.g. AAAI-34 in 2020 ... AAAI-40 in 2026, the latter
+    confirmed against aaai.org/proceeding/aaai-40-2026/). This does NOT
+    hold across AAAI's full history — it wasn't held annually in the
+    1980s — so this is only trusted from 2019 onward; anything earlier
+    returns None rather than silently returning a wrong guess.
+    """
+    try:
+        year_int = int(year)
+    except (TypeError, ValueError):
+        return None
+    if year_int < 2019:
+        return None
+    return year_int - 1986
+
+
 def _pattern_url(key: str, year: str) -> Optional[str]:
     """Stable, derivable-from-year-alone URL patterns (non-OpenReview only —
     OpenReview conferences resolve to a venue_id instead, see resolve_conference_url)."""
@@ -120,6 +139,10 @@ def _pattern_url(key: str, year: str) -> Optional[str]:
         return f"https://papers.nips.cc/paper_files/paper/{year}"
     if key in {"ACL", "EMNLP", "NAACL"}:
         return f"https://aclanthology.org/events/{key.lower()}-{year}/"
+    if key == "AAAI":
+        number = _aaai_number_for_year(year)
+        if number is not None:
+            return f"https://aaai.org/proceeding/aaai-{number}-{year}/"
     return None
 
 
@@ -261,6 +284,23 @@ def detect_structure(conference: str, proceeding_url: str = "") -> dict:
             "notes": (
                 "Fetched via Playwright session-heading navigation "
                 "(Cloudflare bypass), then track selection."
+            ),
+        }
+
+    if base == "AAAI" or "aaai.org" in (proceeding_url or ""):
+        return {
+            "conference": conference,
+            "structure": "grouped",
+            "handler": "aaai_ojs",
+            "notes": (
+                "Two-level fetch: the aaai.org landing page lists "
+                "Volume/Issue links ('Vol N No. M'), each of which is "
+                "fetched from its OJS issue page (ojs.aaai.org) to pull "
+                "per-track paper links, then normal track selection "
+                "applies. Article pages already contain structured "
+                "author/affiliation/abstract text, so the existing "
+                "HTMLScraper tier (Tier 1) and the summarizer's abstract "
+                "fetcher both work against them unmodified."
             ),
         }
 

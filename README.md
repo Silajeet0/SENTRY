@@ -164,6 +164,34 @@ python run_single_paper.py --synthetic-indian
 |-----------|-------------|
 | **Flat** | NeurIPS / NIPS, IEEE-ICDM, IEEE-CVPR, any IEEE Xplore proceedings |
 | **Grouped (track-based)** | ACL, EMNLP, NAACL, ACM-KDD, ACM-SIGMOD, ACM-IKDD |
+| **Grouped (two-level: volume → track)** | AAAI |
+
+### AAAI's two-level structure
+
+Unlike ACL/ACM (a single page with track headers directly above the paper
+list), AAAI's proceedings span two pages per track:
+
+1. The landing page (`aaai.org/proceeding/aaai-<N>-<year>/`) lists one
+   link per volume/issue (`"Vol 40 No. 1: AAAI-26 Technical Tracks 1"`).
+   A second anchor with the track's own name immediately follows each one
+   and points at the *same* issue page — only the `"Vol N No. M"` anchor
+   is followed, so each issue is fetched once.
+2. Each volume link leads to an OJS issue page
+   (`ojs.aaai.org/index.php/AAAI/issue/view/<id>`) listing the actual
+   track heading(s) and paper links.
+3. Each paper's title links to its OJS article page
+   (`ojs.aaai.org/index.php/AAAI/article/view/<id>`) — not the PDF —
+   which already has the full author/affiliation list and abstract as
+   plain page text.
+
+`workflows/link_extractors/aaai_link_extractor.py` handles steps 1–2 and
+produces the same `grouped_links.json` shape ACL/ACM already use, so
+`utils/track_selector_cli.py` / `track_selector_auto.py` and
+`pipeline.run_pipeline` need no AAAI-specific code. Step 3 needs no new
+scraper either: `scrapers/html_scraper.py`'s `HTML_FRIENDLY_DOMAINS` check
+already matches `aaai.org` as a substring of `ojs.aaai.org`, so Tier 1
+(plain requests) already scrapes AAAI article pages — which is also why
+`summarizer/abstract_fetcher.py` works against AAAI papers unmodified.
 
 ---
 

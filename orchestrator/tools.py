@@ -361,7 +361,7 @@ TOOL_SCHEMAS = [
                 "properties": {
                     "conference": {
                         "type": "string",
-                        "description": "Conference name, e.g. 'NeurIPS', 'ICML', 'ACL', 'ACM_KDD', 'IEEE-ICDM'.",
+                        "description": "Conference name, e.g. 'NeurIPS', 'ICML', 'ACL', 'ACM_KDD', 'IEEE-ICDM', 'AAAI'.",
                     },
                     "year": {"type": "string", "description": "Conference year, e.g. '2025'."},
                 },

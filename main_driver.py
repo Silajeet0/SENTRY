@@ -6,6 +6,7 @@ from workflows.track_detector import is_track_grouped
 from workflows.link_extractors.flat_link_extractor import extract_flat_links_with_base
 from workflows.link_extractors.grouped_link_extractor import extract_grouped_links
 from workflows.link_extractors.acm_api_fetcher import fetch_acm_links
+from workflows.link_extractors.aaai_link_extractor import extract_aaai_links
 
 from utils.track_selector_cli import select_tracks_cli
 from utils.track_selector_auto import select_tracks_auto
@@ -96,6 +97,32 @@ def run_pipeline(
             grouped_json_path = str(links_json_path.resolve())
         else:
             grouped_json_path = fetch_acm_links(proceeding_url, conference, year)
+
+        links_json_path = _select_tracks(grouped_json_path)
+
+    # ------------------------------------------------------------------
+    # AAAI — two-level structure: aaai.org's landing page links out to
+    # per-volume OJS issue pages (ojs.aaai.org), each of which has to be
+    # fetched separately to reach the actual track/paper listing. This is
+    # different enough from the single-page ACL/ACM grouped flow below
+    # (and from the Cloudflare-driven ACM flow above) that it gets its own
+    # dedicated fetcher rather than being squeezed into html_fetcher +
+    # extract_grouped_links, which only ever look at ONE saved HTML page.
+    #
+    # Detected the same way the ACM branch above is: by URL, not just
+    # conference name, so an explicit "AAAI" conference id always routes
+    # here regardless of how the caller phrased proceeding_url.
+    # ------------------------------------------------------------------
+    elif "aaai" in conference.lower() or "aaai.org" in proceeding_url:
+        print("[🔎] AAAI proceedings detected — using two-level volume/track extractor.")
+
+        links_json_path = Path(f"data/links_raw/{conference}/{year}/grouped_links.json")
+
+        if links_json_path.exists():
+            print("[✅] Using cached AAAI links.")
+            grouped_json_path = str(links_json_path.resolve())
+        else:
+            grouped_json_path = extract_aaai_links(proceeding_url, conference, year)
 
         links_json_path = _select_tracks(grouped_json_path)
 
