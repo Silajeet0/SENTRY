@@ -103,6 +103,29 @@ if you can vary the phrasing.
 {"summaries": [{"index": 1, "summary": "..."}, {"index": 2, "summary": "..."}]}
 Include exactly one entry per paper given below, in any order, using the same index."""
 
+# Ollama-native JSON schema (see _call_llm's extra_body handling) mirroring
+# the shape described in SUMMARY_SYSTEM_PROMPT. Passing this constrains
+# decoding via GBNF grammar so the model literally cannot emit a token that
+# breaks the schema — e.g. an unescaped quote inside a "summary" string
+# (the exact failure mode this batch call has hit in practice).
+SUMMARIES_JSON_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "summaries": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "index": {"type": "integer"},
+                    "summary": {"type": "string"},
+                },
+                "required": ["index", "summary"],
+            },
+        }
+    },
+    "required": ["summaries"],
+}
+
 BATCH_USER_PROMPT_TEMPLATE = """Summarize each of the following {conference} {year} paper abstracts.
 
 PAPERS:
@@ -201,6 +224,7 @@ class SummaryLLM:
         system_prompt: str = SUMMARY_SYSTEM_PROMPT,
         json_mode: bool = True,
         max_tokens: int = 4000,
+        json_schema: Optional[dict] = None,
     ) -> str:
         if self.call_delay_seconds:
             time.sleep(self.call_delay_seconds)
@@ -214,12 +238,26 @@ class SummaryLLM:
             temperature=self.temperature,
             max_tokens=max_tokens,
         )
+        extra_body = {}
         if json_mode and self._should_request_json_mode():
             request["response_format"] = {"type": "json_object"}
+            # Belt-and-suspenders for Ollama specifically: its OpenAI-compat
+            # layer accepts response_format:{"type":"json_object"} fine, but
+            # a real JSON-schema constraint (native `format` field, GBNF
+            # grammar under the hood) is a strictly tighter guarantee — it
+            # forces the exact {"summaries": [{"index", "summary"}, ...]}
+            # shape rather than merely "some valid JSON object" — so a
+            # truncated/odd response can't silently parse as valid JSON that
+            # doesn't match what summarize_all() expects. Sent via
+            # extra_body since it's outside the OpenAI request schema;
+            # harmless no-op on providers that ignore unknown fields, and
+            # the whole request is retried without it below if it errors.
+            if json_schema and self.provider == "ollama":
+                extra_body["format"] = json_schema
         if self.reasoning_effort:
             request["reasoning_effort"] = self.reasoning_effort
         try:
-            response = client.chat.completions.create(**request)
+            response = client.chat.completions.create(**request, extra_body=extra_body or None)
         except Exception:
             request.pop("response_format", None)
             response = client.chat.completions.create(**request)
@@ -260,23 +298,117 @@ class SummaryLLM:
             return True
         if value in {"0", "false", "no"}:
             return False
-        return "groq.com" in self.base_url or self.provider in {"openai", "groq"}
+        # "auto" heuristic. The important entry here is Ollama: unlike some
+        # providers where json_object mode is just a prompt-level nudge,
+        # Ollama's OpenAI-compat layer translates response_format:
+        # {"type": "json_object"} into its native `format: "json"`, which is
+        # a GBNF-grammar-constrained decode — the model is mechanically
+        # unable to emit a syntax-breaking token (e.g. an unescaped quote
+        # inside a string, the actual cause of the JSONDecodeError this was
+        # built to prevent). This used to only fire for groq.com/openai/
+        # groq, which silently left every local llama.cpp-family server
+        # (Ollama, LM Studio) making raw, unconstrained completions.
+        return (
+            "groq.com" in self.base_url
+            or self.provider in {"openai", "groq", "ollama"}
+            or any(host in self.base_url for host in ("localhost", "127.0.0.1", "0.0.0.0"))
+        )
 
     @staticmethod
-    def _parse_json(raw: str) -> dict:
-        raw = re.sub(r"```(?:json)?", "", raw).strip().strip("`")
-        match = re.search(r"\{.*\}", raw, re.DOTALL)
-        if match:
-            return json.loads(match.group(0))
-        raise ValueError(f"No valid JSON found in summarizer LLM response: {raw[:200]}")
+    def _extract_json_span(raw: str) -> Optional[str]:
+        """
+        Find the first balanced {...} span, respecting string/escape state,
+        instead of the old `re.search(r"\\{.*\\}", raw, re.DOTALL)`.
 
-    def _summarize_one_batch(self, batch: list[dict], conference: str, year: str) -> dict[int, str]:
+        The old regex is greedy across the WHOLE response, so it matches
+        from the first "{" to the LAST "}" in the text. That's fine for a
+        clean one-object response, but silently wrong the moment the model
+        adds anything after the JSON (a trailing aside, a second example, a
+        stray closing brace echoed from an abstract's LaTeX like
+        $\\mathcal{{O}}$) — all of that gets swept into the "JSON" string
+        and handed to json.loads, which then fails on whatever garbage sits
+        between the real closing "}" and the last one. Walking the string
+        and stopping at the first properly-balanced close is correct
+        regardless of what follows it.
+        """
+        start = raw.find("{")
+        if start == -1:
+            return None
+        depth = 0
+        in_string = False
+        escape = False
+        for i in range(start, len(raw)):
+            ch = raw[i]
+            if in_string:
+                if escape:
+                    escape = False
+                elif ch == "\\":
+                    escape = True
+                elif ch == '"':
+                    in_string = False
+                continue
+            if ch == '"':
+                in_string = True
+            elif ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0:
+                    return raw[start:i + 1]
+        return None  # unbalanced — model got cut off mid-object
+
+    @staticmethod
+    def _repair_json(candidate: str) -> str:
+        """
+        Cheap, deterministic fixes for the handful of malformations small
+        local models actually produce, tried only after a straight
+        json.loads() has already failed. Each is a no-op on already-valid
+        JSON, so this is safe to always attempt as a second pass.
+        """
+        # Trailing commas before a closing bracket: {"a": 1,} / [1, 2,]
+        repaired = re.sub(r",\s*([}\]])", r"\1", candidate)
+        # Smart/curly quotes some models substitute for straight quotes.
+        repaired = repaired.replace("\u201c", '"').replace("\u201d", '"')
+        return repaired
+
+    @classmethod
+    def _parse_json(cls, raw: str) -> dict:
+        cleaned = re.sub(r"```(?:json)?", "", raw).strip().strip("`")
+        span = cls._extract_json_span(cleaned)
+        if span is None:
+            raise ValueError(f"No balanced JSON object found in summarizer LLM response: {raw[:200]}")
+        try:
+            return json.loads(span)
+        except json.JSONDecodeError as e:
+            try:
+                return json.loads(cls._repair_json(span))
+            except json.JSONDecodeError:
+                # Re-raise the ORIGINAL error but with the full offending
+                # span attached — the previous version only ever surfaced
+                # e.g. "Expecting ',' delimiter: line 1 column 1110" with no
+                # way to see what was actually at column 1110, which made
+                # this exact class of failure unreconstructable after the
+                # fact. Callers that log str(e) now get something they can
+                # actually debug.
+                raise ValueError(
+                    f"{e} | offending JSON span (len={len(span)}): {span}"
+                ) from e
+
+    def _summarize_one_batch(self, batch: list[dict], conference: str, year: str, _depth: int = 0) -> dict[int, str]:
         """
         batch: list of {"index": int, "paper_title": str, "abstract": str}
         (only papers with a non-empty abstract should be passed in).
         Returns {index: summary}. Missing/failed indices simply aren't in
         the returned dict — the caller fills those in with a deterministic
         fallback rather than failing the whole batch.
+
+        On a parse failure, this no longer drops the WHOLE batch straight
+        to raw-excerpt fallback. A single bad token from an 8B model
+        anywhere in a 15-paper batch used to cost all 15 papers their
+        summary; instead we bisect — split the batch in half and retry each
+        half independently (recursively, down to batches of 1) — so only
+        the specific paper(s) actually triggering the malformed output fall
+        back to an excerpt, and its batch-mates still get real summaries.
         """
         blocks = []
         for item in batch:
@@ -288,7 +420,7 @@ class SummaryLLM:
         )
 
         try:
-            raw = self._call_llm(prompt)
+            raw = self._call_llm(prompt, json_schema=SUMMARIES_JSON_SCHEMA)
             parsed = self._parse_json(raw)
             out = {}
             for entry in parsed.get("summaries", []):
@@ -296,9 +428,31 @@ class SummaryLLM:
                 summary = (entry.get("summary") or "").strip()
                 if idx is not None and summary:
                     out[int(idx)] = summary
+            missing = [item["index"] for item in batch if item["index"] not in out]
+            if missing:
+                log.warning(f"Summarizer batch returned no entry for paper index(es) {missing} — those will fall back to raw excerpts")
             return out
         except Exception as e:  # noqa: BLE001 — one bad batch must not kill the whole run
-            log.warning(f"Summarizer batch call failed ({type(e).__name__}: {e}) — falling back to raw abstract excerpts for this batch")
+            indices = [item["index"] for item in batch]
+            if len(batch) > 1:
+                log.warning(
+                    f"Summarizer batch call failed for indices {indices} "
+                    f"({type(e).__name__}: {e}) — bisecting and retrying the two halves separately"
+                )
+                mid = len(batch) // 2
+                out = {}
+                out.update(self._summarize_one_batch(batch[:mid], conference, year, _depth + 1))
+                out.update(self._summarize_one_batch(batch[mid:], conference, year, _depth + 1))
+                return out
+            # A single-paper batch still failing means it's not a batch-
+            # boundary/cross-contamination issue — log the full raw
+            # response (not just the 200-char snippet _parse_json raises
+            # with) so the actual malformed output is visible in the logs
+            # instead of just the terse JSONDecodeError position.
+            log.warning(
+                f"Summarizer call failed for paper index {indices} even after bisecting to a single paper "
+                f"({type(e).__name__}: {e}) — falling back to a raw abstract excerpt for this paper"
+            )
             return {}
 
     def summarize_all(self, papers_with_abstracts: list[dict], conference: str, year: str) -> dict[int, str]:
