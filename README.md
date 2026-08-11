@@ -42,53 +42,6 @@ A multi-tier, deterministic pipeline for identifying Indian-affiliated authors a
 
 ---
 
-## Repository Structure
-
-```
-SENTRY_Refactored/
-├── run.py                          # Main entrypoint
-├── run_single_paper.py             # Single-paper debug / smoke-test entrypoint
-├── main_driver.py                  # Orchestrates Stage 1 → Stage 2 → Stage 3
-├── pipeline.py                     # Core per-paper processing + run_pipeline()
-│
-├── scrapers/
-│   ├── base.py                     # BaseScraper ABC + ScrapeResult dataclass
-│   ├── html_scraper.py             # Tier 1: requests + BeautifulSoup
-│   ├── browser_scraper.py          # Tier 2: Playwright + IEEE author page logic
-│   ├── pdf_scraper.py              # Tier 3: pdfminer.six, NeurIPS HTML fallback
-│   └── api_scraper.py              # Tier 4: Semantic Scholar, OpenAlex, CrossRef
-│
-├── extractors/
-│   └── llm_extractor.py            # OpenAI-compatible LLM call + JSON parsing
-│
-├── workflows/
-│   ├── html_fetcher.py             # Playwright-based proceedings page fetcher
-│   ├── track_detector.py           # flat vs. grouped structure detection
-│   └── link_extractors/
-│       ├── flat_link_extractor.py  # IEEE, NeurIPS link extraction
-│       ├── grouped_link_extractor.py  # ACL, ACM track-grouped extraction
-│       └── skip_patterns.py        # Non-paper title filter
-│
-├── utils/
-│   ├── ieee_author_parser.py       # IEEE author/affiliation text parsing helpers
-│   └── track_selector_cli.py       # Interactive CLI for ACL/ACM track selection
-│
-├── Form_filler/                    # Selenium-based form auto-filler (standalone)
-│   ├── selenium_filler.py
-│   └── run_selenium_filler.py
-│
-├── data/
-│   ├── html/                       # Cached proceedings HTML pages
-│   ├── links_raw/                  # Extracted paper links per conference/year
-│   ├── final_output/               # Indian-affiliated paper results
-│   ├── eval_inputs/                # Evaluation subsets
-│   └── ground_truth/              # Labelled ground truth for eval
-│
-└── requirements.txt
-```
-
----
-
 ## Quick Start
 
 ### 1. Install dependencies
@@ -102,21 +55,14 @@ pip install -r requirements.txt
 Create a `.env` file in the project root:
 
 ```env
-LLM_PROVIDER=groq            # or: nvidia, openai, anthropic, ollama
-LLM_MODEL=openai/gpt-oss-20b   # used in the test run
-LLM_API_KEY=your_key_here
-LLM_BASE_URL=https://api.groq.com/openai/v1 # or corresponding url
+LLM_PROVIDER=ollama           # or: nvidia, openai, anthropic, groq
+LLM_MODEL=gpt-oss:20b   # used in the test run
+LLM_API_KEY=ollama
+LLM_BASE_URL=http://localhost:11434/v1 # or corresponding url
 
 # Optional — only needed for the email-summary feature (see "Email Summary"
 # below). Falls back to LLM_* above if unset, so the feature works with a
-# single model too — but a SEPARATE, smaller model is recommended: the
-# summarizer runs at temperature > 0 (fluent prose, not extraction) and
-# benefits from its own instance rather than sharing the 20B model that's
-# also driving the orchestrator's tool-calling loop. On a 32GB Mac running
-# gpt-oss-20b locally (~12-13GB quantized), a second local 7-8B model
-# (~4.5-5GB quantized, e.g. llama3.1:8b-instruct or qwen2.5:7b-instruct via
-# a second Ollama/LM Studio/llama.cpp server) both fit comfortably in
-# unified memory with room to spare for Playwright/Chromium during scraping.
+# single model too — but a SEPARATE, smaller model is recommended
 SUMMARY_LLM_PROVIDER=ollama
 SUMMARY_LLM_MODEL=llama3.1:8b-instruct
 SUMMARY_LLM_API_KEY=ollama                       # placeholder — most local servers ignore this
@@ -162,9 +108,10 @@ python run_single_paper.py --synthetic-indian
 
 | Structure | Conferences |
 |-----------|-------------|
-| **Flat** | NeurIPS / NIPS, IEEE-ICDM, IEEE-CVPR, any IEEE Xplore proceedings |
-| **Grouped (track-based)** | ACL, EMNLP, NAACL, ACM-KDD, ACM-SIGMOD, ACM-IKDD |
+| **Flat** | NeurIPS, any IEEE Xplore proceedings |
+| **Grouped (track-based)** | ACL, EMNLP, NAACL, any ACM-DL hosted proceedings|
 | **Grouped (two-level: volume → track)** | AAAI |
+|**API BASED**|ICML, ICLR|
 
 ### AAAI's two-level structure
 
@@ -285,9 +232,6 @@ support OpenAI-style function calling (Groq's `openai/gpt-oss-20b` does).
 
 ### Using main_driver.run_pipeline non-interactively yourself
 
-`main_driver.run_pipeline` grew three new optional parameters, all
-backward-compatible (default `interactive=True` preserves the exact old
-CLI-prompt behavior for `run.py`):
 
 ```python
 run_pipeline(
