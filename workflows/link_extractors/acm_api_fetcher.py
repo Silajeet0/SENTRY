@@ -10,51 +10,6 @@ Supported conferences (all A* under ACM):
     KDD, SIGMOD, SIGIR, SIGCOMM, STOC, FOCS, PODC, SOSP, OSDI,
     CCS, SIGGRAPH, CHI, PLDI, ASPLOS, ICSE, FSE, WWW, CSCW, UIST
 
-─────────────────────────────────────────────────────────────────────────────
-HOW ACM DL SESSION EXPANSION ACTUALLY WORKS
-─────────────────────────────────────────────────────────────────────────────
-Each SESSION heading in the main content area is an <a> element with:
-    href="/doi/proceedings/10.1145/XXXXXX?tocHeading=headingN"
-    class="section__title accordion-tabbed__control ..."
-    aria-expanded="false"
-
-Navigating to the ?tocHeading=headingN URL causes the server to return the
-page with that section pre-expanded (papers visible in DOM). This is a full
-page load per section — there is no in-page XHR.
-
-The sidebar TOC contains visually identical <a> elements (same text, same
-class prefix) but with bare href="#headingN" — those only scroll the page.
-We read the full href of main-content anchors (those with ?tocHeading= in
-their href) to get the correct navigation URLs.
-
-─────────────────────────────────────────────────────────────────────────────
-HOW TO ADD SUPPORT FOR A NEW CONFERENCE
-─────────────────────────────────────────────────────────────────────────────
-Every ACM DL proceedings page uses the same "SESSION: <name>" heading format.
-To add a conference you only need to touch ONE place: CONFERENCE_SESSION_CONFIG
-below. Add an entry with these fields:
-
-    "ACM_YOURCONF": {
-        # Sessions whose headings contain ANY of these substrings will be
-        # SKIPPED. Case-insensitive. Leave as [] to harvest every session.
-        "skip_sessions": ["Keynote", "Tutorial", "Workshop", "Demo", "Panel"],
-
-        # If non-empty, ONLY sessions containing one of these substrings are
-        # harvested — all others are skipped. Set to [] to include everything
-        # not in skip_sessions. Extra keywords that match nothing are ignored.
-        "include_only": [],
-    },
-
-After adding the entry, pass conference="ACM_YOURCONF" to fetch_acm_links()
-and the rest of the pipeline adapts automatically.
-
-To find the exact SESSION heading texts for a new conference:
-  1. Open its dl.acm.org/doi/proceedings/... page in your browser.
-  2. Open DevTools Console and run:
-       [...document.querySelectorAll('a.accordion-tabbed__control[href*="tocHeading"]')]
-         .map(el => el.innerText.trim())
-  3. Add substrings of any you want to skip to "skip_sessions".
-─────────────────────────────────────────────────────────────────────────────
 """
 
 import re
@@ -74,141 +29,86 @@ def _run_isolated(fn, *args, **kwargs):
     """
     Run fn (which opens sync_playwright()) in a brand-new, dedicated thread
     and block for its result.
-
-    Playwright's sync API refuses to start ("It looks like you are using
-    Playwright Sync API inside the asyncio loop") if the *calling* thread
-    already has an asyncio event loop running in it. Whatever ends up
-    calling into this module — a plain script, the FastAPI orchestrator
-    (orchestrator_api.py), an agent runtime, a notebook — may or may not be
-    such a thread, and that can vary between machines/setups even when the
-    calling code looks identical. Rather than relying on every caller's
-    context happening to be safe, we always hand the actual Playwright call
-    off to a fresh OS thread with no asyncio history of its own, so this
-    never depends on how this module happened to be invoked.
     """
     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
         return pool.submit(fn, *args, **kwargs).result()
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Per-conference configuration
-# ─────────────────────────────────────────────────────────────────────────────
 CONFERENCE_SESSION_CONFIG: dict[str, dict] = {
-    # ------------------------------------------------------------------
-    # KDD — single "Research Track" session; everything else is skipped.
-    # ------------------------------------------------------------------
+
     "ACM_KDD": {
         "skip_sessions": ["Workshop", "Tutorial"],
         "include_only": [],
     },
 
-    # ------------------------------------------------------------------
-    # CCS — many "Session A1/B2/..." slots; skip keynote + workshop/tutorial.
-    # ------------------------------------------------------------------
     "ACM_CCS": {
         "skip_sessions": ["Keynote", "Workshop", "Tutorial"],
         "include_only": [],
     },
 
-    # ------------------------------------------------------------------
-    # SIGMOD — only Industry Papers session wanted.
-    # ------------------------------------------------------------------
     "ACM_SIGMOD": {
         "skip_sessions": ["Keynote", "Demo", "Panel", "Tutorial", "Workshop"],
         "include_only": [],
     },
 
-    # ------------------------------------------------------------------
-    # SIGGRAPH — all technical paper sessions.
-    # ------------------------------------------------------------------
+
     "ACM_SIGGRAPH": {
         "skip_sessions": ["Keynote", "Course", "Talk", "Panel", "Poster", "Workshop", "Tutorial"],
         "include_only": [],
     },
 
-    # ------------------------------------------------------------------
-    # SIGCOMM — all technical sessions.
-    # ------------------------------------------------------------------
     "ACM_SIGCOMM": {
         "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel", "Poster"],
         "include_only": [],
     },
 
-    # ------------------------------------------------------------------
-    # EC — all technical sessions.
-    # ------------------------------------------------------------------
     "ACM_EC": {
         "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
         "include_only": [],
     },
 
-    # ------------------------------------------------------------------
-    # FSE — all technical sessions.
-    # ------------------------------------------------------------------
     "ACM_FSE": {
         "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
         "include_only": [],
     },
 
-    # ------------------------------------------------------------------
-    # ISCA — all technical sessions.
-    # ------------------------------------------------------------------
+
     "ACM_ISCA": {
         "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
         "include_only": [],
     },
 
-    # ------------------------------------------------------------------
-    # MOBICOM — all technical sessions.
-    # ------------------------------------------------------------------
     "ACM_MOBICOM": {
         "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
         "include_only": [],
     },
 
-    # ------------------------------------------------------------------
-    # PODC — all technical sessions.
-    # ------------------------------------------------------------------
     "ACM_PODC": {
         "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
         "include_only": [],
     },
 
-    # ------------------------------------------------------------------
-    # PODS — all technical sessions.
-    # ------------------------------------------------------------------
+
     "ACM_PODS": {
         "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
         "include_only": [],
     },
 
-    # ------------------------------------------------------------------
-    # SIGIR — all technical sessions.
-    # ------------------------------------------------------------------
     "ACM_SIGIR": {
         "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
         "include_only": [],
     },
 
-    # ------------------------------------------------------------------
-    # SOSP — all technical sessions.
-    # ------------------------------------------------------------------
     "ACM_SOSP": {
         "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
         "include_only": [],
     },
 
-    # ------------------------------------------------------------------
-    # STOC — all technical sessions.
-    # ------------------------------------------------------------------
     "ACM_STOC": {
         "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
         "include_only": [],
     },
 
-    # ------------------------------------------------------------------
-    # UIST — all technical sessions.
-    # ------------------------------------------------------------------
     "ACM_UIST": {
         "skip_sessions": ["Keynote", "Workshop", "Tutorial", "Panel"],
         "include_only": [],
@@ -242,9 +142,6 @@ def _session_is_wanted(heading_text: str, cfg: dict) -> bool:
     """
     Return True if a SESSION heading should be harvested.
 
-    Applies include_only first (whitelist), then skip_sessions (blacklist).
-    Both are case-insensitive substring matches. Extra keywords that match
-    nothing are silently ignored.
     """
     text_lower = heading_text.lower()
     if cfg["include_only"]:
@@ -257,8 +154,6 @@ def _wait_for_page_ready(page) -> None:
     Block until Cloudflare challenge is cleared and the real ACM DL
     proceedings page is loaded.
 
-    Stage 1 — wait until title is no longer "Just a moment..." (up to 120s).
-    Stage 2 — wait for main-content accordion anchors to be in the DOM.
     """
     log.info("Waiting for Cloudflare challenge to clear (solve in browser if prompted)...")
 
@@ -338,7 +233,7 @@ def _fetch_conference_links(
     proceeding_url: str,
     conference: str,
 ) -> tuple[list[str], list[dict]]:
-    """Thread-isolated entry point — see _run_isolated() for why."""
+    """Thread-isolated entry point"""
     return _run_isolated(_fetch_conference_links_impl, proceeding_url, conference)
 
 
@@ -382,8 +277,7 @@ def _fetch_conference_links_impl(
             all_paper_links.extend(new_links)
 
         # ── Step 2: discover all SESSION headings with tocHeading URLs ────────
-        # Query only main-content accordion anchors — href contains "tocHeading".
-        # Sidebar anchors have bare "#headingN" hrefs and are excluded.
+        # Query only main-content accordion anchors — href contains "tocHeading" (MIGHT NEED UPDATES IF STRUCUTRE IS CHANGED).
         session_entries: list[dict] = page.evaluate("""
             () => [
                 ...document.querySelectorAll(
@@ -500,9 +394,7 @@ def warmup_acm_cookies(proceeding_url: str) -> None:
 def _warmup_acm_cookies_impl(proceeding_url: str) -> None:
     """
     Visit the ACM proceedings page to clear Cloudflare and save session
-    cookies. Does not extract links — used by run_single_paper.py and
-    reactively by scrapers/browser_scraper.py when it detects a Cloudflare
-    challenge on a stored session.
+    cookies.
     """
     with sync_playwright() as p:
         browser = p.chromium.launch(

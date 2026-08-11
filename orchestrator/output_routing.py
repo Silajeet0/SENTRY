@@ -1,18 +1,6 @@
 """
 output_routing.py — routes print()/logging output from a specific thread to
 a log file instead of the console.
-
-AEGIS's pipeline code (main_driver.py, pipeline.py) uses plain print() and
-the logging module directly to the console — fine for the original
-synchronous CLI (run.py), but when it runs in a background thread under the
-orchestrator, that output interleaves character-by-character with whatever
-the person is typing at the orchestrator_cli.py "you>" prompt. The thread
-isn't actually blocked — input() still works — it just becomes unreadable.
-
-sys.stdout/sys.stderr are process-wide, not thread-local, so this installs a
-thin routing wrapper *once* that checks which thread is currently writing
-and redirects only that thread's output, leaving every other thread's
-(in particular the main REPL thread's) output completely untouched.
 """
 import sys
 import threading
@@ -62,9 +50,6 @@ def _install():
 def route_output_to_file(log_path: str):
     """
     Use inside a background worker thread:
-
-        with route_output_to_file("data/orchestrator_logs/NeurIPS_2025.log"):
-            main_driver.run_pipeline(...)
 
     Every print()/logging call made from *this thread* while inside the
     block goes to that file. Calls from any other thread are unaffected.

@@ -2,53 +2,8 @@
 aaai_link_extractor.py — Extracts paper links from AAAI proceedings.
 
 AAAI's proceedings are a TWO-LEVEL structure, unlike every other grouped
-conference AEGIS already supports (ACL/ACM are a single page with track
-headers directly above their paper lists):
-
-    Level 1 — aaai.org/proceeding/aaai-<N>-<year>/  (the "landing" page)
-        Lists one anchor per volume/issue, e.g.:
-            "Vol 40 No. 1: AAAI-26 Technical Tracks 1"
-        immediately followed by a second anchor with the track's own name,
-        e.g. "AAAI Technical Track on Application Domains I" — this second
-        anchor points at the EXACT SAME issue page as the first (confirmed
-        by inspection: clicking either lands you on the same OJS issue
-        view). Only the "Vol N No. M" anchor is followed here; the
-        redundant sub-anchor is intentionally skipped so each issue page
-        is only fetched once.
-
-    Level 2 — ojs.aaai.org/index.php/AAAI/issue/view/<id>  (the OJS issue
-        page linked from Level 1)
-        Lists one or more technical-track sections (a heading followed by
-        a list of papers). Each paper's TITLE is itself a link to:
-            ojs.aaai.org/index.php/AAAI/article/view/<id>
-        which is the page we want — it already contains the full author
-        list with each author's institutional affiliation directly below
-        their name, the DOI, and the Abstract, all as plain page text (see
-        screenshot of a sample article page). This is deliberately NOT the
-        "PDF" button next to each paper (that points at a different,
-        galley-specific sub-path and just serves the raw PDF).
-
-Because the article-view page already contains everything the rest of the
-pipeline needs as plain HTML text, no new scraper tier or LLM-prompt work
-is required: `scrapers.html_scraper.HTMLScraper` already lists "aaai.org"
-in HTML_FRIENDLY_DOMAINS, and that substring check also matches the
-"ojs.aaai.org" subdomain the article pages actually live on — so
-pipeline.process_paper() and summarizer.abstract_fetcher's abstract
-retrieval both work against these URLs completely unmodified. This module
-only has to produce the same grouped_links.json shape
-(`[{"track_title", "track_url", "paper_links": [...]}]`) that
-grouped_link_extractor.py already produces for ACL/ACM, so every
-downstream step (utils.track_selector_cli/_auto, pipeline.run_pipeline)
-needs no AAAI-specific changes either.
-
-Markup note: this is written against AAAI-26's OJS instance as observed
-in screenshots, using tolerant heuristics (regex on href path, keyword-
-filtered heading detection) rather than hardcoded CSS classes, since exact
-PKP/OJS theme markup can vary by field/class names across deployments and
-this repo has no live network access to verify it byte-for-byte. If a
-future AAAI year renders differently, the two functions below
-(_find_volume_links / _extract_tracks_from_volume) are the only things
-that should need adjusting.
+conference SENTRY already supports (ACL/ACM are a single page with track
+headers directly above their paper lists)
 """
 import json
 import logging
@@ -71,22 +26,14 @@ HEADERS = {
     "Accept-Language": "en-US,en;q=0.9",
 }
 
-# Matches anchor text like "Vol 40 No. 1", "Vol. 40, No. 1" etc. — the ONLY
-# anchors on the landing page we follow. The sub-track anchor that follows
-# each one (e.g. "AAAI Technical Track on Application Domains I") does not
-# start with "Vol N No. M" and is correctly skipped by this pattern.
+# Matches anchor text like "Vol 40 No. 1", "Vol. 40, No. 1" etc. (MIGHT NEED MAINTAINENCE)
 _VOLUME_TITLE_RE = re.compile(r"^vol\.?\s*\d+\s*,?\s*no\.?\s*\d+", re.IGNORECASE)
 
-# Matches the article "abstract/details" page — NOT its PDF/galley link,
-# which has one or more extra path segments after the numeric article id
-# (e.g. /article/view/36958/34567) and is excluded by the trailing "$".
+# Matches the article "abstract/details" page (MIGHT NEED MAINTAINENCE)
 _ARTICLE_VIEW_RE = re.compile(r"/article/view/(\d+)/?$")
 
 # Sidebar/navigation/boilerplate heading text that shows up on an OJS issue
-# page but is never a real technical-track heading — must not be mistaken
-# for one, or a fake "track" gets created with zero real papers under it
-# (harmless on its own since empty tracks are dropped, but would also
-# wrongly close out the real track's link collection early).
+# page but is never a real technical-track heading 
 _OJS_BOILERPLATE_HEADING_KEYWORDS = [
     "information", "for readers", "for authors", "for librarians",
     "part of the", "published", "how to cite", "make a submission",
@@ -94,9 +41,7 @@ _OJS_BOILERPLATE_HEADING_KEYWORDS = [
     "current", "archives", "about", "search", "login", "issue",
 ]
 
-# Politeness delay between successive OJS issue-page fetches — a single
-# AAAI proceedings can span ~48 issues (per aaai.org's own numbering), so
-# this matters more here than a one-shot single-page fetch elsewhere.
+# Politeness delay between successive OJS issue-page fetches 
 DELAY_BETWEEN_VOLUME_FETCHES = 1.5
 
 _CHALLENGE_SIGNALS = [
@@ -107,11 +52,7 @@ _CHALLENGE_SIGNALS = [
 
 def _fetch(url: str) -> tuple[BeautifulSoup, str]:
     """Plain requests fetch — aaai.org/ojs.aaai.org are static server-
-    rendered pages (this is also why HTMLScraper's Tier 1, plain requests,
-    already works against them for per-paper scraping), so no Playwright
-    is needed here. Returns (soup, raw_html) — raw_html kept separately so
-    the on-disk cache is the server's actual bytes, not BeautifulSoup's
-    re-serialization of them."""
+    rendered pages"""
     resp = requests.get(url, headers=HEADERS, timeout=20)
     resp.raise_for_status()
 
@@ -161,22 +102,6 @@ def _extract_tracks_from_volume(soup: BeautifulSoup, volume_url: str, volume_tit
     (h1/h2 only — filtered through _is_track_heading) starts a new track
     bucket; every '/article/view/{id}' anchor found afterward is a paper
     title link belonging to whichever track bucket is currently open.
-
-    Deliberately h1/h2 ONLY, not h1-h5: standard OJS/PKP theme markup
-    renders the track/section heading as an h2 (class "tocSectionTitle")
-    but each individual PAPER's own title as an h3 nested inside it
-    (class "title"). Treating h3 as a track boundary too would wrongly
-    split a single track into one (bogus) "track" per paper — confirmed
-    against a synthetic page mirroring real OJS markup in
-    test_aaai_extractor_offline.py. h1/h2 also naturally excludes most
-    sidebar/nav boilerplate (typically h3-h5 in OJS themes), with the
-    keyword filter below as a second line of defense regardless.
-
-    Falls back to a single bucket named after the issue itself
-    (volume_title) if papers appear before any recognized heading, or if
-    the page has no recognizable track headings at all — mirroring
-    grouped_link_extractor.py's ACM "All papers" fallback, so a markup
-    surprise degrades gracefully instead of silently dropping papers.
     """
     tracks: list[dict] = []
     current_title = volume_title
@@ -232,9 +157,7 @@ def extract_aaai_links(proceeding_url: str, conference: str, year: str) -> str:
     Fetches the AAAI proceedings landing page, follows every 'Vol N No. M'
     volume link to its OJS issue page, extracts {track_title, track_url,
     paper_links} from each, and saves the combined result as
-    grouped_links.json — the exact same shape utils.track_selector_cli /
-    utils.track_selector_auto already know how to flatten into a final
-    links.json for pipeline.run_pipeline.
+    grouped_links.json 
 
     Returns the absolute path to the saved grouped_links.json.
     """

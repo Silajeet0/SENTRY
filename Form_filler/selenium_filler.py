@@ -12,26 +12,8 @@ def _is_others_area(selected_area: str) -> bool:
 
 def _fill_other_area_field(driver: webdriver.Chrome, other_text: str):
     """
-    IKDD's form reveals a follow-up free-text box directly below the Area
-    of research dropdown the instant "Others" is selected — it isn't
-    present/visible before that:
-        <input type="text" class="form-control main" name="areaResearchOther"
-               id="areaResearchOther" placeholder="Enter the area of research">
-    Previously the filler only selected "Others" on the dropdown and left
-    this box untouched, so every "Others"-classified paper submitted with
-    that field blank.
-
-    Locator strategy, in order:
-      1. name="areaResearchOther" — confirmed against the live form's DOM.
-      2. Placeholder match, in case a future markup change drops/renames
-         the name/id but keeps the visible placeholder text.
-      3. DOM-proximity fallback via JS: walk up from the areaResearch
-         <select> looking for the nearest visible text input that isn't
-         the select itself — last resort if both of the above miss.
-    Raises NoSuchElementException if none of these find anything visible,
-    so this surfaces through fill_single_paper's existing except block
-    exactly like any other missing-element failure, instead of silently
-    submitting with the field empty.
+    IKDD's (or any other suitable venue's) form reveals a follow-up free-text box directly below the Area
+    of research dropdown the instant "Others" is selected 
     """
     text_to_enter = (other_text or "").strip()
     if not text_to_enter:
@@ -88,7 +70,7 @@ def fill_single_paper(driver: webdriver.Chrome, paper_data: dict, form_config: d
     Fills the form for a single paper using an active browser instance.
     """
     try:
-        # --- PHASE 1: PREPARE ALL AUTHOR FIELDS ---
+        # PHASE 1: PREPARE ALL AUTHOR FIELDS
         authors = paper_data.get('all_authors', [])
         num_authors = len(authors)
         clicks_needed = max(0, num_authors - 1)
@@ -100,7 +82,6 @@ def fill_single_paper(driver: webdriver.Chrome, paper_data: dict, form_config: d
             for i in range(clicks_needed):
                 print(f"   -> Clicking 'Add another author' ({i+1}/{clicks_needed})...")
 
-                # --- SCROLLING FIX ---
                 # Execute JavaScript to scroll the button into the center of the view.
                 # This prevents other elements (like footers) from intercepting the click.
                 driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", add_author_button)
@@ -114,12 +95,12 @@ def fill_single_paper(driver: webdriver.Chrome, paper_data: dict, form_config: d
                 print("      ...waiting for 10 seconds for page to update.")
                 time.sleep(10)
         
-        # This verification step is still useful as a final check
+        
         WebDriverWait(driver, 10).until(
             lambda d: len(d.find_elements(By.NAME, "authors[]")) == num_authors
         )
 
-        # --- PHASE 2: FILL THE ENTIRE FORM ---
+        # PHASE 2: FILL THE ENTIRE FORM
         print("   -> Filling paper title...")
         driver.find_element(By.NAME, "paperTitle").send_keys(paper_data['paper_title'])
 
@@ -141,7 +122,7 @@ def fill_single_paper(driver: webdriver.Chrome, paper_data: dict, form_config: d
             print("   -> 'Others' selected — filling the follow-up area-of-research text box...")
             _fill_other_area_field(driver, paper_data.get('area_of_research_other', ''))
 
-        # --- PHASE 3: SUBMIT ---
+        # PHASE 3: SUBMIT
         print("   -> Submitting form...")
         submit_button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//div[@class='col-12 text-center btnAdd']/button"))

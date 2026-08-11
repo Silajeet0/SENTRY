@@ -1,23 +1,8 @@
 # run_selenium_filler.py
 """
 Loads a conference/year's `indian_papers_structured.json`, dedup-checks
-every candidate title against IKDD (New + Approved), and Selenium-submits
+every candidate title against IKDD  (or any other suitable venue)(New + Approved), and Selenium-submits
 only the genuinely new ones.
-
-Two ways to use this module:
-
-1. Programmatically — `run_form_filler(...)` is the entry point the
-   orchestrator's RPA tool calls (see orchestrator/rpa_runner.py). It takes
-   conference/year/venue/month as plain arguments and returns a summary
-   dict rather than just printing, so a caller can report real numbers back
-   to whoever asked for the run.
-
-2. As a script — `python Form_filler/run_selenium_filler.py --conference
-   NeurIPS --year 2025 --month Dec --venue NeurIPS` for a manual/local run.
-   All four are required on the CLI; there is no hardcoded default
-   conference/year/month/venue anymore; venue/month must match the form's
-   dropdown text exactly, or Selenium's select_by_visible_text will fail
-   loudly on the mismatch, so it can't be guessed here.
 """
 import argparse
 import json
@@ -31,10 +16,6 @@ load_dotenv()
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
-# Make sure `utils` (which lives at REPO_ROOT/utils) is importable regardless
-# of the current working directory this script is launched from, and
-# regardless of whether this file is imported as `Form_filler.run_selenium_filler`
-# (by the orchestrator) or run directly as a script.
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
@@ -44,13 +25,7 @@ if str(REPO_ROOT) not in sys.path:
 # file is run directly as a script (`python Form_filler/run_selenium_filler.py`),
 # __package__ is empty and Python puts Form_filler/ itself on sys.path[0]
 # instead, so the bare top-level import is what works there.
-#
-# Branching on __package__ (rather than try/except ImportError on the first
-# form) matters: selenium_filler.py itself does `from selenium import
-# webdriver` at module load time, which also raises ImportError if selenium
-# isn't installed — catching ImportError broadly here would misreport a
-# genuine "selenium isn't installed" failure as an unrelated fallback
-# import error instead of surfacing the real, actionable one.
+
 if __package__:
     from .selenium_filler import process_papers_with_selenium
 else:
@@ -58,12 +33,12 @@ else:
 
 from utils.ikdd_dedup import IKDDDeduplicator, refresh_cache, load_cache
 
-DEFAULT_FORM_URL = "https://ikdd.hosting.acm.org/ds-papers-form.php"
+DEFAULT_FORM_URL = "https://ikdd.hosting.acm.org/ds-papers-form.php" # or any other suitable venue
 
 
 def get_dedup_cache(refresh: bool = True) -> Optional[dict]:
     """
-    Returns a fresh (or cached) IKDD approved-titles cache, with a sensible
+    Returns a fresh (or cached) IKDD (or any other suitable venue) approved-titles cache, with a sensible
     fallback if a live refresh isn't possible.
     """
     if refresh:
@@ -91,7 +66,7 @@ def run_form_filler(
 ) -> dict:
     """
     Programmatic entry point — dedup-checks `conference`/`year`'s extracted
-    papers against IKDD, then Selenium-submits only the new ones.
+    papers against IKDD (or any other suitable venue), then Selenium-submits only the new ones.
 
     Args:
         conference: e.g. "NeurIPS" — must match the folder name under
@@ -100,7 +75,7 @@ def run_form_filler(
         month: EXACT text of the form's month dropdown option, e.g. "Nov".
         venue: EXACT text of the form's venue dropdown option, e.g. "ICDM".
         form_url: overrides DEFAULT_FORM_URL if given.
-        refresh_dedup_cache: if True (default), re-scrapes IKDD's New +
+        refresh_dedup_cache: if True (default), re-scrapes IKDD's (or any other suitable venue's) New +
             Approved lists before checking. If False, uses whatever is
             already cached on disk (faster, but may be stale).
 
@@ -114,11 +89,6 @@ def run_form_filler(
             "duplicate_details": [...],
             "details": [...],   # per-paper submit/fail results
         }
-    Raises FileNotFoundError if the conference/year's structured JSON
-    doesn't exist, and RuntimeError if no dedup cache is available at all
-    (neither a live refresh nor a local cache) — both are treated as hard
-    stops rather than silently skipping the dedup check, since submitting
-    without it risks duplicate entries on IKDD.
     """
     year = str(year)
     form_url = form_url or DEFAULT_FORM_URL
@@ -147,8 +117,7 @@ def run_form_filler(
             "duplicate_details": [], "details": [],
         }
 
-    # 2. Dedup step — check candidates against IKDD's New + Approved lists
-    #    BEFORE opening a browser or touching the form at all.
+    # 2. Dedup step — check candidates against IKDD's (or any other suitable venue's) New + Approved lists
     cache = get_dedup_cache(refresh=refresh_dedup_cache)
     if cache is None:
         raise RuntimeError(

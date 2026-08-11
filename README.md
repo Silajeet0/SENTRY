@@ -1,6 +1,6 @@
-# AEGIS — Academic Extraction & Geolocation Intelligence System
+# SENTRY — Academic Extraction & Geolocation Intelligence System
 
-A multi-tier, deterministic pipeline for identifying Indian-affiliated authors across A/A\*-ranked CS conference proceedings. AEGIS scrapes, extracts, and classifies paper metadata using a four-tier scraping architecture followed by a single LLM call per paper — no agent loops, no planning steps.
+A multi-tier, deterministic pipeline for identifying Indian-affiliated authors across A/A\*-ranked CS conference proceedings. SENTRY scrapes, extracts, and classifies paper metadata using a four-tier scraping architecture followed by a single LLM call per paper — no agent loops, no planning steps.
 
 ---
 
@@ -45,7 +45,7 @@ A multi-tier, deterministic pipeline for identifying Indian-affiliated authors a
 ## Repository Structure
 
 ```
-AEGIS_Refactored/
+SENTRY_Refactored/
 ├── run.py                          # Main entrypoint
 ├── run_single_paper.py             # Single-paper debug / smoke-test entrypoint
 ├── main_driver.py                  # Orchestrates Stage 1 → Stage 2 → Stage 3
@@ -279,7 +279,7 @@ papers stay skipped, only the previously-failed ones get reprocessed.
 
 ### Configuration
 
-Same `.env` as the rest of AEGIS (`LLM_PROVIDER` / `LLM_MODEL` /
+Same `.env` as the rest of SENTRY (`LLM_PROVIDER` / `LLM_MODEL` /
 `LLM_API_KEY` / `LLM_BASE_URL`) — the orchestrator's LLM just needs to
 support OpenAI-style function calling (Groq's `openai/gpt-oss-20b` does).
 
@@ -364,13 +364,13 @@ python run_conference_summary.py ICML 2025 --refresh-cache  # ignore cached abst
 
 ### Why a separate model, at a different temperature
 
-Every other LLM call in AEGIS (per-paper metadata extraction, the
+Every other LLM call in SENTRY (per-paper metadata extraction, the
 orchestrator's tool-calling loop) runs at or near temperature 0 — an
 extraction/decision task has one correct answer, so any variance is noise.
 Writing a readable summary of an abstract is a different kind of task:
 temperature 0 tends toward stilted, repetitive phrasing across a whole
 batch of papers, which reads poorly in something about to be sent as an
-email. This feature is the **one place** in AEGIS that intentionally runs
+email. This feature is the **one place** in SENTRY that intentionally runs
 above temperature 0 (default 0.4).
 
 Because it's a different kind of workload, it's also configured as a

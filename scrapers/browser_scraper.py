@@ -3,38 +3,6 @@ Tier 2: Playwright browser scraper.
 Handles JS-rendered pages that Tier 1 cannot.
 
 Works for: IEEE Xplore, ACM DL
-
-NOTE ON HEADLESS MODE:
-    ACM DL is protected by Cloudflare Turnstile which detects and blocks
-    headless Chromium. The scraper runs headless=False for ACM URLs so
-    Cloudflare passes the browser through. IEEE does not have this issue.
-
-    ACM session cookies are loaded from data/acm_session_cookies.json
-    (written by acm_api_fetcher.py during link extraction) so the
-    Cloudflare clearance from the proceedings page is reused here,
-    making per-paper scraping reliable without re-challenging.
-
-NOTE ON PERSISTENT BROWSER (why scrape() no longer launches Chromium fresh
-every call):
-    A brand-new headless=False Chromium process + a brand-new TLS handshake
-    to dl.acm.org, repeated every ~10-15s for an hour straight, is a very
-    regular, very fingerprintable traffic pattern — independent of raw
-    request volume, this is itself a strong bot signal. One Chromium
-    process + one browser context is now launched lazily on first use and
-    reused for every subsequent scrape() call (only a fresh Page is opened
-    and closed per paper, which is cheap and keeps one paper's DOM state
-    from leaking into the next). This also means cookies accumulated during
-    the session persist naturally in the context's own cookie jar, on top
-    of the existing load-from-disk logic below — closer to how a real
-    browsing session actually behaves.
-
-    The browser is intentionally NOT torn down between conferences/runs —
-    under the orchestrator (a long-lived process), this lets one browser
-    process serve the entire session's ACM scraping rather than relaunching
-    per run. call .close() explicitly if you want to release it (e.g. at
-    full process shutdown); if the browser/context ever dies unexpectedly
-    (crash, killed process), _ensure_browser() detects that and relaunches
-    once automatically rather than failing every subsequent call.
 """
 import re
 import json
@@ -87,21 +55,10 @@ PAYWALL_SIGNALS = [
 class BrowserScraper(BaseScraper):
 
     def __init__(self):
-        # Lazily launched on first scrape() call, then reused — see module
-        # docstring "NOTE ON PERSISTENT BROWSER" above.
+        # Lazily launched on first scrape() call, then reused
         self._playwright = None
         self._browser = None
         self._context = None
-        # OS thread that _ensure_browser() launched the persistent browser
-        # on. Playwright's sync API binds every object it returns to a
-        # single greenlet ("dispatcher fiber") that lives on whichever OS
-        # thread called sync_playwright().start() — calling any Playwright
-        # method from a *different* thread raises
-        # "greenlet.error: cannot switch to a different thread", and
-        # Browser.is_connected() (a local flag, not a real round-trip) has
-        # no way to detect that on its own. We track the owning thread
-        # explicitly so a caller from a different thread forces a clean
-        # relaunch instead of reusing a browser it can never actually use.
         self._browser_thread_id = None
 
     def can_handle(self, url: str) -> bool:
@@ -120,10 +77,7 @@ class BrowserScraper(BaseScraper):
         return f"https://dl.acm.org/doi/proceedings/10.1145/{m.group(1)}"
 
     def _load_acm_cookies_into_context(self) -> None:
-        """Best-effort refresh of ACM cookies into the persistent context.
-        Cheap even when nothing changed — safe to call before every ACM
-        scrape (matches the original per-call behavior), and picks up a
-        newly-warmed cookie file mid-run without needing a browser relaunch."""
+        """Refresh ACM cookies into the persistent context."""
         if ACM_COOKIE_PATH.exists():
             try:
                 cookies = json.loads(ACM_COOKIE_PATH.read_text())
@@ -136,16 +90,12 @@ class BrowserScraper(BaseScraper):
         """
         Lazily launch the persistent Chromium instance on first use, or
         after it's been closed/died. Reused across every subsequent
-        scrape() call — see module docstring "NOTE ON PERSISTENT BROWSER".
+        scrape() call.
         """
         current_thread_id = threading.get_ident()
 
         if self._browser is not None:
             if self._browser_thread_id != current_thread_id:
-                # is_connected() would return True here — the browser IS
-                # still alive, just permanently unusable from this thread.
-                # Checking it first would mask exactly the bug we're
-                # guarding against, so the thread check must come first.
                 log.warning(
                     "Persistent browser was launched on thread "
                     f"{self._browser_thread_id} but is now being called "
@@ -156,9 +106,6 @@ class BrowserScraper(BaseScraper):
                 self.close()
             else:
                 try:
-                    # is_connected() is the cheap way to detect a browser
-                    # that crashed or was killed out from under us since
-                    # last use (same-thread case only — see above).
                     if self._browser.is_connected():
                         return
                     log.warning("Persistent browser disconnected — relaunching.")
@@ -169,9 +116,7 @@ class BrowserScraper(BaseScraper):
         from playwright.sync_api import sync_playwright
 
         self._playwright = sync_playwright().start()
-        # headless=False unconditionally (unchanged from before) — ACM's
-        # bot challenge wall detects and blocks headless Chromium; running
-        # every domain this way is simplest and already what the code did.
+    
         self._browser = self._playwright.chromium.launch(
             headless=False,
             args=["--disable-blink-features=AutomationControlled"]
@@ -222,20 +167,8 @@ class BrowserScraper(BaseScraper):
 
             is_acm = "dl.acm.org" in url
 
-            # NOTE: ACM cookie freshness is no longer checked on a wall-clock
-            # timer. We go straight to _ensure_browser()/_load_acm_cookies_
-            # into_context() below with whatever's on disk (even if it's old
-            # — it may well still be valid), and only pay for a full
-            # Cloudflare re-clearance if we actually get challenged (see the
-            # title check further down). That's strictly cheaper than
-            # unconditionally re-warming every ~30 minutes.
-
             self._ensure_browser()
-
-            # Refresh cookies into the persistent context before every ACM
-            # scrape (cheap; picks up any warmup_acm_cookies() write above,
-            # or one triggered by an earlier paper this run, without a
-            # browser relaunch).
+            
             if is_acm:
                 self._load_acm_cookies_into_context()
 
@@ -248,16 +181,7 @@ class BrowserScraper(BaseScraper):
                 title = page.title()
                 log.debug(f"Page title: {title}")
 
-                # Detect bot challenge. Covers Cloudflare's
-                # "Just a moment..." (ACM). For ACM specifically, this is
-                # the ONE place a cookie refresh gets triggered — reactively,
-                # because we just proved the persistent context's session no
-                # longer clears Cloudflare — rather than pre-emptively on a
-                # timer. The browser/context themselves are NOT torn down;
-                # only this page is, and warmup_acm_cookies() writes fresh
-                # cookies that _load_acm_cookies_into_context() (called again
-                # on the retried scrape() call below) merges straight into
-                # the same persistent context.
+                # Detect bot challenge
                 if self._is_challenge_title(title):
                     if is_acm and not _retry:
                         log.warning(
@@ -362,10 +286,6 @@ class BrowserScraper(BaseScraper):
                 else:
                     content = "[ACM paper content]\n" + acm_content
 
-            # OpenReview intentionally not handled here — see module
-            # docstring. openreview.net is absent from BROWSER_DOMAINS,
-            # so this branch is unreachable in normal operation.
-
             self._debug_dump(url, content)
 
             # Paywall check
@@ -421,10 +341,7 @@ class BrowserScraper(BaseScraper):
                 except Exception:
                     pass
 
-    # -----------------------------------------------------------------------
     # ACM helpers
-    # -----------------------------------------------------------------------
-
     @staticmethod
     def _extract_acm_essentials(page) -> str:
         """
@@ -489,7 +406,7 @@ class BrowserScraper(BaseScraper):
         i = 0
         while i < len(lines):
             line = lines[i]
-            # Name heuristic: short, no commas, no digits, starts uppercase
+            # Name heuristiC
             is_name = (
                 len(line) < 60
                 and "," not in line
@@ -510,14 +427,10 @@ class BrowserScraper(BaseScraper):
         Extract author/affiliation pairs directly from the live DOM using
         page.evaluate(), with a polling wait until affiliations are populated.
 
-        Key insight: the affiliation divs are injected by JS after page load.
-        page.content() misses them. outerHTML via evaluate() sees them — but
-        only after the JS has run. We poll until at least one affiliation span
-        has non-empty text, then extract everything at once.
         """
         try:
             # Poll until affiliation spans are populated (max 15s).
-            # The JS that fills them runs asynchronously after page load.
+    
             for _ in range(15):
                 has_affs = page.evaluate("""
                     () => {
@@ -534,7 +447,7 @@ class BrowserScraper(BaseScraper):
                 log.warning("ACM: affiliation spans never populated after 15s")
 
             # Extract directly from the live DOM.
-            # DOM structure confirmed from DevTools:
+            # DOM structure confirmed from DevTools (MIGHT NEED TO BE CHANGED IF THE STRUCTURE UPDATES):
             #   span[property="author"]    — one per author, names only, flat list
             #   div.affiliations           — one per author, in matching document order
             #     div[property="affiliation"]  — ONE OR MORE per author
@@ -595,9 +508,7 @@ class BrowserScraper(BaseScraper):
             log.warning(f"ACM live DOM extraction failed: {e}")
             return ""
 
-    # -----------------------------------------------------------------------
     # IEEE helpers
-    # -----------------------------------------------------------------------
 
     @staticmethod
     def _scrape_ieee_authors_page(page, url: str) -> str:
@@ -617,7 +528,7 @@ class BrowserScraper(BaseScraper):
             page.wait_for_timeout(2500)
 
             for selector in [
-                "a:has-text('All Authors')",
+                "a:has-text('All Authors')", # THESE MIGHT NEED TO BE CHANGED IF THE STRUCTURE UPDATES
                 "button:has-text('Authors')",
                 "text=Authors",
             ]:
@@ -637,9 +548,7 @@ class BrowserScraper(BaseScraper):
         except Exception:
             return ""
 
-    # -----------------------------------------------------------------------
     # Shared helpers
-    # -----------------------------------------------------------------------
 
     @staticmethod
     def _get_domain(url: str) -> str:

@@ -4,12 +4,12 @@ directly (no orchestrator/agent involved) — for debugging/smoke-testing,
 the same role run_single_paper.py plays for the main extraction pipeline.
 
 Requires data/final_output/<conference>/<year>/indian_papers_structured.json
-to already exist (i.e. run_pipeline has already completed for it).
+to already exist.
 
 Usage:
     python run_conference_summary.py ICML 2025
     python run_conference_summary.py ICML 2025 --refresh-cache
-    python run_conference_summary.py ICML 2025 --max-papers 3   # quick smoke test
+    python run_conference_summary.py ICML 2025 --max-papers 3   
 """
 import argparse
 import json

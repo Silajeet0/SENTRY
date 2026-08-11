@@ -1,5 +1,5 @@
 """
-ikdd_dedup.py — IKDD backend deduplication checker.
+ikdd_dedup.py — IKDD (or any other suitable venue, but might need adjustment) backend deduplication checker.
 
 Scrapes all approved Premier Papers from ikdd backend and checks
 whether a candidate paper (by title) is already present.
@@ -22,13 +22,10 @@ log = logging.getLogger(__name__)
 IKDD_BASE          = "https://ikdd.acm.org"
 LOGIN_URL          = f"{IKDD_BASE}/ikdd-login.php"
 APPROVED_LIST_URL  = f"{IKDD_BASE}/premier-papers-list.php?status=2"
-# NOTE: guessed as status=1 by analogy with status=2 for Approved — verify
-# against the actual URL behind the "New" tile on the Premier Papers dashboard
-# and correct this if it doesn't match.
 NEW_LIST_URL       = f"{IKDD_BASE}/premier-papers-list.php?status=1"
 
 # Every status list we scrape into the dedup cache. Add/remove entries here
-# if IKDD ever exposes more statuses worth checking (e.g. Declined).
+# if IKDD (or other venue) ever exposes more statuses worth checking.
 LIST_URLS_TO_SCRAPE = {
     "new": NEW_LIST_URL,
     "approved": APPROVED_LIST_URL,
@@ -71,8 +68,8 @@ def _similarity(a: str, b: str) -> float:
 # scraper
 def _login(page, username: str, password: str) -> None:
     """
-    Logs in to IKDD using an already-open Playwright page.
-    Raises RuntimeError if login fails.
+    Logs in to IKDD (can be configured for other venues or might work without configuration as well) 
+    using an already-open Playwright page.Raises RuntimeError if login fails.
     """
     from playwright.sync_api import TimeoutError as PWTimeout
 
@@ -190,7 +187,7 @@ def _scrape_titles_from_list(page, list_url: str, label: str) -> list[str]:
 
 def _scrape_approved_titles(username: str, password: str) -> list[str]:
     """
-    Logs in to IKDD and scrapes Premier Paper titles across every status
+    Logs in to IKDD (or possibly other venues) and scrapes Paper titles across every status
     listed in LIST_URLS_TO_SCRAPE (currently New + Approved), deduplicating
     the combined result.
     Returns a list of raw title strings as they appear in the UI.
@@ -317,7 +314,7 @@ class IKDDDeduplicator:
             if score > best_score:
                 best_score = score
                 best_title = self._titles[i]
-            # Short-circuit on near-exact match
+            # near-exact match
             if best_score >= 0.99:
                 break
 
@@ -337,8 +334,8 @@ class IKDDDeduplicator:
         matching the structure of indian_papers_structured.json.
 
         Returns:
-            new_papers  — papers not in IKDD (safe to push)
-            duplicates  — papers already in IKDD (skip)
+            new_papers  — papers not in IKDD/other venues (safe to push)
+            duplicates  — papers already in IKDD/other venues (skip)
         """
         new_papers = []
         duplicates = []
@@ -387,7 +384,7 @@ def main():
     )
 
     parser = argparse.ArgumentParser(
-        description="IKDD deduplication checker for AEGIS pipeline outputs."
+        description="IKDD deduplication checker for SENTRY pipeline outputs."
     )
     parser.add_argument(
         "--refresh", action="store_true",

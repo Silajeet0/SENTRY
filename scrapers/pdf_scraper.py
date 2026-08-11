@@ -2,10 +2,6 @@
 Tier 3: PDF text extraction.
 Used when the paper is only available as a PDF and/or previous tier fails.
 
-NOTE: openreview.net is NOT handled here — it returns 403 (Cloudflare-style
-challenge) to all requests.get() calls regardless of headers, identical to
-ACM DL's behaviour. OpenReview papers are handled by Tier 2 (browser_scraper.py)
-which uses Playwright with cookie-based session warmup.
 """
 import io
 import re

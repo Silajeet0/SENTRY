@@ -19,7 +19,7 @@ SS_BASE = "https://api.semanticscholar.org/graph/v1/paper"
 OA_BASE = "https://api.openalex.org/works"
 CR_BASE = "https://api.crossref.org/works"
 
-HEADERS = {"User-Agent": "AEGIS-Pipeline/1.0 (academic research; contact@institution.edu)"}
+HEADERS = {"User-Agent": "SENTRY-Pipeline/1.0 (academic research; contact@institution.edu)"}
 
 
 def _extract_doi(url: str) -> str | None:
@@ -128,8 +128,6 @@ class APIScraper(BaseScraper):
             success=False,
             error=f"All APIs failed. SS: {ss_result.error} | OA: {oa_result.error}"
         )
-
-    # ------------------------------------------------------------------ #
 
     def _try_semantic_scholar(self, url, doi, arxiv_id) -> ScrapeResult:
         try:

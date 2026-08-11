@@ -2,22 +2,7 @@
 tools.py — the tool surface exposed to the LLM-driven orchestrator agent.
 
 Every tool is a plain, synchronous, JSON-in/JSON-out Python function.
-agent.py is what turns TOOL_SCHEMAS into an OpenAI-style `tools=[...]` list
-and dispatches calls through TOOL_FUNCTIONS — this module has no idea an LLM
-is involved, which keeps it independently testable and callable from plain
-Python (e.g. from a Jupyter cell) with no agent loop at all.
 
-Two design choices worth calling out:
-
-- run_pipeline / retry_errors return immediately (they start a background
-  thread — see runner.py) rather than blocking. A single AEGIS run over
-  hundreds of papers at `delay` seconds apart routinely takes minutes to
-  hours; holding a tool-call turn open that long isn't workable. Progress is
-  polled afterwards via get_run_status, which just reads the same files
-  pipeline.py already saves after every single paper.
-
-- resolve_conference_url never guesses at ACM/IEEE proceeding URLs. See
-  conference_catalog.py's docstring for why.
 """
 import json
 from pathlib import Path
@@ -61,18 +46,7 @@ def run_pipeline(
     Guards against redundant re-extraction: if
     data/final_output/<conference>/<year>/indian_papers_structured.json
     already exists, this returns status="already_extracted" (with the
-    existing paper count) INSTEAD of starting a new run. A fresh run means
-    re-scraping every paper AND re-running the extraction LLM call on each
-    one — on the tiered/scraped path that's one MAIN-orchestrator-model call
-    per paper, which for a few dozen papers is genuinely expensive and, if
-    the main model shares a tight rate-limited quota (e.g. a free-tier cloud
-    endpoint), can tie it up for a long time. There's no reason to pay that
-    cost again for a conference/year that's already sitting on disk — a
-    request to summarize/email/submit an already-extracted conference should
-    go straight to the tool that reads existing data (summarize_indian_authors,
-    initiate_form_filler), not through here first. Pass force=True only when
-    a fresh extraction is actually wanted (e.g. the source proceedings page
-    has new papers since the last run, or a scraping bug is being re-tested).
+    existing paper count) INSTEAD of starting a new run. 
     """
     if not force:
         existing_path = Path(f"data/final_output/{conference}/{year}/indian_papers_structured.json")
@@ -145,12 +119,7 @@ def get_run_status(conference: str, year: str) -> dict:
 
     result["found_output"] = True
 
-    # Detect stale data: if this run is still queued/extracting links, it
-    # hasn't written its own summary.json yet — anything currently on disk
-    # is leftover from a PREVIOUS run of this same conference/year, not live
-    # progress. _save() stamps summary.json with the writing run's own
-    # started_at, so comparing that against the registry's started_at for
-    # *this* run tells them apart precisely.
+    # Detect stale data
     is_stale = False
     if rec and rec.stage in ("queued", "link_extraction") and rec.started_at:
         if summary_file.exists():
@@ -202,17 +171,9 @@ def list_runs() -> dict:
     return {"runs": [r.to_dict() for r in REGISTRY.all()]}
 
 
-# ---------------------------------------------------------------------------
-# RPA / IKDD form-filler tools
-#
-# These are deliberately separate from run_pipeline/get_run_status/list_runs
-# above: run_pipeline extracts and classifies papers (scraping + LLM), while
-# initiate_form_filler is a downstream, independent step that takes papers
-# ALREADY extracted (data/final_output/<conference>/<year>/indian_papers_
-# structured.json must already exist) and submits the new ones to IKDD via
-# Selenium. A person can ask for one without the other, e.g. re-running the
-# form filler after fixing a rejected submission without re-scraping.
-# ---------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------
+# RPA / IKDD (or any other suitable venue, may need some apt modifications) form-filler tools
+# --------------------------------------------------------------------------------------------
 def resolve_ikdd_form_metadata(conference: str, year: str) -> dict:
     return ikdd_form_catalog.resolve(conference, year)
 
@@ -226,7 +187,7 @@ def initiate_form_filler(
     refresh_dedup_cache: bool = True,
 ) -> dict:
     """
-    Starts the IKDD Selenium form-filler (RPA) for one conference/year in
+    Starts the IKDD (or any other suitable venue) Selenium form-filler (RPA) for one conference/year in
     the background and returns immediately — hundreds of papers at several
     seconds each adds up, so poll get_rpa_status afterwards rather than
     waiting here, same pattern as run_pipeline/get_run_status.
@@ -269,18 +230,6 @@ def list_rpa_runs() -> dict:
 
 # ---------------------------------------------------------------------------
 # Email-summary tools
-#
-# A THIRD downstream, independent step alongside initiate_form_filler —
-# same relationship to run_pipeline: it reads papers ALREADY extracted
-# (data/final_output/<conference>/<year>/indian_papers_structured.json must
-# already exist) rather than re-scraping/re-classifying anything. Fetches
-# each paper's abstract (OpenReview API directly for ICML/ICLR/..., the
-# same four-tier scraper as run_pipeline for everything else — see
-# summarizer/abstract_fetcher.py), then writes a cited email-body summary
-# via a SEPARATE summarization LLM (see summarizer/email_summarizer.py for
-# why — a different model/temperature than the main extraction/orchestrator
-# LLM). Runs in the background like run_pipeline/initiate_form_filler —
-# poll get_summary_status rather than waiting here.
 # ---------------------------------------------------------------------------
 def summarize_indian_authors(conference: str, year: str, refresh_cache: bool = False) -> dict:
     return summary_runner.start_summary(conference=conference, year=year, refresh_cache=refresh_cache)
@@ -296,13 +245,6 @@ def list_summary_runs() -> dict:
 
 # ---------------------------------------------------------------------------
 # Standalone affiliation-gate tool
-#
-# initiate_form_filler ALREADY runs this gate internally (see
-# Form_filler/run_selenium_filler.py) before ever submitting anything — this
-# standalone version exists so the gate can be previewed/re-run on its own,
-# independent of and before committing to an actual RPA run (e.g. "check
-# which ICML 2025 papers would need human review before you submit them").
-# Deterministic, regex-only, no LLM call — see evaluation/affiliation_gate.py.
 # ---------------------------------------------------------------------------
 def verify_indian_affiliations(conference: str, year: str) -> dict:
     from evaluation.affiliation_gate import run_gate
@@ -409,7 +351,7 @@ TOOL_SCHEMAS = [
         "function": {
             "name": "run_pipeline",
             "description": (
-                "Start the AEGIS extraction pipeline for one conference/year "
+                "Start the SENTRY extraction pipeline for one conference/year "
                 "in the background and return immediately — a full run over "
                 "hundreds of papers can take a long time, so poll "
                 "get_run_status afterwards rather than waiting here. "

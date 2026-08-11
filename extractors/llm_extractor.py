@@ -1,5 +1,5 @@
 """
-In contrast to Agent-E, the LLM does ONLY extraction — never navigation or planning.
+llm_extractor
 """
 import os
 import json
@@ -45,11 +45,9 @@ class PaperInfo:
     area_of_research: str = ""
     # Populated ONLY when area_of_research falls back to "Others" and the
     # LLM's own free-text answer had something more specific to say than
-    # that (e.g. "Federated Learning") — the IKDD form reveals a follow-up
+    # that (e.g. "Federated Learning") — the IKDD (or any other suitable venue) form reveals a follow-up
     # "Enter the area of research" text box the moment "Others" is picked
-    # on the dropdown, and Form_filler needs this to fill it in. Left ""
-    # when area_of_research is one of the fixed AREA_LIST options, or when
-    # the LLM's raw answer was itself just some spelling of "other"/unknown.
+    # on the dropdown, and Form_filler needs this to fill it in
     area_of_research_other: str = ""
     total_authors: int = 0
     all_authors: list = field(default_factory=list)
@@ -215,13 +213,11 @@ class LLMExtractor:
 
         raise ValueError(f"No valid JSON found in LLM response: {raw[:200]}")
 
-    # Raw LLM answers that mean "no more specific term than Others itself" —
-    # not worth surfacing back as the "Others" follow-up text.
     _EMPTY_OTHER_VALUES = {"other", "others", "n/a", "na", "none", "unknown", ""}
 
     def _normalize_area_of_research(self, area: object) -> tuple[str, str]:
         """
-        Return (area_of_research, area_of_research_other) — an IKDD
+        Return (area_of_research, area_of_research_other) — an IKDD (or any other suitable venue)
         form-safe dropdown value from the LLM's free text, plus (when the
         dropdown value is "Others") the LLM's original wording so it can
         go into the form's follow-up "Enter the area of research" text box
@@ -247,20 +243,8 @@ class LLMExtractor:
 
     def _resolve_other_text(self, explicit_other: object, derived_other: str, area: str) -> str:
         """
-        Pick the text to show in the IKDD form's follow-up "Enter the area
-        of research" box, when area_of_research is "Others". Two sources:
-
-        1. explicit_other — the LLM's answer to the prompt's dedicated
-           area_of_research_other field. This is the expected path: the
-           prompt now asks for it explicitly whenever the LLM picks
-           "Others", since AREA_LIST's own "Others" entry means a
-           compliant model otherwise has no reason to say anything more
-           specific in area_of_research itself (it's a valid list choice
-           on its own) — that was the actual root cause of this field
-           coming back empty even after area_of_research_other existed.
-        2. derived_other — _normalize_area_of_research's fallback, for
-           models that don't reliably follow the JSON schema and instead
-           put a free-text, off-list term directly in area_of_research.
+        Pick the text to show in the IKDD (or any other suitable venue) form's follow-up "Enter the area
+        of research" box, when area_of_research is "Others". 
 
         Returns "" if area isn't "Others" at all, or if neither source has
         anything usable.
@@ -278,20 +262,7 @@ class LLMExtractor:
     def _verify_indian_affiliations(self, info: PaperInfo) -> PaperInfo:
         """
         Two-way deterministic safety net around the LLM's own India-affiliation
-        call, using evaluation.india_rules as ground truth:
-
-        1. ADD authors the LLM missed whose affiliation is an unambiguous
-           ("positive") Indian-institution match.
-        2. DEMOTE (remove) authors the LLM flagged whose OWN affiliation
-           string is only "ambiguous" — i.e. it matched purely on a
-           collision-prone acronym (IIT/NIT/ISI/VIT — see india_rules.py's
-           AMBIGUOUS_ACRONYM_INSTITUTION_PATTERNS) or a bare Indian
-           city/company name, with no corroborating "India"/full name. The
-           prompt already instructs the LLM not to do this, but a smaller
-           model can still slip (this is exactly how "IIT" = Istituto
-           Italiano di Tecnologia / a Greek NCSR Demokritos institute ended
-           up misclassified as Indian in practice) — catch it
-           deterministically rather than trusting the instruction alone.
+        call
         """
         if not info.all_authors:
             return info
@@ -325,13 +296,7 @@ class LLMExtractor:
             info.authors_with_indian_affiliations = [
                 name for name in info.authors_with_indian_affiliations if name not in demoted
             ]
-            # indian_institutions is free text (sometimes the LLM's own
-            # cleaned-up name, sometimes a raw affiliation string), so we
-            # can't always tie an entry back to the demoted author with
-            # certainty. What we CAN safely drop is a bare ambiguous
-            # acronym standing alone as an "institution" — e.g. "IIT" with
-            # nothing else — which is itself the exact failure pattern
-            # being corrected here, never a legitimate full institution name.
+            
             info.indian_institutions = [
                 inst for inst in info.indian_institutions
                 if inst.strip().lower() not in {"iit", "nit", "isi", "vit"}

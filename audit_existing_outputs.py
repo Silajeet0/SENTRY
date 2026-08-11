@@ -2,11 +2,6 @@
 Audit already-extracted indian_papers_structured.json files against the
 hardened india_rules.py, WITHOUT re-scraping or re-calling the LLM.
 
-For each Indian-flagged author in each existing output file, re-classify
-their raw affiliation string with the new rules. Flags anyone who would
-now be "ambiguous" (i.e. was only kept alive by the old bare-acronym
-auto-positive rule) so you can review/strip them by hand, or re-run just
-that specific paper.
 """
 import json
 import sys

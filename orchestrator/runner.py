@@ -1,22 +1,9 @@
 """
-runner.py — executes AEGIS runs (fresh or retry-only) one at a time on a
+runner.py — executes SENTRY runs (fresh or retry-only) one at a time on a
 single background worker thread, keeping orchestrator.registry.REGISTRY
 updated as they progress.
 
-Why one worker instead of "one thread per run_pipeline call": ACM and
-OpenReview conferences are fetched via Playwright and cache their login
-session to a single shared cookie file per handler type
-(workflows/link_extractors/acm_api_fetcher.COOKIE_PATH,
-openreview_fetcher.OPENREVIEW_COOKIE_PATH). If two ACM (or two OpenReview)
-runs executed truly concurrently, they'd race writing that file and could
-corrupt each other's session. A single serial queue sidesteps that
-entirely and matches the natural mental model of "extract these
-conferences" anyway — they queue in the order requested and run one after
-another, each still non-blocking from the chat's point of view.
 
-start_run / start_retry both return immediately with status "queued" (or
-"already_running"/"already_queued"); get_run_status reflects the queued ->
-running -> completed/failed transitions.
 """
 import json
 import queue
@@ -42,7 +29,7 @@ def _ensure_worker_started() -> None:
     global _WORKER_STARTED
     with _WORKER_LOCK:
         if not _WORKER_STARTED:
-            threading.Thread(target=_worker_loop, daemon=True, name="aegis-run-worker").start()
+            threading.Thread(target=_worker_loop, daemon=True, name="sentry-run-worker").start()
             _WORKER_STARTED = True
 
 
@@ -51,7 +38,7 @@ def _worker_loop() -> None:
         job = _JOB_QUEUE.get()
         try:
             job()
-        except Exception:  # noqa: BLE001 — one job's bug must not kill the worker
+        except Exception:  
             traceback.print_exc()
         finally:
             _JOB_QUEUE.task_done()
@@ -61,9 +48,6 @@ def _log_path(conference: str, year: str) -> str:
     return f"data/orchestrator_logs/{conference}_{year}.log"
 
 
-# ---------------------------------------------------------------------------
-# Fresh runs
-# ---------------------------------------------------------------------------
 def _run_job(conference, year, proceeding_url, delay, track_skip_keywords, track_include_keywords):
     def _on_links_ready(path: str):
         REGISTRY.mark_links_ready(conference, year, path)
@@ -86,7 +70,7 @@ def _run_job(conference, year, proceeding_url, delay, track_skip_keywords, track
             REGISTRY.mark_completed(conference, year)
         except RunBlockedError as e:
             REGISTRY.mark_blocked(conference, year, str(e))
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:  
             REGISTRY.mark_failed(
                 conference, year, f"{type(e).__name__}: {e}\n{traceback.format_exc(limit=4)}"
             )
@@ -122,7 +106,7 @@ def start_run(
         )
     )
 
-    ahead = _JOB_QUEUE.qsize()  # rough — includes this job if not yet picked up
+    ahead = _JOB_QUEUE.qsize() 
     return {
         "status": "queued",
         "conference": conference,
@@ -138,10 +122,6 @@ def start_run(
         ),
     }
 
-
-# ---------------------------------------------------------------------------
-# Fresh runs — OpenReview API mode (venue_id, bypasses main_driver entirely)
-# ---------------------------------------------------------------------------
 def _run_job_openreview(conference, year, venue_id, delay, skip_venue_keywords, include_only_venue_keywords):
     REGISTRY.mark_running(conference, year, stage="paper_processing")
     with route_output_to_file(_log_path(conference, year)):
@@ -159,7 +139,7 @@ def _run_job_openreview(conference, year, venue_id, delay, skip_venue_keywords, 
             REGISTRY.mark_completed(conference, year)
         except RunBlockedError as e:
             REGISTRY.mark_blocked(conference, year, str(e))
-        except Exception as e:  # noqa: BLE001
+        except Exception as e: 
             REGISTRY.mark_failed(
                 conference, year, f"{type(e).__name__}: {e}\n{traceback.format_exc(limit=4)}"
             )
@@ -212,15 +192,11 @@ def start_run_openreview(
         ),
     }
 
-
-# ---------------------------------------------------------------------------
-# Retries — re-run only the papers that previously errored
-# ---------------------------------------------------------------------------
 def _guess_links_path(conference: str, year: str) -> Optional[str]:
     """
     Fallback for when the registry doesn't know input_links_path (e.g. the
     orchestrator process was restarted between the original run and the
-    retry request). Tries the two locations AEGIS ever writes a final
+    retry request). Tries the two locations SENTRY ever writes a final
     per-paper links.json to.
     """
     candidates = [
@@ -248,7 +224,7 @@ def _retry_job(conference, year, input_links_path, delay):
             REGISTRY.mark_completed(conference, year)
         except RunBlockedError as e:
             REGISTRY.mark_blocked(conference, year, str(e))
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:  
             REGISTRY.mark_failed(
                 conference, year, f"{type(e).__name__}: {e}\n{traceback.format_exc(limit=4)}"
             )
@@ -271,7 +247,7 @@ def _retry_job_openreview(conference, year, venue_id, delay, skip_venue_keywords
             REGISTRY.mark_completed(conference, year)
         except RunBlockedError as e:
             REGISTRY.mark_blocked(conference, year, str(e))
-        except Exception as e:  # noqa: BLE001
+        except Exception as e: 
             REGISTRY.mark_failed(
                 conference, year, f"{type(e).__name__}: {e}\n{traceback.format_exc(limit=4)}"
             )
@@ -344,8 +320,7 @@ def start_retry(conference: str, year: str, delay: int = 10) -> dict:
             }
 
     # Un-mark the errored URLs as "processed" so pipeline.run_pipeline's
-    # resume-skip logic will attempt them again on the next call. Back the
-    # original file up first — this rewrite is the one destructive step here.
+    # resume-skip logic will attempt them again on the next call.
     backup_path = processed_file.with_suffix(
         f".json.bak-{datetime.now().strftime('%Y%m%dT%H%M%S')}"
     )

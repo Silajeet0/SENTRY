@@ -1,11 +1,6 @@
 """
-rpa_registry.py — thread-safe, in-process tracking of every IKDD form-filler
-(RPA) job the orchestrator has kicked off. Mirrors orchestrator/registry.py's
-role for AEGIS extraction runs, but kept as its own registry rather than
-reused, because the two jobs track genuinely different things:
-RunRecord's input_links_path/track_keywords fields are extraction-pipeline
-concepts that don't apply here, and this job's meaningful "result" is
-submission counts (submitted/skipped/failed), not a scraped-links path.
+rpa_registry.py — thread-safe, in-process tracking of every IKDD form-filler (or any other suitable venue)
+(RPA) job the orchestrator has kicked off. 
 """
 import threading
 from dataclasses import dataclass, field, asdict
@@ -23,7 +18,7 @@ class RPAJobRecord:
     year: str
     venue: str = ""
     month: str = ""
-    state: str = "not_started"   # not_started | queued | running | completed | failed
+    state: str = "not_started"   
     total_candidates: int = 0
     duplicates_skipped: int = 0
     submitted: int = 0
@@ -32,7 +27,7 @@ class RPAJobRecord:
     finished_at: Optional[str] = None
     error: Optional[str] = None
     duplicate_details: list = field(default_factory=list)
-    details: list = field(default_factory=list)  # per-paper submit/fail results from the last run
+    details: list = field(default_factory=list) 
 
     def to_dict(self) -> dict:
         return asdict(self)

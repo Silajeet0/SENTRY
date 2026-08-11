@@ -1,10 +1,6 @@
 """
 summary_registry.py — thread-safe, in-process tracking of every email-summary
-job the orchestrator has kicked off. Mirrors orchestrator/rpa_registry.py's
-role for IKDD form-filler runs, kept as its own registry for the same reason
-rpa_registry.py is separate from registry.py: this job's meaningful
-"result" (subject/body/paper_count) and progress shape (papers_scraped/
-total_papers) are specific to it.
+job the orchestrator has kicked off.
 """
 import threading
 from dataclasses import dataclass, field, asdict
@@ -20,14 +16,14 @@ def _key(conference: str, year: str) -> str:
 class SummaryJobRecord:
     conference: str
     year: str
-    state: str = "not_started"   # not_started | queued | running | completed | failed
-    stage: str = ""              # "" | "fetching_abstracts" | "summarizing" | "done"
+    state: str = "not_started"   
+    stage: str = ""              
     total_papers: int = 0
-    papers_scraped: int = 0      # live progress during the fetching_abstracts stage
+    papers_scraped: int = 0     
     started_at: Optional[str] = None
     finished_at: Optional[str] = None
     error: Optional[str] = None
-    result: Optional[dict] = field(default_factory=dict)  # build_email() output once completed
+    result: Optional[dict] = field(default_factory=dict) 
 
     def to_dict(self) -> dict:
         return asdict(self)

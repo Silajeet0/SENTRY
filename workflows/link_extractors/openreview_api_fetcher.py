@@ -2,22 +2,10 @@
 openreview_api_fetcher.py — pure openreview-py API access for OpenReview-
 hosted conferences (ICLR, ICML, NeurIPS-on-OpenReview, etc).
 
-Replaces the Playwright/browser-scraping approach in openreview_fetcher.py
-entirely. Authenticating with real credentials clears the
-ChallengeRequiredError that blocked anonymous API access — no browser,
-no cookies, no Cloudflare-style challenge handling needed at all.
-
-Why this also replaces browser_scraper.py's OpenReview PDF-download path
-──────────────────────────────────────────────────────────────────────
-The API already returns title, abstract, authors, and authorids directly on
-the note — and author Profiles give real institution/country strings, not
-something an LLM has to infer from scraped text. There is nothing left that
-downloading and parsing the PDF was providing for this pipeline's purposes.
-
 Required environment variables:
     OPENREVIEW_USERNAME
     OPENREVIEW_PASSWORD
-(Do not hardcode credentials in this file or call sites.)
+
 """
 import os
 import re
@@ -31,14 +19,7 @@ log = logging.getLogger(__name__)
 BASE_URL = "https://api2.openreview.net"
 
 # OpenReview profiles store country as a two-letter ISO 3166-1 alpha-2 code
-# (confirmed empirically: Tsinghua University profiles came back with
-# country="CN", not "China"). classify_affiliation() matches on the literal
-# word "india" in the affiliation text, so a raw "IN" code silently never
-# matches unless the institution NAME itself happens to contain a known
-# keyword (IIT/NIT/IISc/etc). This expansion is what makes country-based
-# detection actually work instead of relying solely on institution name.
-# Extend this map as you encounter more codes worth expanding explicitly —
-# unmapped codes just pass through as-is (harmless, just unexpanded).
+# (confirmed empirically)
 _COUNTRY_CODE_MAP = {
     "IN": "India",
     "CN": "China",
@@ -87,10 +68,7 @@ def get_client() -> "openreview.api.OpenReviewClient":
 def _venue_is_wanted(venue_text: str, skip_keywords: list[str], include_only: list[str]) -> bool:
     """
     Same skip_keywords/include_only substring-matching semantics used
-    elsewhere in this pipeline (ACM's CONFERENCE_SESSION_CONFIG,
-    select_tracks_programmatic) — applied here to the note's human-readable
-    `venue` string (e.g. "ICLR 2026 Oral", "ICLR 2026 Workshop") instead of
-    a track/session heading.
+    elsewhere in this pipeline 
     """
     text_lower = venue_text.lower()
     if include_only:
@@ -109,11 +87,6 @@ def fetch_accepted_notes(
     Filtering by content={'venueid': venue_id} is what limits results to
     accepted papers specifically — submissions still under review, or
     rejected/withdrawn ones, carry a different venueid
-    (e.g. ".../Submission", ".../Rejected_Submission"), so they're excluded
-    automatically without any extra status checking.
-
-    skip_venue_keywords defaults to ["Workshop", "Tutorial"] to match the
-    same default used elsewhere in this pipeline for track filtering.
     """
     if skip_venue_keywords is None:
         skip_venue_keywords = ["Workshop", "Tutorial"]
@@ -146,8 +119,6 @@ def fetch_author_profiles(client, authorids: list[str]) -> dict[str, dict]:
     """
     Batch-fetch profiles for a list of tilde author IDs (e.g. '~Jane_Doe1').
     Returns {authorid: {"name": str, "institution": str, "country": str}}.
-    Missing/unretrievable profiles are simply absent from the returned dict —
-    callers should treat a missing key as "affiliation unknown", not an error.
     """
     if not authorids:
         return {}
@@ -222,10 +193,6 @@ def fetch_single_openreview_paper(url: str) -> dict:
     for single-paper testing/debugging via run_single_paper.py. Same output
     shape as the entries fetch_openreview_papers() returns, so it can go
     straight into process_openreview_paper() unchanged.
-
-    This does its own (unbatched) profile fetch since it's just one paper —
-    fetch_openreview_papers() batches across a whole venue for efficiency,
-    which isn't relevant here.
     """
     match = re.search(r"[?&]id=([^&]+)", url)
     if not match:
@@ -252,8 +219,7 @@ def fetch_openreview_papers(
     """
     End-to-end: fetch accepted notes, batch-fetch all unique authors'
     profiles once, and return fully assembled paper records (title,
-    abstract, authors-with-affiliations) — no further network calls needed
-    downstream except the LLM call for area_of_research on positive papers.
+    abstract, authors-with-affiliations)
     """
     client = get_client()
     notes = fetch_accepted_notes(venue_id, skip_venue_keywords, include_only_venue_keywords)

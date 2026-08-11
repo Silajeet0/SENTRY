@@ -26,7 +26,7 @@ def extract_grouped_links(html_path: str, conference: str, year: str) -> str:
     grouped_data = []
     conf = conference.lower()
 
-    # === ACL STYLE ===
+    # ACL STYLE
     if "acl" in conf:
         base_url = "https://aclanthology.org"
         for track_anchor in soup.find_all("a", class_="align-middle", href=True):
@@ -58,7 +58,7 @@ def extract_grouped_links(html_path: str, conference: str, year: str) -> str:
             if track["paper_links"] and "bib" not in title.lower() and not should_skip_title(title):
                 grouped_data.append(track)
 
-    # === ACM STYLE ===
+    # ACM STYLE
     elif "acm" in conf:
         base_url = "https://dl.acm.org"
         session_selectors = [
@@ -126,7 +126,7 @@ def extract_grouped_links(html_path: str, conference: str, year: str) -> str:
     else:
         raise ValueError(f"[ERROR] Unsupported grouped conference: {conference}")
 
-    # === Save Output JSON ===
+    # Save Output JSON
     save_dir = Path(f"data/links_raw/{conference}/{year}")
     save_dir.mkdir(parents=True, exist_ok=True)
     save_path = save_dir / "grouped_links.json"

@@ -1,28 +1,7 @@
 """
 rpa_runner.py — executes IKDD form-filler (RPA) jobs one at a time on a
 single background worker thread, keeping orchestrator.rpa_registry's
-RPA_REGISTRY updated as they progress. Mirrors runner.py's job-queue
-pattern for the AEGIS extraction pipeline, kept as a separate queue/worker
-because it's a genuinely separate resource: Form_filler drives a single
-real Chrome/Selenium session per job, and running two of those concurrently
-on one machine risks window-focus/resource contention between them the
-same way two concurrent scraping runs would race on a shared cookie file.
-Jobs queue and run strictly one after another either way.
-
-start_form_filler returns immediately with status "queued" (or
-"already_running"/"already_queued"); get_status reflects the queued ->
-running -> completed/failed transitions.
-
-RPA_REGISTRY is purely in-memory and only knows about jobs actually started
-via start_form_filler *in this process's lifetime* — it has no idea whether
-data/final_output/<conference>/<year>/indian_papers_structured.json exists
-on disk. That file is written independently by the AEGIS extraction
-pipeline (pipeline.py) and is exactly what run_form_filler needs to submit
-anything, so a conference/year can be fully extracted and ready to submit
-while RPA_REGISTRY still reports "not_started" — e.g. right after a process
-restart, or if extraction ran in an earlier process. get_status/list_runs
-below cross-check the filesystem so callers (the orchestrator agent, and
-the UI on top of it) see readiness that isn't tied to registry state.
+RPA_REGISTRY updated as they progress.
 """
 import json
 import queue
@@ -46,7 +25,7 @@ def _structured_json_path(conference: str, year: str) -> Path:
 
 
 def _extracted_candidate_count(json_path: Path) -> Optional[int]:
-    """Best-effort paper count from an indian_papers_structured.json. None if unreadable."""
+    """Paper count from an indian_papers_structured.json. None if unreadable."""
     try:
         data = json.loads(json_path.read_text(encoding="utf-8"))
         return len(data) if isinstance(data, list) else None
@@ -87,7 +66,7 @@ def _worker_loop() -> None:
         job = _JOB_QUEUE.get()
         try:
             job()
-        except Exception:  # noqa: BLE001 — one job's bug must not kill the worker
+        except Exception: 
             traceback.print_exc()
         finally:
             _JOB_QUEUE.task_done()
@@ -97,10 +76,6 @@ def _job(conference, year, month, venue, form_url, refresh_dedup_cache) -> None:
     RPA_REGISTRY.mark_running(conference, year)
 
     try:
-        # Imported lazily (not at module top) so that environments without
-        # Selenium/Chrome/chromedriver configured can still import and use
-        # the rest of the orchestrator (extraction, dedup, etc.) without
-        # this module's import failing at process startup.
         from Form_filler.run_selenium_filler import run_form_filler
     except ImportError as e:
         RPA_REGISTRY.mark_failed(
@@ -153,7 +128,7 @@ def start_form_filler(
         lambda: _job(conference, year, month, venue, form_url, refresh_dedup_cache)
     )
 
-    ahead = _JOB_QUEUE.qsize()  # rough — includes this job if not yet picked up
+    ahead = _JOB_QUEUE.qsize()  
     return {
         "status": "queued",
         "conference": conference,
@@ -207,8 +182,6 @@ def get_status(conference: str, year: str) -> dict:
         }
 
     result = rec.to_dict()
-    # Even when the registry has a record, surface on-disk state too — e.g.
-    # a "completed" run from earlier plus fresh data re-extracted since.
     result["has_extracted_data"] = has_extracted_data
     result["extracted_candidates"] = extracted_candidates
     return result

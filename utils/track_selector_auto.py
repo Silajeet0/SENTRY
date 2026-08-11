@@ -62,7 +62,6 @@ def select_tracks_auto(
     conference = grouped_path.parts[-3].lower()
     year = grouped_path.parts[-2]
 
-    # Same ACL paper-0 PDF exclusion as the interactive version.
     cleaned_links = []
     for track in selected_tracks:
         for link in track.get("paper_links", []):

@@ -1,5 +1,5 @@
 """
-run.py — entrypoint. Replace your existing run.py with this.
+run.py
 
 Environment variables to set before running:
     LLM_PROVIDER=nvidia          (or openai, anthropic, ollama)
@@ -9,16 +9,6 @@ Environment variables to set before running:
 
     OPENREVIEW_USERNAME=your_openreview_email    (only needed for venue_id entries)
     OPENREVIEW_PASSWORD=your_openreview_password
-
-No other config needed. No Agent-E. No browser agent.
-
-Each entry in conferences_to_run is EITHER:
-    - a "proceeding_url" entry  → routed through main_driver.run_pipeline,
-      which fetches/scrapes the proceedings page then hands off to
-      pipeline.run_pipeline with a resolved input_links_path.
-    - a "venue_id" entry        → routed straight to pipeline.run_pipeline's
-      OpenReview API path — no scraping, no main_driver involvement at all,
-      since OpenReview needs neither HTML fetching nor a browser.
 """
 from dotenv import load_dotenv
 load_dotenv()
@@ -28,7 +18,7 @@ from pipeline import run_pipeline as run_openreview_pipeline
 
 if __name__ == "__main__":
     # List of all conference pipeline configurations
-    '''conferences_to_run = [
+    conferences_to_run = [
         {
             "proceeding_url": "https://ieeexplore.ieee.org/xpl/conhome/11391637/proceeding",
             "conference": "IEEE-ICDM",
@@ -169,9 +159,6 @@ if __name__ == "__main__":
             "conference": "ACM_UIST",
             "year": "2025"
         },
-
-        # ── OpenReview conferences — venue_id routes straight to
-        #    pipeline.run_pipeline's API path, no proceeding_url needed. ──
         {
             "venue_id": "ICML.cc/2026/Conference",
             "conference": "ICML",
@@ -209,14 +196,6 @@ if __name__ == "__main__":
                 max_papers=None,
                 resume_from=0,
                 delay=10
-            )'''
-    
-    run_scraped_pipeline(
-                proceeding_url="https://aaai.org/proceeding/aaai-40-2026/",
-                conference="AAAI",
-                year="2026",
-                max_papers=None,
-                resume_from=0,
-                delay=10
             )
+    
     

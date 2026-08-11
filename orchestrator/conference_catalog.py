@@ -2,14 +2,6 @@
 conference_catalog.py — backs the resolve_conference_url, validate_url, and
 detect_structure orchestrator tools.
 
-Deliberately NOT LLM-guessed. A wrong proceedings URL doesn't fail loudly —
-it sends the four-tier scraper cascade to scrape the wrong conference's
-papers for hours before anyone notices. So every URL here is either:
-  (a) a stable, predictable pattern (NeurIPS, ACL-family, OpenReview), or
-  (b) a hand-verified DOI / conhome URL pulled from a prior real run (ACM,
-      IEEE) — those are per-instance identifiers with no stable pattern
-      across years, so unknown ones resolve=False and ask for the URL
-      rather than fabricate one.
 """
 from typing import Optional
 from urllib.parse import urlparse
@@ -19,23 +11,14 @@ import requests
 from workflows.html_fetcher import USER_AGENT
 from workflows.track_detector import is_track_grouped
 
-# Conferences hosted on OpenReview. IMPORTANT: as of the venue_id/API
-# rework, these bypass main_driver.run_pipeline ENTIRELY — no proceeding_url,
-# no HTML fetch, no browser, no track-selection file. They go straight to
-# pipeline.run_pipeline(venue_id=..., skip_venue_keywords=..., ...), which
-# fetches from OpenReview's API and checks affiliations against ground-truth
-# author-profile data before any LLM call. main_driver.py still carries an
-# OPENREVIEW_CONFERENCES constant for backward compatibility, but it's dead
-# code there now — this orchestrator owns its own copy rather than depending
-# on a constant nothing else in main_driver actually branches on anymore.
+# Conferences hosted on OpenReview
 OPENREVIEW_CONFERENCES = {
     "ICLR", "ICML", "ICLR_ORAL", "ICLR_SPOTLIGHT",
     "ICML_ORAL", "ICML_SPOTLIGHT",
 }
 
-# ---------------------------------------------------------------------------
 # Name normalization
-# ---------------------------------------------------------------------------
+
 _ALIASES = {
     "NEURIPS": "NeurIPS", "NIPS": "NeurIPS",
     "ICML": "ICML", "ICLR": "ICLR",
@@ -70,9 +53,7 @@ _ALIASES = {
 }
 
 # Hand-verified proceeding URLs pulled from prior real runs (see run.py).
-# ACM DOIs and IEEE conhome IDs are per-instance — there is no way to derive
-# next year's from this year's, so only exactly these (conference, year)
-# pairs resolve automatically.
+
 _KNOWN_INSTANCES: dict[tuple[str, str], str] = {
     ("IEEE-ICDM", "2025"): "https://ieeexplore.ieee.org/xpl/conhome/11391637/proceeding",
     ("IEEE-FOCS", "2025"): "https://ieeexplore.ieee.org/xpl/conhome/11368763/proceeding",
@@ -115,14 +96,6 @@ def normalize_conference_name(conference: str) -> str:
 
 
 def _aaai_number_for_year(year: str) -> Optional[int]:
-    """
-    AAAI's conference number has incremented by exactly 1 every year since
-    the modern era (e.g. AAAI-34 in 2020 ... AAAI-40 in 2026, the latter
-    confirmed against aaai.org/proceeding/aaai-40-2026/). This does NOT
-    hold across AAAI's full history — it wasn't held annually in the
-    1980s — so this is only trusted from 2019 onward; anything earlier
-    returns None rather than silently returning a wrong guess.
-    """
     try:
         year_int = int(year)
     except (TypeError, ValueError):
@@ -133,8 +106,6 @@ def _aaai_number_for_year(year: str) -> Optional[int]:
 
 
 def _pattern_url(key: str, year: str) -> Optional[str]:
-    """Stable, derivable-from-year-alone URL patterns (non-OpenReview only —
-    OpenReview conferences resolve to a venue_id instead, see resolve_conference_url)."""
     if key == "NeurIPS":
         return f"https://papers.nips.cc/paper_files/paper/{year}"
     if key in {"ACL", "EMNLP", "NAACL"}:
@@ -150,12 +121,6 @@ def resolve_conference_url(conference: str, year: str) -> dict:
     """
     Resolve a conference name + year to what run_pipeline actually needs.
 
-    Two shapes, depending on mode:
-      - OpenReview conferences (ICML/ICLR/...): mode="openreview_api",
-        venue_id set, proceeding_url=None — pipeline.run_pipeline is called
-        with venue_id directly, no scraping involved at all.
-      - Everything else: mode="scraped", proceeding_url set — goes through
-        main_driver.run_pipeline as before.
     """
     key = normalize_conference_name(conference)
     year = str(year).strip()
@@ -216,8 +181,7 @@ def resolve_conference_url(conference: str, year: str) -> dict:
 
 
 # Domains that challenge-wall plain HTTP requests but are scraped fine via
-# the pipeline's own Playwright-based fetchers — a non-2xx here doesn't mean
-# the URL is actually bad.
+# the pipeline's own Playwright-based fetchers 
 _CHALLENGE_WALLED_DOMAINS = {"dl.acm.org", "openreview.net", "ieeexplore.ieee.org"}
 
 
@@ -238,7 +202,7 @@ def validate_url(url: str) -> dict:
         if not ok and any(d in domain for d in _CHALLENGE_WALLED_DOMAINS):
             result["note"] = (
                 "A non-2xx/3xx from a plain HTTP request doesn't necessarily "
-                "mean this URL is bad — AEGIS fetches this domain with a real "
+                "mean this URL is bad — SENTRY fetches this domain with a real "
                 "Playwright browser to get past its bot challenge, which "
                 "behaves very differently from a bare request. Proceed with "
                 "run_pipeline; the browser-based fetcher will report a "
@@ -251,13 +215,8 @@ def validate_url(url: str) -> dict:
 
 def detect_structure(conference: str, proceeding_url: str = "") -> dict:
     """
-    Determine which of AEGIS's scraping/fetching paths a conference will
-    take. Mirrors the real routing exactly, so the orchestrator's mental
-    model can't drift from what will actually run:
-      - openreview_api: pipeline.run_pipeline(venue_id=...) directly — no
-        scraping tiers, no browser, no main_driver involvement at all.
-      - acm_dl / generic_grouped / generic_flat: main_driver.run_pipeline
-        with a proceeding_url, same as before.
+    Determine which of SENTRY's scraping/fetching paths a conference will
+    take.
     """
     base = (conference or "").upper().split("_")[0]
 

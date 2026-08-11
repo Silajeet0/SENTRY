@@ -45,30 +45,13 @@ def main():
         if not args.url:
             parser.error("provide a paper URL or use --synthetic-indian")
 
-        # OpenReview URLs go through the ground-truth API path (fetch note +
-        # author profiles, classify affiliation from real institution/country
-        # data, LLM only called for area_of_research on positive/ambiguous
-        # papers) — NOT process_paper()'s tiered scrapers. browser_scraper.py
-        # (Tier 2) no longer even claims openreview.net URLs at all; this
-        # branch is the only correct way to process one.
+
         if "openreview.net" in args.url:
             paper = fetch_single_openreview_paper(args.url)
             info = process_openreview_paper(paper)
 
         else:
-            # ACM DL cookie freshness is no longer pre-checked here on a
-            # wall-clock timer — process_paper() below (via
-            # scrapers/browser_scraper.py's BrowserScraper) tries with
-            # whatever session cookies are on disk first, and only refreshes
-            # them itself, reactively, if it actually gets a Cloudflare
-            # challenge back. That's strictly cheaper when the existing
-            # cookies are still good, and no less correct when they aren't.
-
-            # Process the paper via the tiered scrapers — runs for every URL
-            # that isn't OpenReview (ACM, IEEE, NeurIPS, ACL, etc). Kept
-            # outside the ACM-only `if` above (not nested inside it) so
-            # non-ACM URLs actually reach this line — nesting it there was
-            # the original unbound-`info` bug.
+    
             info = process_paper(args.url)
 
     print(json.dumps(asdict(info), indent=2, ensure_ascii=False))

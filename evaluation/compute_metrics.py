@@ -102,7 +102,7 @@ def compute_metrics(ground_truth: list[dict], predictions: list[dict], include_a
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Compute AEGIS Indian-affiliation retrieval metrics.")
+    parser = argparse.ArgumentParser(description="Compute SENTRY Indian-affiliation retrieval metrics.")
     parser.add_argument("--ground-truth", required=True, help="Path to ground_truth.json.")
     parser.add_argument("--predictions", required=True, help="Path to indian_papers_structured.json.")
     parser.add_argument("--output", default=None, help="Optional metrics JSON output path.")

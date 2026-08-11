@@ -1,29 +1,11 @@
 """
-orchestrator_cli.py — interactive REPL for the AEGIS agentic orchestrator.
+orchestrator_cli.py — interactive REPL for the SENTRY agentic orchestrator.
 
     python orchestrator_cli.py
 
-Uses the same .env / LLM_* environment variables as the rest of AEGIS
+Uses the same .env / LLM_* environment variables as the rest of SENTRY
 (see README.md — LLM_PROVIDER, LLM_MODEL, LLM_API_KEY, LLM_BASE_URL).
 
-Example session:
-
-    you> Extract Indian-affiliated papers from NeurIPS 2025, ICML 2025, and
-         ACL 2025. Skip workshop tracks.
-    ⚙️  resolve_conference_url(conference='NeurIPS', year='2025')
-         → {'conference': 'NeurIPS', 'year': '2025', 'proceeding_url': ...
-    ...
-    agent> Started all three runs in the background — NeurIPS and ACL are
-    flat/grouped respectively, ICML is going through OpenReview. I'll check
-    back on progress if you ask for a status update.
-
-    you> what's the status?
-    ...
-
-    you> retry the errors
-    ...
-
-Ctrl-C or "exit" to quit.
 """
 import logging
 
@@ -31,7 +13,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from orchestrator.agent import Orchestrator  # noqa: E402  (after load_dotenv on purpose)
+from orchestrator.agent import Orchestrator 
 
 logging.basicConfig(
     level=logging.INFO,
@@ -50,7 +32,7 @@ def _print_tool_call(name: str, args: dict, result) -> None:
 
 
 def main() -> None:
-    print("AEGIS orchestrator — type an instruction, or 'exit' to quit.\n")
+    print("SENTRY orchestrator — type an instruction, or 'exit' to quit.\n")
     orch = Orchestrator()
 
     while True:

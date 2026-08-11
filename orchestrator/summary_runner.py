@@ -4,19 +4,6 @@ background worker thread, keeping orchestrator.summary_registry's
 SUMMARY_REGISTRY updated as they progress. Mirrors rpa_runner.py's
 job-queue pattern.
 
-Why one worker instead of one thread per job: fetch_abstracts_for_papers
-falls through to pipeline.TIERS for non-OpenReview papers, which includes
-BrowserScraper's single persistent Playwright browser/ACM cookie jar — the
-exact same shared-resource reason runner.py and rpa_runner.py each use a
-single serial queue instead of true concurrency. Summary jobs queue behind
-each other (and implicitly behind whatever else is using pipeline.TIERS,
-since it's the same shared scraper instances) rather than racing.
-
-start_summary returns immediately with status "queued" (or
-"already_running"/"already_queued"/"no_extracted_data"); get_status reflects
-the queued -> running (fetching_abstracts -> summarizing) -> completed/failed
-transitions, with live papers_scraped/total_papers progress during the
-fetching_abstracts stage.
 """
 import json
 import queue
@@ -58,7 +45,7 @@ def _ensure_worker_started() -> None:
     global _WORKER_STARTED
     with _WORKER_LOCK:
         if not _WORKER_STARTED:
-            threading.Thread(target=_worker_loop, daemon=True, name="aegis-summary-worker").start()
+            threading.Thread(target=_worker_loop, daemon=True, name="sentry-summary-worker").start()
             _WORKER_STARTED = True
 
 
@@ -67,29 +54,17 @@ def _worker_loop() -> None:
         job = _JOB_QUEUE.get()
         try:
             job()
-        except Exception:  # noqa: BLE001 — one job's bug must not kill the worker
+        except Exception:  
             traceback.print_exc()
         finally:
             _JOB_QUEUE.task_done()
 
 
 def _job(conference: str, year: str, refresh_cache: bool, delay_seconds: float) -> None:
-    # Imported lazily so importing this module doesn't require the full
-    # scraping stack (Playwright etc.) to be installed just to check status
-    # or list runs elsewhere in the orchestrator.
     from summarizer.abstract_fetcher import fetch_abstracts_for_papers
     from summarizer.email_summarizer import SummaryLLM, build_email
 
-    # Print the ACTUALLY-RESOLVED config for this run, not what .env
-    # currently says on disk. load_dotenv() only runs once, at process
-    # start — if orchestrator_api.py has been running since before
-    # SUMMARY_LLM_* was added/changed in .env, os.getenv() here will
-    # silently fall back to LLM_* (the SAME model the orchestrator's own
-    # tool-calling loop uses), and the two compete for one quota. This line
-    # makes that visible immediately in the server's own log instead of only
-    # being inferable from which model name shows up in the HTTP request
-    # logs — if this doesn't say what you expect, restart orchestrator_api.py
-    # so it picks up the current .env.
+
     _probe = SummaryLLM()
     print(
         f"[summary_runner] {conference} {year}: summarizer resolved to "

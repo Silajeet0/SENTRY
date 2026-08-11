@@ -1,5 +1,5 @@
 """
-Generate deterministic ground-truth labels from IEEE Xplore authors pages (tailored for IEEE only haven't generalized yet).
+Generate deterministic ground-truth labels from IEEE Xplore authors pages (tailored for IEEE only).
 
 It reads /document/<id>/authors#authors, extracts
 author-affiliation pairs, and applies factual affiliation rules.

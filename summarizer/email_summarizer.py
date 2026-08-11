@@ -20,63 +20,7 @@ out of the box even with only one model configured:
                                  is the tighter one that actually controls
                                  prompt-token budget across a whole batch)
 
-WHY TEMPERATURE > 0 HERE (AND ONLY HERE):
-    Every other LLM call in AEGIS (extractors.llm_extractor's per-paper
-    metadata extraction, orchestrator.agent's tool-calling loop) runs at or
-    near temperature 0 because the task is extraction/decision-making —
-    there is a single correct answer (the paper's actual title, the actual
-    next tool to call) and any variance is noise. Writing a fluent,
-    readable one-to-two-sentence synthesis of an abstract is a genuinely
-    different kind of task: temperature 0 tends toward stilted, repetitive
-    phrasing across many papers in the same batch/run, which reads poorly
-    in something a person is about to send as an email. A moderate
-    temperature (default 0.4, not more) buys natural variety in sentence
-    structure without inviting the model to invent facts not in the
-    abstract — the SYSTEM_PROMPT below explicitly forbids that regardless.
 
-WHY A SEPARATE MODEL INSTANCE (per the person's own local setup):
-    On a 32GB M-series Mac running gpt-oss-20b locally as the main
-    orchestrator/extraction model, that same process is also the one
-    driving tool-calling for the agent loop — using it for a second,
-    creative-writing-flavoured task at a different temperature at the same
-    time is exactly the kind of "two jobs sharing one worker" contention
-    orchestrator/runner.py already avoids for scraping (single job queue)
-    for a different reason. Practically: a quantized 20B model (~12-13GB in
-    Q4_K_M GGUF) plus a quantized 7-8B model (~4.5-5GB) both resident is
-    comfortably under 32GB of unified memory, leaving headroom for
-    Playwright/Chromium's own footprint during scraping. Point
-    SUMMARY_LLM_BASE_URL at a second Ollama/LM Studio/llama.cpp server
-    (can be the same host, different port) serving something like
-    llama3.1:8b-instruct or qwen2.5:7b-instruct — either handles fluent
-    short-form summarization comfortably and leaves the 20B model free for
-    orchestration. If SUMMARY_LLM_* is left unset, this class transparently
-    falls back to the main LLM_* config (same model, just a different
-    temperature) so the feature still works with a single model configured
-    — just without the concurrency benefit.
-
-WHAT THE MODEL IS AND ISN'T TRUSTED WITH:
-    Each batch call is given ONLY {index, title, abstract} per paper and
-    asked to return {"summaries": [{"index", "summary"}]} — one sentence or
-    two of plain-English synthesis, nothing else. It is never given (and
-    the prompt explicitly tells it not to invent) author names,
-    institutions, or the paper URL — those are spliced into the final email
-    afterwards by build_email() straight from indian_papers_structured.json,
-    which is the trusted ground truth for citations. A hallucinated
-    one-sentence summary of an abstract the model *was* given is a much
-    smaller, easier-to-spot failure mode than a hallucinated author name or
-    link in what's about to be emailed out.
-
-    The lead paragraph (write_intro_paragraph) is a SECOND, separate call,
-    made once per email rather than once per batch, and is given even less:
-    only the paper titles and the one-line summaries already produced by
-    the first call above — never abstracts directly, never author/
-    institution/link data. It's asked for 3-5 sentences of plain prose
-    naming the paper count and conference/year and describing the general
-    mix of topics, explicitly told not to invent anything beyond what's in
-    those titles/summaries and not to restate per-paper detail (that's
-    build_email()'s numbered list below it). If this call fails for any
-    reason, build_email() falls back to a short templated sentence instead
-    of leaving the email without a lead paragraph.
 """
 import json
 import logging
@@ -103,11 +47,10 @@ if you can vary the phrasing.
 {"summaries": [{"index": 1, "summary": "..."}, {"index": 2, "summary": "..."}]}
 Include exactly one entry per paper given below, in any order, using the same index."""
 
-# Ollama-native JSON schema (see _call_llm's extra_body handling) mirroring
+# Ollama-native JSON schemA mirroring
 # the shape described in SUMMARY_SYSTEM_PROMPT. Passing this constrains
 # decoding via GBNF grammar so the model literally cannot emit a token that
-# breaks the schema — e.g. an unescaped quote inside a "summary" string
-# (the exact failure mode this batch call has hit in practice).
+# breaks the schema
 SUMMARIES_JSON_SCHEMA = {
     "type": "object",
     "properties": {
@@ -176,42 +119,11 @@ class SummaryLLM:
         self.base_url = os.getenv("SUMMARY_LLM_BASE_URL", os.getenv("LLM_BASE_URL", "https://integrate.api.nvidia.com/v1"))
         self.temperature = float(os.getenv("SUMMARY_LLM_TEMPERATURE", "0.4"))
         self.batch_size = int(os.getenv("SUMMARY_BATCH_SIZE", "15"))
-        self.max_abstract_chars = int(os.getenv("SUMMARY_MAX_ABSTRACT_CHARS", "900"))
-        # Not 300 words worth of budget — 300 TOKENS, and it's genuinely too
-        # low for a reasoning model. gpt-oss (and similar "harmony format")
-        # models spend part of max_tokens on an internal reasoning pass
-        # BEFORE writing the visible answer, all counted against the same
-        # budget; at a low max_tokens the reasoning alone can consume the
-        # entire allowance, leaving finish_reason="length" with
-        # completion_tokens maxed out but message.content completely empty
-        # — a documented gpt-oss/vLLM behavior, not a bug in this code. 800
-        # leaves real headroom for that case while still being nowhere near
-        # the batch call's 4000. If you're using a non-reasoning model, feel
-        # free to turn this back down via the env var.
+        self.max_abstract_chars = int(os.getenv("SUMMARY_MAX_ABSTRACT_CHARS", "900"))   
         self.intro_max_tokens = int(os.getenv("SUMMARY_INTRO_MAX_TOKENS", "800"))
-        # Only ever included in the request if explicitly set — Groq's
-        # gpt-oss models accept "low"/"medium"/"high" here to control how
-        # much of max_tokens goes to internal reasoning before the visible
-        # answer; "low" leaves more of a modest max_tokens budget for the
-        # actual output. Left empty by default since non-gpt-oss models (and
-        # some other providers/endpoints) may reject an unrecognized param
-        # outright rather than silently ignoring it.
         self.reasoning_effort = os.getenv("SUMMARY_LLM_REASONING_EFFORT", "").strip().lower()
-        # Rate-limit resilience — a bigger conference means more batch calls
-        # (and one intro call), each of which can independently collide with
-        # a provider's per-minute limit. A small, unconditional pacing delay
-        # before every call spreads them out instead of firing back-to-back,
-        # which is what actually triggers a 429 in the first place; a higher
-        # max_retries gives the SDK's own Retry-After-aware backoff more
-        # chances to succeed on a busy/free-tier endpoint rather than giving
-        # up after its (quite low) default of 2 retries.
         self.call_delay_seconds = float(os.getenv("SUMMARY_LLM_CALL_DELAY_SECONDS", "2"))
         self.max_retries = int(os.getenv("SUMMARY_LLM_MAX_RETRIES", "5"))
-        # Set by write_intro_paragraph on failure so build_email() can report
-        # WHY the lead paragraph fell back to the templated sentence, instead
-        # of that fallback happening silently with no visible reason anywhere
-        # — a real gap in the previous version, where a failed intro call
-        # and "nothing to summarize" both looked identical from the outside.
         self.last_intro_error: Optional[str] = None
 
     def _client(self):
@@ -241,17 +153,6 @@ class SummaryLLM:
         extra_body = {}
         if json_mode and self._should_request_json_mode():
             request["response_format"] = {"type": "json_object"}
-            # Belt-and-suspenders for Ollama specifically: its OpenAI-compat
-            # layer accepts response_format:{"type":"json_object"} fine, but
-            # a real JSON-schema constraint (native `format` field, GBNF
-            # grammar under the hood) is a strictly tighter guarantee — it
-            # forces the exact {"summaries": [{"index", "summary"}, ...]}
-            # shape rather than merely "some valid JSON object" — so a
-            # truncated/odd response can't silently parse as valid JSON that
-            # doesn't match what summarize_all() expects. Sent via
-            # extra_body since it's outside the OpenAI request schema;
-            # harmless no-op on providers that ignore unknown fields, and
-            # the whole request is retried without it below if it errors.
             if json_schema and self.provider == "ollama":
                 extra_body["format"] = json_schema
         if self.reasoning_effort:
@@ -266,13 +167,7 @@ class SummaryLLM:
         text = (choice.message.content or "").strip()
 
         if not text:
-            # Distinguish "the model legitimately declined to answer" from
-            # "the model burned the whole budget on internal reasoning and
-            # never got to the visible answer" — finish_reason == "length"
-            # with completion_tokens at or near max_tokens is the fingerprint
-            # of the latter (see reasoning_effort/max_tokens comment above),
-            # and is fixed by raising max_tokens or setting reasoning_effort,
-            # NOT by treating it as a generic failure and moving on.
+
             finish_reason = getattr(choice, "finish_reason", "unknown")
             usage = getattr(response, "usage", None)
             completion_tokens = getattr(usage, "completion_tokens", "unknown") if usage else "unknown"
@@ -298,16 +193,7 @@ class SummaryLLM:
             return True
         if value in {"0", "false", "no"}:
             return False
-        # "auto" heuristic. The important entry here is Ollama: unlike some
-        # providers where json_object mode is just a prompt-level nudge,
-        # Ollama's OpenAI-compat layer translates response_format:
-        # {"type": "json_object"} into its native `format: "json"`, which is
-        # a GBNF-grammar-constrained decode — the model is mechanically
-        # unable to emit a syntax-breaking token (e.g. an unescaped quote
-        # inside a string, the actual cause of the JSONDecodeError this was
-        # built to prevent). This used to only fire for groq.com/openai/
-        # groq, which silently left every local llama.cpp-family server
-        # (Ollama, LM Studio) making raw, unconstrained completions.
+
         return (
             "groq.com" in self.base_url
             or self.provider in {"openai", "groq", "ollama"}
@@ -319,17 +205,6 @@ class SummaryLLM:
         """
         Find the first balanced {...} span, respecting string/escape state,
         instead of the old `re.search(r"\\{.*\\}", raw, re.DOTALL)`.
-
-        The old regex is greedy across the WHOLE response, so it matches
-        from the first "{" to the LAST "}" in the text. That's fine for a
-        clean one-object response, but silently wrong the moment the model
-        adds anything after the JSON (a trailing aside, a second example, a
-        stray closing brace echoed from an abstract's LaTeX like
-        $\\mathcal{{O}}$) — all of that gets swept into the "JSON" string
-        and handed to json.loads, which then fails on whatever garbage sits
-        between the real closing "}" and the last one. Walking the string
-        and stopping at the first properly-balanced close is correct
-        regardless of what follows it.
         """
         start = raw.find("{")
         if start == -1:
@@ -355,15 +230,14 @@ class SummaryLLM:
                 depth -= 1
                 if depth == 0:
                     return raw[start:i + 1]
-        return None  # unbalanced — model got cut off mid-object
+        return None  
 
     @staticmethod
     def _repair_json(candidate: str) -> str:
         """
         Cheap, deterministic fixes for the handful of malformations small
         local models actually produce, tried only after a straight
-        json.loads() has already failed. Each is a no-op on already-valid
-        JSON, so this is safe to always attempt as a second pass.
+        json.loads() has already failed.
         """
         # Trailing commas before a closing bracket: {"a": 1,} / [1, 2,]
         repaired = re.sub(r",\s*([}\]])", r"\1", candidate)
@@ -383,13 +257,6 @@ class SummaryLLM:
             try:
                 return json.loads(cls._repair_json(span))
             except json.JSONDecodeError:
-                # Re-raise the ORIGINAL error but with the full offending
-                # span attached — the previous version only ever surfaced
-                # e.g. "Expecting ',' delimiter: line 1 column 1110" with no
-                # way to see what was actually at column 1110, which made
-                # this exact class of failure unreconstructable after the
-                # fact. Callers that log str(e) now get something they can
-                # actually debug.
                 raise ValueError(
                     f"{e} | offending JSON span (len={len(span)}): {span}"
                 ) from e
@@ -401,14 +268,6 @@ class SummaryLLM:
         Returns {index: summary}. Missing/failed indices simply aren't in
         the returned dict — the caller fills those in with a deterministic
         fallback rather than failing the whole batch.
-
-        On a parse failure, this no longer drops the WHOLE batch straight
-        to raw-excerpt fallback. A single bad token from an 8B model
-        anywhere in a 15-paper batch used to cost all 15 papers their
-        summary; instead we bisect — split the batch in half and retry each
-        half independently (recursively, down to batches of 1) — so only
-        the specific paper(s) actually triggering the malformed output fall
-        back to an excerpt, and its batch-mates still get real summaries.
         """
         blocks = []
         for item in batch:
@@ -432,7 +291,7 @@ class SummaryLLM:
             if missing:
                 log.warning(f"Summarizer batch returned no entry for paper index(es) {missing} — those will fall back to raw excerpts")
             return out
-        except Exception as e:  # noqa: BLE001 — one bad batch must not kill the whole run
+        except Exception as e:  
             indices = [item["index"] for item in batch]
             if len(batch) > 1:
                 log.warning(
@@ -444,11 +303,6 @@ class SummaryLLM:
                 out.update(self._summarize_one_batch(batch[:mid], conference, year, _depth + 1))
                 out.update(self._summarize_one_batch(batch[mid:], conference, year, _depth + 1))
                 return out
-            # A single-paper batch still failing means it's not a batch-
-            # boundary/cross-contamination issue — log the full raw
-            # response (not just the 200-char snippet _parse_json raises
-            # with) so the actual malformed output is visible in the logs
-            # instead of just the terse JSONDecodeError position.
             log.warning(
                 f"Summarizer call failed for paper index {indices} even after bisecting to a single paper "
                 f"({type(e).__name__}: {e}) — falling back to a raw abstract excerpt for this paper"
@@ -491,15 +345,6 @@ class SummaryLLM:
         synthesizing the whole set of papers, e.g. "Indian-affiliated
         authors had N papers at {conference} {year}. They spanned areas of
         X, Y, and Z. ...".
-
-        Only ever given each included paper's title + its already-generated
-        one-line summary (never the raw abstract, never author/institution/
-        link data) — see the module docstring for why.
-
-        Returns "" if there's nothing to summarize (no included papers) or
-        if the LLM call fails for any reason — build_email() falls back to
-        a short templated sentence in either case, so a broken lead
-        paragraph never blocks the rest of the email from being generated.
         """
         lines = []
         for i, paper in enumerate(papers_with_abstracts, start=1):
@@ -521,17 +366,14 @@ class SummaryLLM:
             text = self._call_llm(prompt, system_prompt=INTRO_SYSTEM_PROMPT, json_mode=False, max_tokens=self.intro_max_tokens)
             self.last_intro_error = None
             return text.strip().strip('"')
-        except Exception as e:  # noqa: BLE001 — a failed intro call must not block the rest of the email
+        except Exception as e:  
             self.last_intro_error = f"{type(e).__name__}: {e}"
             log.warning(f"Lead-paragraph call failed ({self.last_intro_error}) — falling back to a templated intro")
             return ""
 
 
-# ---------------------------------------------------------------------------
-# Deterministic email assembly — no LLM involved past this point. Title,
-# authors, institutions, and the paper link all come straight from the
-# trusted paper record (indian_papers_structured.json), never from the LLM.
-# ---------------------------------------------------------------------------
+
+# Deterministic email assembly — no LLM involved past this point. 
 def _fallback_summary(abstract: str) -> str:
     """Used only when the LLM summarizer produced nothing for this paper —
     a plain truncated excerpt of the real abstract beats silently omitting
@@ -561,18 +403,6 @@ def build_email(
     """
     Returns {"subject": str, "body": str, "paper_count": int,
     "papers_included": [...], "papers_skipped": [...]}.
-
-    papers_with_abstracts is expected in the same order used to build
-    summaries_by_index (1-based index = position in this list).
-
-    intro_paragraph: pass an already-generated lead paragraph to use as-is
-    (e.g. if a caller wants to review/edit it before assembly), or leave as
-    None (the default) to have this function generate one itself via
-    SummaryLLM.write_intro_paragraph — the LLM call happens right here so
-    existing callers (summary_runner.py, run_conference_summary.py) get the
-    new lead paragraph automatically with no changes on their end. Falls
-    back to a short templated sentence if generation fails or there's
-    nothing to summarize.
     """
     included = []
     skipped = []
@@ -611,7 +441,7 @@ def build_email(
             )
             if not intro_paragraph:
                 intro_fallback_reason = intro_llm.last_intro_error or "Lead-paragraph call returned no text"
-        except Exception as e:  # noqa: BLE001 — a broken lead paragraph must not break the whole email
+        except Exception as e:  
             intro_fallback_reason = f"{type(e).__name__}: {e}"
             log.warning(f"Could not generate lead paragraph ({intro_fallback_reason}) — using a templated one instead")
             intro_paragraph = None

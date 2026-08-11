@@ -2,15 +2,6 @@
 registry.py — thread-safe, in-process tracking of every conference/year run
 the orchestrator has kicked off.
 
-Why this needs to exist at all: a full AEGIS run is hundreds of papers at
-`delay` seconds apart, i.e. easily minutes to hours. run_pipeline / retry
-run in background threads (see runner.py) so a single tool-call turn never
-blocks that long. This registry is what get_run_status and retry_errors use
-to find their way back to an in-flight or finished run — in particular,
-input_links_path (recorded the moment link extraction finishes, via
-main_driver.run_pipeline's on_links_ready callback) is what lets
-retry_errors re-run exactly the previously-failed papers without needing to
-re-extract links or guess a path.
 """
 import threading
 from dataclasses import dataclass, field, asdict
@@ -27,12 +18,12 @@ class RunRecord:
     conference: str
     year: str
     proceeding_url: str = ""
-    mode: str = "scraped"           # "scraped" (main_driver) | "openreview_api" (pipeline direct)
+    mode: str = "scraped"        
     venue_id: Optional[str] = None
     skip_venue_keywords: list = field(default_factory=list)
     include_only_venue_keywords: list = field(default_factory=list)
-    state: str = "not_started"      # not_started | queued | running | completed | failed | blocked
-    stage: str = ""                 # queued | link_extraction | paper_processing | retrying_errors | done
+    state: str = "not_started"     
+    stage: str = ""              
     input_links_path: Optional[str] = None
     track_skip_keywords: list = field(default_factory=list)
     track_include_keywords: list = field(default_factory=list)
@@ -61,7 +52,7 @@ class RunRegistry:
         track_include_keywords=None,
     ) -> RunRecord:
         """Record a run as queued — not yet actually executing. Runs execute
-        one at a time (see runner.py's single worker thread) because AEGIS's
+        one at a time (see runner.py's single worker thread) because SENTRY's
         ACM/OpenReview fetchers share a single on-disk cookie file per
         handler type; running two of the same handler concurrently would
         race on that file."""
@@ -87,9 +78,6 @@ class RunRegistry:
         skip_venue_keywords=None,
         include_only_venue_keywords=None,
     ) -> RunRecord:
-        """Same as enqueue(), for the venue_id/OpenReview-API mode — no
-        proceeding_url, no track-selection file, just the venue_id and its
-        keyword filters (needed later if this run needs retrying)."""
         with self._lock:
             rec = RunRecord(
                 conference=conference,
@@ -135,8 +123,6 @@ class RunRegistry:
                 rec.error = error
                 rec.finished_at = datetime.now().isoformat()
             else:
-                # A failure before start() ever ran (shouldn't normally
-                # happen, but record it rather than silently drop it).
                 self._runs[_key(conference, year)] = RunRecord(
                     conference=conference,
                     year=str(year),
@@ -148,9 +134,7 @@ class RunRegistry:
     def mark_blocked(self, conference: str, year: str, message: str) -> None:
         """Distinct from mark_failed — the run stopped itself deliberately
         because a domain's circuit breaker tripped (pipeline.RunBlockedError),
-        not because of an unexpected crash. get_run_status surfaces this
-        differently so the person knows to wait before retrying rather than
-        treating it like an ordinary bug."""
+        not because of an unexpected crash."""
         with self._lock:
             rec = self._runs.get(_key(conference, year))
             if rec is None:

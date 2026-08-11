@@ -1,38 +1,13 @@
 """
 ikdd_form_catalog.py — resolves a conference name to the exact "venue" and
-"month" dropdown text the IKDD Premier Papers submission form
+"month" dropdown text the IKDD Premier Papers (or any other suitable venue) submission form
 (ds-papers-form.php) expects.
 
-Deliberately NOT LLM-guessed or derived, same philosophy as
-conference_catalog.py's proceeding-URL resolution: Selenium's
-Select.select_by_visible_text raises hard if the text doesn't match the
-dropdown EXACTLY, and there's no way to derive the right text from the
-conference name alone —
-
-  - "IEEE-ICDM" needs "ICDM" on the form, not "IEEE-ICDM" — whatever
-    string IKDD's admin actually typed into that <select> when they set
-    the form up, which doesn't necessarily match AEGIS's own internal
-    conference key.
-  - "month" is whichever month the conference was actually held that
-    year, not a fixed calendar slot — it can shift year to year.
-
-So only conferences a human has actually verified against the live form
-are listed here; everything else resolves=False and asks the person for
-the exact text, the same way conference_catalog.resolve_conference_url
-asks for an unknown ACM/IEEE URL rather than guessing one that might send
-hours of scraping (or here, an hours-long Selenium run) down the wrong
-path before anyone notices.
-
-To add a new conference: open ds-papers-form.php, inspect the venue/month
+To add a new conference: open ds-papers-form.php, (or corresponding suitable submissions page), inspect the venue/month
 <select> options for real, and add a verified line below.
 """
 from orchestrator.conference_catalog import normalize_conference_name
 
-# normalized_conference_key -> {"venue": <exact dropdown text>, "month": <exact dropdown text>}
-# Carried over from values previously hand-set in Form_filler/run_selenium_filler.py's
-# old hardcoded config for real runs of these conference/year pairs — not
-# independently re-verified against the live form here, so double-check
-# before trusting blindly, especially the month for a new year.
 _KNOWN_FORM_METADATA: dict[str, dict] = {
     "IEEE-ICDM": {"venue": "ICDM", "month": "Nov"},
     "IEEE-CVPR": {"venue": "CVPR", "month": "Jun"},

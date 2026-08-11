@@ -2,21 +2,6 @@
 abstract_fetcher.py — deterministic per-paper abstract retrieval for the
 email-summary feature. No LLM calls here.
 
-Two paths, mirroring the exact split pipeline.py / run_single_paper.py
-already use elsewhere in AEGIS:
-
-    OpenReview URLs ("openreview.net" in paper_url — ICML, ICLR, ...)
-        -> workflows.link_extractors.openreview_api_fetcher.fetch_single_openreview_paper
-           The abstract is already a field on the OpenReview note. No
-           scraping, no browser, no regex needed.
-
-    Everything else (ACL/NeurIPS PDFs, IEEE/ACM via the browser tier, ...)
-        -> reuse pipeline.TIERS (the exact same HTMLScraper/BrowserScraper/
-           PDFScraper/APIScraper instances the main pipeline uses — same
-           persistent Playwright browser, same ACM cookie jar, no separate
-           network stack to keep warm) to get raw page/PDF-first-page text,
-           then a regex heuristic pulls just the Abstract window out of it.
-
 Title / authors / institutions are deliberately NOT re-derived from scraped
 text here — indian_papers_structured.json already has them from the main
 pipeline's extraction LLM call, and that's what the email-summary feature
@@ -31,17 +16,9 @@ from typing import Optional
 
 log = logging.getLogger(__name__)
 
-# Same per-request politeness delay philosophy as pipeline.py's
-# INTER_PAPER_DELAY — only applied to the tiered-scraper path below, since
-# the OpenReview path is one authenticated API call, not a scrape against a
-# server that might rate-limit/block us.
 DEFAULT_SCRAPE_DELAY_SECONDS = 3
 
-# Section headings that mark the end of an abstract in scraped page/PDF
-# text. Checked case-insensitively; order doesn't matter, the EARLIEST match
-# in the text wins. Deliberately broad — a false-positive cut (stopping too
-# early) still yields a usable, if shorter, abstract; missing every marker
-# and running the abstract into the next section is the worse failure mode.
+
 ABSTRACT_STOP_MARKERS = [
     "1 introduction", "1. introduction", "i. introduction", "introduction",
     "keywords", "index terms", "ccs concepts",
@@ -108,8 +85,7 @@ def extract_abstract_from_content(content: str) -> tuple[str, bool]:
 
     # A heading match with almost nothing after it before the next marker
     # (e.g. "Abstract" as a nav link, immediately followed by "Keywords")
-    # isn't a real abstract — fall back to the leading-window heuristic
-    # instead of returning a near-empty string.
+    # isn't a real abstract 
     if len(best_abstract) < 40:
         fallback = re.sub(r"\s+", " ", content[:FALLBACK_WINDOW_CHARS]).strip()
         return fallback, False
@@ -132,7 +108,6 @@ def fetch_abstract_for_paper(paper: dict, delay_seconds: float = DEFAULT_SCRAPE_
           "heading_found": bool,    # False = degraded fallback-window abstract
           "error": str,             # "" on success
         }
-    Never raises — failures go into "error", matching BaseScraper's contract.
     """
     url = paper.get("paper_url", "")
     out = {"paper_url": url, "abstract": "", "abstract_source": "", "heading_found": False, "error": ""}
@@ -151,15 +126,12 @@ def fetch_abstract_for_paper(paper: dict, delay_seconds: float = DEFAULT_SCRAPE_
                 return out
             out["abstract"] = abstract[:MAX_ABSTRACT_CHARS]
             out["abstract_source"] = "openreview_api"
-            out["heading_found"] = True  # structured field, not a heuristic match
+            out["heading_found"] = True  
             return out
-        except Exception as e:  # noqa: BLE001
+        except Exception as e: 
             out["error"] = f"{type(e).__name__}: {e}"
             return out
 
-    # Non-OpenReview: reuse the exact tier instances pipeline.py uses (same
-    # persistent Playwright browser / ACM cookie jar as the main run, rather
-    # than spinning up a second one).
     from pipeline import TIERS
 
     content = ""
@@ -192,13 +164,6 @@ def fetch_abstract_for_paper(paper: dict, delay_seconds: float = DEFAULT_SCRAPE_
     out["heading_found"] = heading_found
     return out
 
-
-# ---------------------------------------------------------------------------
-# Crash-safe, resumable cache — mirrors pipeline.py's "save after every item"
-# philosophy so a long scraping pass across dozens of papers survives a
-# restart, and so asking for the same conference/year's summary again later
-# doesn't re-scrape everything from scratch.
-# ---------------------------------------------------------------------------
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -212,7 +177,7 @@ def load_cache(conference: str, year: str) -> dict:
         return {}
     try:
         return json.loads(p.read_text(encoding="utf-8"))
-    except Exception:  # noqa: BLE001 — a corrupt cache shouldn't crash the run
+    except Exception: 
         log.warning(f"Could not parse existing abstracts cache at {p} — starting fresh")
         return {}
 
@@ -237,11 +202,6 @@ def fetch_abstracts_for_papers(
     merging the original paper record with the fetch_abstract_for_paper()
     result (so callers get paper_title/authors/institutions/url + abstract
     all in one place).
-
-    on_progress(done, total), if given, is called after every paper —
-    used by summary_runner.py to keep orchestrator.summary_registry's live
-    progress counters current the same way pipeline.py's per-paper _save()
-    keeps get_run_status current.
     """
     cache = {} if refresh_cache else load_cache(conference, year)
     total = len(papers)

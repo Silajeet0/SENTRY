@@ -1,32 +1,5 @@
 """
-Main pipeline: drop-in replacement for agent_caller.py.
-
-Two input modes, one output contract:
-
-    A) input_links_path given  → original tiered-scraper flow
-       URL → Tier1(HTML) → Tier2(Browser) → Tier3(PDF) → Tier4(API)
-                                                               ↓
-                                                       LLM Extractor
-                                                               ↓
-                                                       PaperInfo
-
-    B) venue_id given          → OpenReview API flow (no scraping tiers)
-       fetch_openreview_papers() → ground-truth affiliation check
-                                        ↓
-                              only positive papers → LLM (area_of_research)
-                                        ↓
-                                    PaperInfo
-
-    "ambiguous" (a collision-prone acronym like IIT/ISI/NIT/VIT with no
-    stronger corroboration — see evaluation/india_rules.py) is treated the
-    same as "negative" everywhere in this file: it never counts as an
-    Indian affiliation in the output, and never triggers an LLM call on
-    its own.
-
-Exactly one of input_links_path / venue_id must be provided to run_pipeline.
-Both modes write the identical indian_papers_structured.json / errors.json /
-processed_papers.json / summary.json shape via the shared _save() — nothing
-downstream needs to know which mode produced a given conference's output.
+Main pipeline
 """
 import json
 import random
@@ -69,17 +42,8 @@ EXTRACTOR = LLMExtractor()
 # Delay between papers (seconds) — be polite to servers
 INTER_PAPER_DELAY = 3
 
-# ---------------------------------------------------------------------------
-# Block detection / circuit breaker
-# ---------------------------------------------------------------------------
-# Substrings that indicate the *server* is refusing us (bot challenge, IP
-# rate-limit, outright block) as opposed to a normal per-paper failure
-# (malformed content, LLM hiccup, missing DOI). Only the former should ever
-# trip the breaker — a run shouldn't stop just because a few individual
-# papers had bad metadata. Only relevant to the tiered-scraper path
-# (input_links_path) — the OpenReview API path's errors won't match these
-# and the breaker simply never trips there, which is correct: there's no
-# per-domain HTTP scraping to be blocked from in that mode.
+# Block detection
+
 BLOCK_SIGNAL_SUBSTRINGS = [
     "bot challenge detected",
     "just a moment",
@@ -99,9 +63,7 @@ MAX_CONSECUTIVE_BLOCK_SIGNALS = 4
 
 
 class RunBlockedError(Exception):
-    """Raised when a domain trips the circuit breaker — the run stopped
-    itself early rather than continuing to hit a domain that's blocking
-    this IP. Distinct from a generic per-paper error."""
+    """Raised when a domain trips the circuit breaker ."""
 
     def __init__(self, domain: str, consecutive_signals: int, papers_attempted: int):
         self.domain = domain
@@ -120,10 +82,8 @@ def _looks_like_block(error: str) -> bool:
     e = error.lower()
     return any(sig in e for sig in BLOCK_SIGNAL_SUBSTRINGS)
 
-
-# ─────────────────────────────────────────────────────────────────────────
 # Tiered-scraper path (HTML/IEEE/ACM/ACL/etc via a flat list of URLs)
-# ─────────────────────────────────────────────────────────────────────────
+
 def process_paper(url: str) -> PaperInfo:
     """
     Process a single paper URL through the tiered pipeline.
@@ -204,9 +164,8 @@ def _has_positive_pdf_affiliation_evidence(content: str) -> bool:
     return False
 
 
-# ─────────────────────────────────────────────────────────────────────────
 # OpenReview API path (no scraping tiers — data already structured)
-# ─────────────────────────────────────────────────────────────────────────
+
 def _build_openreview_llm_content(paper: dict) -> str:
     """
     Synthetic content string in the same "Title / Abstract / Author |
@@ -221,32 +180,16 @@ def _build_openreview_llm_content(paper: dict) -> str:
 
 
 def process_openreview_paper(paper: dict) -> PaperInfo:
-    """
-    Ground-truth-first version of process_paper for OpenReview papers.
-    No scraping tiers — `paper` already has title/abstract/authors/
-    affiliations from the API. classify_affiliation runs on real
-    institution/country strings before any LLM call is made.
-    """
     decisions = [classify_affiliation(a["affiliation"]) for a in paper["authors"]]
     overall_label = combine_author_decisions(decisions)
 
     if overall_label in ("negative", "ambiguous"):
-        # No LLM call at all — same shape as the tiered path's prefilter
-        # skip (empty area_of_research, empty Indian-affiliation fields).
-        # "ambiguous" (e.g. an author's affiliation only matches a
-        # collision-prone acronym like "IIT"/"ISI"/"NIT"/"VIT" with no
-        # stronger corroboration) is treated identically to "negative"
-        # here — it will never produce an Indian-affiliated author below,
-        # so there's no reason to spend an LLM call on it.
         return PaperInfo(
             paper_url=paper["paper_url"],
             raw_content_source="openreview_api",
             source="openreview_api",
         )
 
-    # At least one author flagged positive — one LLM call, mainly for
-    # area_of_research (and a second opinion on the author list, though our
-    # own ground-truth data below takes precedence over its guess).
     content = _build_openreview_llm_content(paper)
     info = EXTRACTOR.extract(content, paper["paper_url"], content_source="openreview_api")
     info.source = "openreview_api"
@@ -259,10 +202,6 @@ def process_openreview_paper(paper: dict) -> PaperInfo:
     if not info.paper_title:
         info.paper_title = paper["title"]
 
-    # Only "positive" decisions count as Indian-affiliated — "ambiguous"
-    # authors on an otherwise-positive paper must NOT be pulled in just
-    # because the paper as a whole made the cut. A collision-prone acronym
-    # match on one co-author's affiliation is not evidence about them.
     positive_authors = [
         a["name"] for a, d in zip(paper["authors"], decisions)
         if d.label == "positive"
@@ -271,19 +210,13 @@ def process_openreview_paper(paper: dict) -> PaperInfo:
         a["affiliation"] for a, d in zip(paper["authors"], decisions)
         if d.label == "positive"
     ]
-    # Overwrite rather than merge with the LLM's own guess — ground-truth
-    # profile data is what we trust here, and the LLM's version can differ
-    # in formatting (e.g. "Adamas University" vs "Adamas University, India"
-    # for the same author), which set-union would keep as two entries.
+
     info.authors_with_indian_affiliations = sorted(set(positive_authors))
     info.indian_institutions = sorted(set(positive_institutions))
 
     return info
 
 
-# ─────────────────────────────────────────────────────────────────────────
-# Shared main loop — same accumulation/save logic regardless of source
-# ─────────────────────────────────────────────────────────────────────────
 def run_pipeline(
     conference: str,
     year: str,
@@ -353,9 +286,6 @@ def run_pipeline(
         processed_urls.update(r["paper_url"] for r in processed_records)
         log.info(f"Processed checkpoint — {len(processed_records)} total papers already attempted")
 
-    # Consecutive block-like failures per domain — see RunBlockedError above.
-    # Stays empty (never trips) for the venue_id/OpenReview-API path, since
-    # that path makes no per-domain scraping requests to be blocked from.
     consecutive_block_signals: dict[str, int] = {}
 
     for i, item in enumerate(work_items, start=resume_from + 1):
@@ -437,14 +367,7 @@ def run_pipeline(
         _save(output_file, errors_file, processed_file, results, errors, processed_records,
               all_urls, start, resume_from, max_papers)
 
-        # For OpenReview's negative (no-LLM) path there's no external
-        # service call to be polite to, so skip the delay for those —
-        # applies to the majority of papers in that mode.
         if venue_id is None or info.source != "openreview_api" or info.paper_title or info.error:
-            # Jittered delay — a perfectly regular request interval is
-            # itself a bot signal on top of raw volume; +/-30%
-            # randomization breaks that pattern without meaningfully
-            # slowing the run down.
             time.sleep(delay + random.uniform(-0.3 * delay, 0.3 * delay))
 
     log.info(f"Done — {len(results)} Indian-affiliated papers found")

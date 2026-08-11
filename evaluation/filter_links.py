@@ -1,7 +1,5 @@
 """
 Create a filtered links.json for partial evaluation runs.
-
-Indices are 1-based to match pipeline logs and paper_number values.
 """
 import argparse
 import json

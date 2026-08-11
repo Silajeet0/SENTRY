@@ -54,10 +54,8 @@ class HTMLScraper(BaseScraper):
 
             text = soup.get_text(separator="\n", strip=True)
 
-            # Defense-in-depth: some bot-challenge pages (Cloudflare-style)
-            # are plain HTML with enough boilerplate text to slip past the
-            # length check below, but contain no real paper content. Catch
-            # these explicitly rather than silently returning garbage.
+            # some bot-challenge pages (Cloudflare-style)
+    
             challenge_signals = [
                 "checking your browser",
                 "just a moment",
