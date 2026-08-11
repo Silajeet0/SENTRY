@@ -5,3 +5,5 @@ __pycache__/
 data/
 .venv
 debug.py
+test_aaai_extractor_offline.py
+diagnose_playwright_thread.py
