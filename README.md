@@ -1,4 +1,4 @@
-# SENTRY — Academic Extraction & Geolocation Intelligence System
+# SENTRY — Structured Extraction, Normalization, and Tiered Retrieval System for Scholarly Affiliation Tracking
 
 A multi-tier, deterministic pipeline for identifying Indian-affiliated authors across A/A\*-ranked CS conference proceedings. SENTRY scrapes, extracts, and classifies paper metadata using a four-tier scraping architecture followed by a single LLM call per paper — no agent loops, no planning steps.
 
@@ -68,6 +68,17 @@ SUMMARY_LLM_MODEL=llama3.1:8b-instruct
 SUMMARY_LLM_API_KEY=ollama                       # placeholder — most local servers ignore this
 SUMMARY_LLM_BASE_URL=http://localhost:11435/v1   # different port from the main model's server
 SUMMARY_LLM_TEMPERATURE=0.4
+
+# Tuning (all optional, falls back to defaults if not set)
+SUMMARY_LLM_TEMPERATURE=0.4
+SUMMARY_BATCH_SIZE=15
+SUMMARY_MAX_ABSTRACT_CHARS=900
+SUMMARY_INTRO_MAX_TOKENS=800
+SUMMARY_LLM_CALL_DELAY_SECONDS=2
+SUMMARY_LLM_MAX_RETRIES=5
+SUMMARY_LLM_RESPONSE_FORMAT_JSON=auto
+SUMMARY_LLM_REASONING_EFFORT=              # needs to be set accordingly if using a reasoning model
+
 ```
 
 Any OpenAI-compatible endpoint works. The pipeline uses the `openai` Python SDK universally.
@@ -113,33 +124,6 @@ python run_single_paper.py --synthetic-indian
 | **Grouped (two-level: volume → track)** | AAAI |
 |**API BASED**|ICML, ICLR|
 
-### AAAI's two-level structure
-
-Unlike ACL/ACM (a single page with track headers directly above the paper
-list), AAAI's proceedings span two pages per track:
-
-1. The landing page (`aaai.org/proceeding/aaai-<N>-<year>/`) lists one
-   link per volume/issue (`"Vol 40 No. 1: AAAI-26 Technical Tracks 1"`).
-   A second anchor with the track's own name immediately follows each one
-   and points at the *same* issue page — only the `"Vol N No. M"` anchor
-   is followed, so each issue is fetched once.
-2. Each volume link leads to an OJS issue page
-   (`ojs.aaai.org/index.php/AAAI/issue/view/<id>`) listing the actual
-   track heading(s) and paper links.
-3. Each paper's title links to its OJS article page
-   (`ojs.aaai.org/index.php/AAAI/article/view/<id>`) — not the PDF —
-   which already has the full author/affiliation list and abstract as
-   plain page text.
-
-`workflows/link_extractors/aaai_link_extractor.py` handles steps 1–2 and
-produces the same `grouped_links.json` shape ACL/ACM already use, so
-`utils/track_selector_cli.py` / `track_selector_auto.py` and
-`pipeline.run_pipeline` need no AAAI-specific code. Step 3 needs no new
-scraper either: `scrapers/html_scraper.py`'s `HTML_FRIENDLY_DOMAINS` check
-already matches `aaai.org` as a substring of `ojs.aaai.org`, so Tier 1
-(plain requests) already scrapes AAAI article pages — which is also why
-`summarizer/abstract_fetcher.py` works against AAAI papers unmodified.
-
 ---
 
 ## Output Format
@@ -183,22 +167,19 @@ python orchestrator_cli.py
 ```
 you> Extract Indian-affiliated papers from NeurIPS 2025, ICML 2025, and
      ACL 2025. Skip workshop tracks.
-  ⚙️  resolve_conference_url(conference='NeurIPS', year='2025')
-     → {'proceeding_url': 'https://papers.nips.cc/paper_files/paper/2025', 'resolved': True, ...}
-  ⚙️  detect_structure(conference='NeurIPS')
-     → {'structure': 'flat', 'handler': 'generic_flat', ...}
-  ⚙️  run_pipeline(conference='NeurIPS', year='2025', proceeding_url='...')
-     → {'status': 'started', ...}
-  ...
+  [tool] resolve_conference_url(conference='NeurIPS', year='2025')
+     -> {'proceeding_url': 'https://papers.nips.cc/paper_files/paper/2025', 'resolved': True, ...}
+  [tool] detect_structure(conference='NeurIPS')
+     -> ...
 
 you> what's the status?
-  ⚙️  get_run_status(conference='NeurIPS', year='2025')
-     → {'papers_attempted': 812, 'progress_pct': 14.2, 'status_breakdown': {...}}
+  [tool] get_run_status(conference='NeurIPS', year='2025')
+     -> {'papers_attempted': 812, 'progress_pct': 14.2, 'status_breakdown': {...}}
 
 you> retry the errors
-  ⚙️  list_runs()
-  ⚙️  retry_errors(conference='ACL', year='2025')
-     → {'status': 'started', 'retrying_count': 44, ...}
+  [tool] list_runs()
+  [tool] retry_errors(conference='ACL', year='2025')
+     -> {'status': 'started', 'retrying_count': 44, ...}
 ```
 
 ### Tools
@@ -215,14 +196,8 @@ you> retry the errors
 | `summarize_indian_authors(conference, year, refresh_cache)` | Reads the **already-extracted** `indian_papers_structured.json`, fetches each paper's abstract, and starts a **background** run that produces a cited email-body summary. See [Email Summary](#email-summary-indian-authors-work) below. |
 | `get_summary_status(conference, year)` | Polls progress (`fetching_abstracts` → `summarizing` → `completed`) and returns the final `subject`/`body` once done. |
 | `list_summary_runs()` | Lists every summary run + every conference/year on disk that's ready to summarize but hasn't been yet. |
-
-### How retries actually work
-
-`pipeline.run_pipeline` already tracks every attempted URL in
-`processed_papers.json` (crash-safe resume). `retry_errors` backs that file
-up, strips out just the entries with `status: "error"`, and calls
-`pipeline.run_pipeline` again against the same links file — successful
-papers stay skipped, only the previously-failed ones get reprocessed.
+| `initiate_form_filler(conference, year, month, venue, form_url, refresh_dedup_cache)` | Starts the RPA form-submission run in the background against the extracted, deduplicated papers for a conference/year. See [Form Filler](#form-filler-rpa) below. |
+| `get_rpa_status(conference, year)` | Polls submission progress and returns the final per-paper submit/skip/fail breakdown once done. |
 
 ### Configuration
 
@@ -231,7 +206,6 @@ Same `.env` as the rest of SENTRY (`LLM_PROVIDER` / `LLM_MODEL` /
 support OpenAI-style function calling (Groq's `openai/gpt-oss-20b` does).
 
 ### Using main_driver.run_pipeline non-interactively yourself
-
 
 ```python
 run_pipeline(
@@ -246,6 +220,78 @@ run_pipeline(
 
 ---
 
+## Talking to the Orchestrator from OpenWebUI
+
+`orchestrator_api.py` wraps the same `Orchestrator` class the CLI uses
+behind a minimal OpenAI-compatible `/v1/chat/completions` server, so a
+self-hosted [OpenWebUI](https://github.com/open-webui/open-webui) instance
+can drive SENTRY as a regular chat model — no browser extension, no
+custom frontend code, just OpenWebUI's built-in "Connections" feature
+pointed at a local server.
+
+### 1. Start OpenWebUI (Docker)
+
+```bash
+docker run -d \
+  --name open-webui \
+  -p 3000:8080 \
+  -v open-webui:/app/backend/data \
+  --add-host=host.docker.internal:host-gateway \
+  ghcr.io/open-webui/open-webui:main
+```
+
+- `-p 3000:8080` — OpenWebUI's own web UI will be reachable at
+  `http://localhost:3000`.
+- `-v open-webui:/app/backend/data` — persists OpenWebUI's own users/chats/
+  settings in a named volume across container restarts.
+- `--add-host=host.docker.internal:host-gateway` — lets the container
+  reach services running on your host machine (the orchestrator API server
+  below, plus Ollama if that's also on the host) via
+  `host.docker.internal`, since `localhost` inside the container refers to
+  the container itself, not your machine.
+
+Wait a few seconds for the container to finish starting, then open
+`http://localhost:3000` in a browser.
+
+### 2. Start the SENTRY orchestrator API server
+
+In a separate terminal, from the repo root, with your `.env` already
+configured (see [Quick Start](#quick-start) above):
+
+```bash
+pip install fastapi uvicorn --break-system-packages
+python orchestrator_api.py
+```
+
+This starts listening on `0.0.0.0:8091`. Leave it running — it needs to
+stay up for the length of your OpenWebUI session, since it's the only
+thing actually running SENTRY's pipeline, tools, and LLM calls.
+
+### 3. Create your OpenWebUI account and connect SENTRY
+
+1. On first visit to `http://localhost:3000`, OpenWebUI will prompt you to
+   create a local admin account (this account only exists inside your own
+   OpenWebUI container — nothing is sent externally).
+2. Once logged in, go to **Settings → Admin Settings → Connections**.
+3. Under **OpenAI API**, click **Add Connection** and fill in:
+   - **Base URL**: `http://host.docker.internal:8091/v1`
+     (if OpenWebUI is running on a *different* machine from the orchestrator
+     API server, use that machine's LAN IP instead, e.g.
+     `http://192.168.1.23:8091/v1`)
+   - **API Key**: any placeholder value (e.g. `sentry`) — the server
+     doesn't validate it.
+4. Save the connection, then refresh the model picker in a new chat. A
+   model named **`sentry-orchestrator`** should now appear alongside any
+   other configured models.
+5. Select `sentry-orchestrator` and start chatting — every message is
+   forwarded to the same `Orchestrator.chat()` used by `orchestrator_cli.py`,
+   so anything demonstrated in the [Agentic Orchestrator](#agentic-orchestrator)
+   section above (starting runs, checking status, retrying errors,
+   requesting summaries, triggering the form filler) works identically
+   through the OpenWebUI chat window.
+
+---
+
 ## Email Summary (Indian Authors' Work)
 
 A downstream feature on top of an **already-completed** extraction run — it
@@ -255,12 +301,12 @@ conference/year first.
 
 ```bash
 you> Summarize the works of the Indian authors in ICML 2025
-  ⚙️  summarize_indian_authors(conference='ICML', year='2025')
-     → {'status': 'queued', 'message': 'Queued the email-summary run for ICML 2025 ...'}
+  [tool] summarize_indian_authors(conference='ICML', year='2025')
+     -> {'status': 'queued', 'message': 'Queued the email-summary run for ICML 2025 ...'}
 
 you> is it done?
-  ⚙️  get_summary_status(conference='ICML', year='2025')
-     → {'state': 'completed', 'stage': 'done', 'result': {'subject': 'Summary: Indian-Authored
+  [tool] get_summary_status(conference='ICML', year='2025')
+     -> {'state': 'completed', 'stage': 'done', 'result': {'subject': 'Summary: Indian-Authored
         Papers at ICML 2025 (23 papers)', 'body': '...', 'paper_count': 23, ...}}
 ```
 
@@ -362,14 +408,99 @@ All optional — every one falls back to a sensible default (or to the main
 
 ---
 
-## Form Filler (Standalone)
+## Form Filler (RPA)
 
-After running the pipeline, use the Selenium-based form filler to submit results to the IKDD data-sharing portal:
+A downstream feature on top of an **already-completed** extraction run —
+like the email summarizer, it reads `indian_papers_structured.json` for a
+conference/year rather than re-scraping or re-classifying anything, and
+submits each candidate paper as a nomination through a Selenium-driven
+browser session against a target form (default: the IKDD data-sharing
+portal, but any similarly-structured venue form works by pointing
+`--form-url` elsewhere).
+
+### What it does, step by step
+
+1. **Load the extracted candidates.** Reads
+   `data/final_output/<conference>/<year>/indian_papers_structured.json`.
+   If that file doesn't exist yet, it errors out with a clear message
+   pointing back at running the extraction pipeline first.
+2. **Deduplicate against what's already submitted.** Before submitting
+   anything, `utils/ikdd_dedup.py` scrapes (or reuses a cached copy of) the
+   target venue's **New** and **Approved** nomination lists, then checks
+   every candidate paper's title against both using token-based Jaccard
+   similarity (threshold `0.85`, over normalized — lowercased,
+   accent- and punctuation-stripped — titles). Anything scoring above the
+   threshold against an existing entry is treated as already-present and
+   skipped, along with the score and the specific existing title it
+   matched, so you can audit a near-miss instead of just trusting the
+   skip.
+3. **Submit only the genuinely new candidates.** For each remaining paper,
+   `Form_filler/selenium_filler.py` drives a real (non-headless) browser
+   session: it navigates to the form, fills in the standard fields
+   (title, conference, month, venue, and the paper's Indian author/
+   institution details pulled straight from the already-verified JSON —
+   nothing is re-typed by an LLM at this stage), and handles the
+   "Others"-category dropdown's dynamic follow-up text field when a
+   paper's `area_of_research` doesn't match one of the form's fixed
+   options.
+4. **Run as a single sequential job.** Submissions happen one at a time in
+   the same browser session, deliberately not in parallel — a second
+   concurrent session hitting the same form would itself look like
+   automated/bot traffic to the target site, independent of how fast any
+   individual submission is.
+
+### Running it standalone
 
 ```bash
-# Edit FORM_URL, CONFERENCE_NAME, YEAR, MONTH, VENUE inside the script
-python Form_filler/run_selenium_filler.py
+# Edit FORM_URL / IKDD_USERNAME / IKDD_PASSWORD in .env first (see below),
+# then run against a conference/year that's already been extracted:
+python Form_filler/run_selenium_filler.py \
+  --conference NeurIPS \
+  --year 2025 \
+  --month Nov \
+  --venue NeurIPS \
+  --form-url https://ikdd.hosting.acm.org/ds-papers-form.php
 ```
+
+- `--month` / `--venue` must match the **exact text** of the target form's
+  dropdown options — these aren't free text fields, and a mismatch will
+  fail the submission step rather than silently picking something close.
+- `--no-refresh` skips re-scraping the venue's New/Approved lists and uses
+  whatever dedup cache is already on disk (faster for repeated local
+  testing, but can miss recently-approved papers).
+- Programmatic use (e.g. from your own script, or the orchestrator's
+  `initiate_form_filler` tool) is the same call via
+  `run_form_filler(conference, year, month, venue, form_url,
+  refresh_dedup_cache)`, returning a summary dict with
+  `total_candidates`, `duplicates_skipped`, `submitted`, `failed`, and
+  full per-paper detail lists for both duplicates and submission attempts.
+
+### Configuration
+
+```env
+IKDD_USERNAME=your_login_email     # or the equivalent for whatever venue's
+IKDD_PASSWORD=your_login_password  # New/Approved lists you're dedup-checking against
+```
+
+Required only for the dedup step's live refresh (step 2 above). If you'd
+rather not scrape live, pre-populate a local cache with
+`python -m utils.ikdd_dedup --refresh` once (interactively, with
+credentials entered directly) and run the filler afterward with
+`--no-refresh`.
+
+### Via the orchestrator
+
+```bash
+you> Submit the ICML 2025 Indian-affiliated papers to IKDD for November, venue ICML
+  [tool] initiate_form_filler(conference='ICML', year='2025', month='Nov', venue='ICML')
+     -> {'status': 'started', ...}
+
+you> how's the submission going?
+  [tool] get_rpa_status(conference='ICML', year='2025')
+     -> {'state': 'completed', 'total_candidates': 23, 'duplicates_skipped': 4,
+        'submitted': 19, 'failed': 0, ...}
+```
+
 ---
 
 ## Evaluation
@@ -377,4 +508,3 @@ python Form_filler/run_selenium_filler.py
 Ground truth data for IEEE-ICDM 2025 is included under `data/ground_truth/`. The `data/eval_inputs/` directory contains link subsets used during development benchmarking.
 
 ---
-
