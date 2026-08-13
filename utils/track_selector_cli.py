@@ -16,7 +16,7 @@ def select_tracks_cli(grouped_json_path: str, output_dir: str = None) -> str:
     with open(grouped_json_path, "r", encoding="utf-8") as f:
         tracks = json.load(f)
 
-    print(f"\n✅ Loaded {len(tracks)} tracks from: {grouped_json_path}\n")
+    print(f"\n Loaded {len(tracks)} tracks from: {grouped_json_path}\n")
 
     # Display track titles with indices
     for idx, track in enumerate(tracks):
@@ -53,5 +53,5 @@ def select_tracks_cli(grouped_json_path: str, output_dir: str = None) -> str:
     with open(save_path, "w", encoding="utf-8") as f:
         json.dump(all_paper_links, f, indent=2)
 
-    print(f"\n✅ Saved {len(all_paper_links)} links from {len(selected_tracks)} track(s) → {save_path.resolve()}\n")
+    print(f"\n Saved {len(all_paper_links)} links from {len(selected_tracks)} track(s) → {save_path.resolve()}\n")
     return str(save_path.resolve())

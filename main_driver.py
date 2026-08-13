@@ -40,7 +40,7 @@ def run_pipeline(
     Returns the resolved links.json path that was fed into per-paper
     processing.
     """
-    print(f"\n🚀 Running pipeline for {conference.upper()} {year}")
+    print(f"\nRunning pipeline for {conference.upper()} {year}")
 
     def _select_tracks(grouped_path: str) -> str:
         if interactive:
@@ -51,7 +51,7 @@ def run_pipeline(
             include_keywords=track_include_keywords,
         )
         print(
-            f"[INFO] 🤖 Auto-selected {len(result['selected_tracks'])}/"
+            f"[INFO] Auto-selected {len(result['selected_tracks'])}/"
             f"{result['total_tracks']} tracks ({result['total_links']} links)"
             f" — skipped: {result['skipped_tracks'] or 'none'}"
         )
@@ -59,12 +59,12 @@ def run_pipeline(
 
 
     if "dl.acm.org" in proceeding_url:
-        print("[🔎] ACM DL proceedings detected — using Playwright.")
+        print("ACM DL proceedings detected — using Playwright.")
 
         links_json_path = Path(f"data/links_raw/{conference}/{year}/grouped_links.json")
 
         if links_json_path.exists():
-            print("[✅] Using cached ACM links.")
+            print("Using cached ACM links.")
             grouped_json_path = str(links_json_path.resolve())
         else:
             grouped_json_path = fetch_acm_links(proceeding_url, conference, year)
@@ -72,12 +72,12 @@ def run_pipeline(
         links_json_path = _select_tracks(grouped_json_path)
 
     elif "aaai" in conference.lower() or "aaai.org" in proceeding_url:
-        print("[🔎] AAAI proceedings detected — using two-level volume/track extractor.")
+        print("AAAI proceedings detected — using two-level volume/track extractor.")
 
         links_json_path = Path(f"data/links_raw/{conference}/{year}/grouped_links.json")
 
         if links_json_path.exists():
-            print("[✅] Using cached AAAI links.")
+            print("Using cached AAAI links.")
             grouped_json_path = str(links_json_path.resolve())
         else:
             grouped_json_path = extract_aaai_links(proceeding_url, conference, year)
@@ -88,12 +88,12 @@ def run_pipeline(
     else:
         html_path = fetch_and_save_html(proceeding_url, conference, year)
 
-        if is_track_grouped(conference):
-            print("[🔎] Track-based structure detected.")
-            grouped_json_path = extract_grouped_links(html_path, conference, year)
+        if is_track_grouped(conference, proceeding_url):
+            print("Track-based structure detected.")
+            grouped_json_path = extract_grouped_links(html_path, conference, year, proceeding_url)
             links_json_path = _select_tracks(grouped_json_path)
         else:
-            print("[🔎] Flat structure detected.")
+            print("Flat structure detected.")
             extract_flat_links_with_base(conference, html_path, year)
             links_json_path = Path(f"data/links_raw/{conference}/{year}/links.json")
 
@@ -111,6 +111,6 @@ def run_pipeline(
         delay=delay
     )
 
-    print(f"✅ Pipeline completed for {conference.upper()} {year}\n")
+    print(f"Pipeline completed for {conference.upper()} {year}\n")
 
     return links_json_path

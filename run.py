@@ -18,7 +18,7 @@ from pipeline import run_pipeline as run_openreview_pipeline
 
 if __name__ == "__main__":
     # List of all conference pipeline configurations
-    conferences_to_run = [
+    '''conferences_to_run = [
         {
             "proceeding_url": "https://ieeexplore.ieee.org/xpl/conhome/11391637/proceeding",
             "conference": "IEEE-ICDM",
@@ -196,6 +196,15 @@ if __name__ == "__main__":
                 max_papers=None,
                 resume_from=0,
                 delay=10
-            )
+            )'''
+    run_scraped_pipeline(
+                    proceeding_url="https://aclanthology.org/events/emnlp-2025/",
+                    conference="EMNLP",
+                    year="2025",
+                    max_papers=None,
+                    resume_from=0,
+                    delay=10
+                )
+    
     
     

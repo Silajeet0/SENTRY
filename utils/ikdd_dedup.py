@@ -409,7 +409,7 @@ def main():
 
     if args.refresh:
         cache = refresh_cache()
-        print(f"\n✅ Cache refreshed — {cache['total']} approved titles stored.")
+        print(f"\n Cache refreshed — {cache['total']} approved titles stored.")
         return
 
     if not args.check and not args.check_file:
@@ -420,22 +420,22 @@ def main():
     try:
         dedup = IKDDDeduplicator()
     except FileNotFoundError as e:
-        print(f"\n❌ {e}")
+        print(f"\nError: {e}")
         return
 
     if args.check:
         result = dedup.is_duplicate(args.check)
         if result.is_duplicate:
-            print(f"\n⚠️  DUPLICATE (score: {result.score:.2f})")
+            print(f"\n  DUPLICATE (score: {result.score:.2f})")
             print(f"   Your title : {result.candidate}")
             print(f"   IKDD title : {result.matched_title}")
         else:
-            print(f"\n✅ NEW — not found in IKDD (best score: {result.score:.2f})")
+            print(f"\n NEW — not found in IKDD (best score: {result.score:.2f})")
 
     if args.check_file:
         path = Path(args.check_file)
         if not path.exists():
-            print(f"\n❌ File not found: {path}")
+            print(f"\n File not found: {path}")
             return
 
         papers = json.loads(path.read_text(encoding="utf-8"))
@@ -450,7 +450,7 @@ def main():
         print(f"{'─'*50}")
 
         if duplicates:
-            print(f"\n⚠️  Duplicates found:")
+            print(f"\n  Duplicates found:")
             for p in duplicates:
                 print(f"  [{p['_dedup_score']:.2f}] {p['paper_title']}")
                 print(f"         → {p['_dedup_matched']}")

@@ -380,8 +380,8 @@ def fetch_acm_links(
     with open(save_path, "w", encoding="utf-8") as f:
         json.dump(grouped_data, f, indent=2, ensure_ascii=False)
 
-    print(f"[INFO] ✅ Extracted {len(paper_links)} papers for {conference} {year}.")
-    print(f"[INFO] 📁 Saved grouped links to: {save_path.resolve()}")
+    print(f"[INFO] Extracted {len(paper_links)} papers for {conference} {year}.")
+    print(f"[INFO] Saved grouped links to: {save_path.resolve()}")
 
     return str(save_path.resolve())
 

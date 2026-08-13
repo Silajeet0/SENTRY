@@ -12,13 +12,9 @@ out of the box even with only one model configured:
     SUMMARY_LLM_MODEL        (falls back to LLM_MODEL)
     SUMMARY_LLM_API_KEY      (falls back to LLM_API_KEY)
     SUMMARY_LLM_BASE_URL     (falls back to LLM_BASE_URL)
-    SUMMARY_LLM_TEMPERATURE  (default 0.4 — see reasoning below)
+    SUMMARY_LLM_TEMPERATURE  (default 0.4)
     SUMMARY_BATCH_SIZE       (default 15 papers per LLM call)
-    SUMMARY_MAX_ABSTRACT_CHARS (default 900 — per-abstract cap INSIDE the
-                                 prompt; abstract_fetcher.py's 2500-char cap
-                                 is a much looser upstream safety net, this
-                                 is the tighter one that actually controls
-                                 prompt-token budget across a whole batch)
+    SUMMARY_MAX_ABSTRACT_CHARS (default 900)
 
 
 """

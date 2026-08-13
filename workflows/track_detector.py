@@ -1,11 +1,15 @@
 from workflows.link_extractors.flat_link_extractor import extract_flat_links_with_base
 from workflows.link_extractors.grouped_link_extractor import extract_grouped_links
+from urllib.parse import urlparse
 
-def is_track_grouped(conference: str) -> bool:
+def is_track_grouped(conference: str, proceeding_url: str = "") -> bool:
     """
     Determines if the conference has papers grouped by tracks or sessions.
     Flat → IEEE, NeurIPS variants | Grouped → ACL, ACM, AAAI variants
     """
+    domain = urlparse(proceeding_url or "").netloc.lower()
+    if domain == "aclanthology.org":
+        return True
     flat_keywords = ["ieee", "neurips", "nips", "icml"]
     grouped_keywords = ["acm", "acl", "aaai"]
 
@@ -23,11 +27,11 @@ def is_track_grouped(conference: str) -> bool:
 
 
 
-def extract_links_based_on_structure(conference: str, html_path: str, year: str) -> list[str] | str:
+def extract_links_based_on_structure(conference: str, html_path: str, year: str, proceeding_url: str = "") -> list[str] | str:
     """
     Based on the structure (flat/grouped), uses the right extractor.
     """
-    if is_track_grouped(conference):
-        return extract_grouped_links(html_path, conference, year)
+    if is_track_grouped(conference, proceeding_url):
+        return extract_grouped_links(html_path, conference, year, proceeding_url)
     else:
         return extract_flat_links_with_base(conference, html_path, year)

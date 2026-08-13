@@ -24,7 +24,7 @@ logging.basicConfig(
 
 def _print_tool_call(name: str, args: dict, result) -> None:
     args_str = ", ".join(f"{k}={v!r}" for k, v in args.items())
-    print(f"  ⚙️  {name}({args_str})")
+    print(f"[TOOL] {name}({args_str})")
     preview = str(result)
     if len(preview) > 300:
         preview = preview[:300] + "…"

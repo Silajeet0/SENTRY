@@ -81,7 +81,7 @@ def main():
     print(result["body"])
     print("=" * 70)
     if not result["intro_generated_by_llm"]:
-        print(f"\n⚠️  Lead paragraph fell back to the templated one-liner. Reason: {result['intro_fallback_reason']}")
+        print(f"\nLead paragraph fell back to the templated one-liner. Reason: {result['intro_fallback_reason']}")
     print(f"\n{result['paper_count']} paper(s) included, {len(result['papers_skipped'])} skipped.")
 
 

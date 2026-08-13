@@ -215,9 +215,9 @@ def extract_aaai_links(proceeding_url: str, conference: str, year: str) -> str:
 
     total_links = sum(len(track["paper_links"]) for track in grouped_data)
     print(
-        f"[INFO] ✅ Extracted {total_links} paper links across "
+        f"[INFO] Extracted {total_links} paper links across "
         f"{len(grouped_data)} track(s) from {len(volumes)} AAAI volume(s)."
     )
-    print(f"[INFO] 📁 Saved grouped links to: {save_path.resolve()}")
+    print(f"[INFO] Saved grouped links to: {save_path.resolve()}")
 
     return str(save_path.resolve())

@@ -39,7 +39,7 @@ PDF_PREFILTER_DOMAINS = {
 
 EXTRACTOR = LLMExtractor()
 
-# Delay between papers (seconds) — be polite to servers
+# Delay between papers
 INTER_PAPER_DELAY = 3
 
 # Block detection

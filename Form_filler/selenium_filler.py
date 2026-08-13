@@ -18,7 +18,7 @@ def _fill_other_area_field(driver: webdriver.Chrome, other_text: str):
     text_to_enter = (other_text or "").strip()
     if not text_to_enter:
         text_to_enter = "Others"
-        print("   -> ⚠️  No specific 'Others' area text available from "
+        print("   ->   No specific 'Others' area text available from "
               f"extraction; falling back to '{text_to_enter}' in the "
               "follow-up box. Consider reviewing this paper's area "
               "classification manually after submission.")
@@ -136,15 +136,15 @@ def fill_single_paper(driver: webdriver.Chrome, paper_data: dict, form_config: d
         WebDriverWait(driver, 20).until(
             EC.visibility_of_element_located((By.CLASS_NAME, "success"))
         )
-        print("   -> ✅ Submission successful!")
+        print("   ->  Submission successful!")
         return True
 
     except (NoSuchElementException, TimeoutException) as e:
-        print(f"\n   -> ❌ An error occurred during form filling: Could not find or interact with an element.")
+        print(f"\n   ->  An error occurred during form filling: Could not find or interact with an element.")
         print(f"      Details: {e}")
         return False
     except Exception as e:
-        print(f"\n   -> ❌ An unexpected error occurred: {e}")
+        print(f"\n   ->  An unexpected error occurred: {e}")
         return False
 
 
@@ -161,7 +161,7 @@ def process_papers_with_selenium(papers: list, form_config: dict) -> list:
     results = []
     driver = None
     try:
-        print("🚀 Starting browser for the entire session...")
+        print(" Starting browser for the entire session...")
         service = webdriver.chrome.service.Service()
         driver = webdriver.Chrome(service=service)
         
@@ -186,7 +186,7 @@ def process_papers_with_selenium(papers: list, form_config: dict) -> list:
                 print("--- Pausing for 10 seconds after error before trying next paper ---")
                 time.sleep(10)
 
-        print("\n✅ All papers have been processed.")
+        print("\n All papers have been processed.")
 
     finally:
         if driver:

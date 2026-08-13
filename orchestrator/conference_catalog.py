@@ -263,7 +263,7 @@ def detect_structure(conference: str, proceeding_url: str = "") -> dict:
             ),
         }
 
-    grouped = is_track_grouped(conference)
+    grouped = is_track_grouped(conference, proceeding_url)
     return {
         "conference": conference,
         "structure": "grouped" if grouped else "flat",

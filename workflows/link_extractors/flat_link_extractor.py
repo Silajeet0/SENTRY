@@ -101,6 +101,6 @@ def extract_flat_links_with_base(conference: str, html_path: str, year: str) -> 
     with open(save_path, "w", encoding="utf-8") as f:
         json.dump(full_links, f, indent=4)
 
-    print(f"[INFO] ✅ Extracted {len(full_links)} flat links")
-    print(f"[INFO] 📁 Saved to: {save_path.resolve()}")
+    print(f"[INFO] Extracted {len(full_links)} flat links")
+    print(f"[INFO] Saved to: {save_path.resolve()}")
     return full_links

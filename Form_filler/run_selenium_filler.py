@@ -43,16 +43,16 @@ def get_dedup_cache(refresh: bool = True) -> Optional[dict]:
     """
     if refresh:
         try:
-            print("🔍 Refreshing IKDD approved-papers cache (scraping latest list)...")
+            print("Refreshing IKDD approved-papers cache (scraping latest list)...")
             return refresh_cache()
         except Exception as e:
-            print(f"⚠️  Could not refresh IKDD cache live: {e}")
+            print(f"  Could not refresh IKDD cache live: {e}")
             print("   Falling back to local cache, if one exists...")
 
     try:
         return load_cache()
     except FileNotFoundError as e:
-        print(f"❌ {e}")
+        print(f"Error: {e}")
         return None
 
 
@@ -104,12 +104,12 @@ def run_form_filler(
             "this conference/year first."
         )
 
-    print(f"✅ Found data file: {json_path}")
+    print(f" Found data file: {json_path}")
     with open(json_path, "r", encoding="utf-8") as f:
         papers_data = json.load(f)
 
     if not papers_data:
-        print("ℹ️ The JSON file is empty. Nothing to process.")
+        print(" The JSON file is empty. Nothing to process.")
         return {
             "conference": conference, "year": year,
             "total_candidates": 0, "duplicates_skipped": 0,
@@ -130,7 +130,7 @@ def run_form_filler(
     dedup = IKDDDeduplicator(cache=cache)
     new_papers, duplicates = dedup.filter_new(papers_data)
 
-    print(f"\n📊 Dedup results: {len(papers_data)} total | "
+    print(f"\n Dedup results: {len(papers_data)} total | "
           f"{len(new_papers)} new | {len(duplicates)} already in IKDD")
 
     duplicate_details = [
@@ -147,7 +147,7 @@ def run_form_filler(
             print(f"     [{d['score']:.2f}] {d['paper_title']} → matched '{d['matched_title']}'")
 
     if not new_papers:
-        print("\n✅ Nothing to submit — every candidate paper is already in IKDD.")
+        print("\n Nothing to submit — every candidate paper is already in IKDD.")
         return {
             "conference": conference, "year": year,
             "total_candidates": len(papers_data),
@@ -158,7 +158,7 @@ def run_form_filler(
 
     # 3. Fill and submit only the genuinely new papers.
     form_config = {"form_url": form_url, "venue": venue, "year": year, "month": month}
-    print(f"\n🚀 Proceeding to fill and submit {len(new_papers)} new paper(s)...")
+    print(f"\n Proceeding to fill and submit {len(new_papers)} new paper(s)...")
     details = process_papers_with_selenium(new_papers, form_config)
 
     submitted = sum(1 for d in details if d["status"] == "submitted")

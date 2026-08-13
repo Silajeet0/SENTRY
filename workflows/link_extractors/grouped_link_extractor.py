@@ -1,10 +1,10 @@
 import json
 from pathlib import Path
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 from workflows.link_extractors.skip_patterns import should_skip_title
 
-def extract_grouped_links(html_path: str, conference: str, year: str) -> str:
+def extract_grouped_links(html_path: str, conference: str, year: str, proceeding_url: str="") -> str:
     """
     Extracts paper links grouped by tracks/sessions for ACL and ACM-style conferences.
 
@@ -25,9 +25,10 @@ def extract_grouped_links(html_path: str, conference: str, year: str) -> str:
 
     grouped_data = []
     conf = conference.lower()
+    domain = urlparse(proceeding_url or "").netloc.lower()
 
     # ACL STYLE
-    if "acl" in conf:
+    if domain == "aclanthology.org" or "acl" in conf:
         base_url = "https://aclanthology.org"
         for track_anchor in soup.find_all("a", class_="align-middle", href=True):
             href = track_anchor["href"].strip()
@@ -59,7 +60,7 @@ def extract_grouped_links(html_path: str, conference: str, year: str) -> str:
                 grouped_data.append(track)
 
     # ACM STYLE
-    elif "acm" in conf:
+    elif "acm.org" in domain or "acm" in conf:
         base_url = "https://dl.acm.org"
         session_selectors = [
             "a.section__title",
@@ -135,7 +136,7 @@ def extract_grouped_links(html_path: str, conference: str, year: str) -> str:
         json.dump(grouped_data, f, indent=2)
 
     total_links = sum(len(track.get("paper_links", [])) for track in grouped_data)
-    print(f"[INFO] ✅ Extracted {total_links} paper links across {len(grouped_data)} tracks.")
-    print(f"[INFO] 📁 Saved grouped links to: {save_path.resolve()}")
+    print(f"[INFO] Extracted {total_links} paper links across {len(grouped_data)} tracks.")
+    print(f"[INFO] Saved grouped links to: {save_path.resolve()}")
 
     return str(save_path.resolve())
