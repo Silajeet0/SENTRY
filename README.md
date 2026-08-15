@@ -120,7 +120,7 @@ python run_single_paper.py --synthetic-indian
 | Structure | Conferences |
 |-----------|-------------|
 | **Flat** | NeurIPS, any IEEE Xplore proceedings |
-| **Grouped (track-based)** | ACL, EMNLP, NAACL, any ACM-DL hosted proceedings|
+| **Grouped (track-based)** | any aclanthology hosted proceedings, any ACM-DL hosted proceedings|
 | **Grouped (two-level: volume → track)** | AAAI |
 |**API BASED**|ICML, ICLR|
 
@@ -203,7 +203,7 @@ you> retry the errors
 
 Same `.env` as the rest of SENTRY (`LLM_PROVIDER` / `LLM_MODEL` /
 `LLM_API_KEY` / `LLM_BASE_URL`) — the orchestrator's LLM just needs to
-support OpenAI-style function calling (Groq's `openai/gpt-oss-20b` does).
+support OpenAI-style function calling.
 
 ### Using main_driver.run_pipeline non-interactively yourself
 
@@ -317,66 +317,6 @@ python run_conference_summary.py ICML 2025
 python run_conference_summary.py ICML 2025 --max-papers 3   # quick smoke test
 python run_conference_summary.py ICML 2025 --refresh-cache  # ignore cached abstracts, re-fetch all
 ```
-
-### What it does, per paper
-
-1. **Get the abstract.** For OpenReview-hosted conferences (ICML, ICLR, ...
-   — detected from the URL, same check `run_single_paper.py` already uses)
-   the abstract is already a field on the OpenReview note, so it's fetched
-   directly via the API — no scraping at all. For everything else
-   (ACL/NeurIPS PDFs, IEEE/ACM pages, ...) it reuses the **exact same
-   four-tier scraper** `run_pipeline` uses (`pipeline.TIERS` — same
-   persistent Playwright browser, same ACM cookie jar), then pulls just the
-   Abstract section out of the scraped text with a heading-anchored regex
-   (falling back to a leading text window if no heading is found).
-   Title/authors/institutions are **not** re-derived from scraped text —
-   they're already trustworthy in `indian_papers_structured.json`.
-2. **Cache it.** Every fetched abstract is saved to
-   `data/final_output/<conference>/<year>/abstracts_cache.json`
-   immediately, crash-safe and resumable like `processed_papers.json`.
-   Asking for the same conference/year's summary again later reuses the
-   cache rather than re-scraping (abstracts don't change once published);
-   pass `refresh_cache=True` to force a re-fetch.
-3. **Summarize it.** Once every paper's abstract is in hand, they're
-   batched (default 15 papers/call — override with `SUMMARY_BATCH_SIZE`)
-   to a **separate summarization LLM** and written into a 1-2 sentence
-   plain-English synthesis each. This is the only LLM call in the whole
-   feature.
-4. **Assemble the email — deterministically.** The LLM is only ever given
-   `{title, abstract}` and asked to return `{summary}` per paper — it is
-   never given, and is explicitly told not to invent, author names,
-   institutions, or the paper link. Those are spliced into the final email
-   afterwards straight from `indian_papers_structured.json`, so the
-   citation the recipient actually sees can't contain a hallucinated name
-   or link even if the prose summary of some abstract is imperfect. Papers
-   whose abstract couldn't be retrieved are listed separately at the bottom
-   ("Not included above") rather than silently dropped or faked.
-
-### Why a separate model, at a different temperature
-
-Every other LLM call in SENTRY (per-paper metadata extraction, the
-orchestrator's tool-calling loop) runs at or near temperature 0 — an
-extraction/decision task has one correct answer, so any variance is noise.
-Writing a readable summary of an abstract is a different kind of task:
-temperature 0 tends toward stilted, repetitive phrasing across a whole
-batch of papers, which reads poorly in something about to be sent as an
-email. This feature is the **one place** in SENTRY that intentionally runs
-above temperature 0 (default 0.4).
-
-Because it's a different kind of workload, it's also configured as a
-**separate model/endpoint** from the main orchestrator/extraction model —
-recommended, not required (it falls back to the main `LLM_*` config if
-`SUMMARY_LLM_*` is unset). On the 32GB M-series Mac setup this is built
-for, running `gpt-oss-20b` as the main model: a quantized 20B model
-(~12-13GB) and a quantized 7-8B model (~4.5-5GB, e.g.
-`llama3.1:8b-instruct` or `qwen2.5:7b-instruct` served locally via a second
-Ollama/LM Studio/llama.cpp instance on a different port) both fit
-comfortably in unified memory at once, with headroom left for
-Playwright/Chromium during the scraping stage. This also means the 20B
-model stays free to keep driving the orchestrator's tool-calling loop while
-the 8B model handles summarization, rather than one process serializing
-both jobs on the same weights.
-
 ### Configuration
 
 ```env
@@ -417,37 +357,6 @@ submits each candidate paper as a nomination through a Selenium-driven
 browser session against a target form (default: the IKDD data-sharing
 portal, but any similarly-structured venue form works by pointing
 `--form-url` elsewhere).
-
-### What it does, step by step
-
-1. **Load the extracted candidates.** Reads
-   `data/final_output/<conference>/<year>/indian_papers_structured.json`.
-   If that file doesn't exist yet, it errors out with a clear message
-   pointing back at running the extraction pipeline first.
-2. **Deduplicate against what's already submitted.** Before submitting
-   anything, `utils/ikdd_dedup.py` scrapes (or reuses a cached copy of) the
-   target venue's **New** and **Approved** nomination lists, then checks
-   every candidate paper's title against both using token-based Jaccard
-   similarity (threshold `0.85`, over normalized — lowercased,
-   accent- and punctuation-stripped — titles). Anything scoring above the
-   threshold against an existing entry is treated as already-present and
-   skipped, along with the score and the specific existing title it
-   matched, so you can audit a near-miss instead of just trusting the
-   skip.
-3. **Submit only the genuinely new candidates.** For each remaining paper,
-   `Form_filler/selenium_filler.py` drives a real (non-headless) browser
-   session: it navigates to the form, fills in the standard fields
-   (title, conference, month, venue, and the paper's Indian author/
-   institution details pulled straight from the already-verified JSON —
-   nothing is re-typed by an LLM at this stage), and handles the
-   "Others"-category dropdown's dynamic follow-up text field when a
-   paper's `area_of_research` doesn't match one of the form's fixed
-   options.
-4. **Run as a single sequential job.** Submissions happen one at a time in
-   the same browser session, deliberately not in parallel — a second
-   concurrent session hitting the same form would itself look like
-   automated/bot traffic to the target site, independent of how fast any
-   individual submission is.
 
 ### Running it standalone
 
