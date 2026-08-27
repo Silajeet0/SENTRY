@@ -11,7 +11,7 @@ def is_track_grouped(conference: str, proceeding_url: str = "") -> bool:
     if domain == "aclanthology.org":
         return True
     flat_keywords = ["ieee", "neurips", "nips", "icml"]
-    grouped_keywords = ["acm", "acl", "aaai"]
+    grouped_keywords = ["acm", "acl", "aaai", "ijcai"]
 
     name = conference.lower()
 

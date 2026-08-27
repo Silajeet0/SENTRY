@@ -4,6 +4,51 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 from workflows.link_extractors.skip_patterns import should_skip_title
 
+
+def _extract_generic_heading_grouped(soup: BeautifulSoup, proceeding_url: str = "") -> list:
+    """
+    Best-effort fallback for single-page, track-grouped proceedings that don't
+    match a dedicated extractor (ACL/ACM/AAAI). Walks the page in document
+    order, treating any heading tag (h1-h5) as a new track boundary, and
+    collects every '.pdf'-suffixed link seen before the next heading as
+    belonging to that track. Headings with no PDF links under them (nav/site
+    title headings, empty umbrella headings like "Main Track") are dropped
+    automatically since they end up with an empty paper_links list.
+    """
+    grouped_data = []
+    current_track = None
+
+    for element in soup.find_all(["h1", "h2", "h3", "h4", "h5", "a"]):
+        if element.name in ("h1", "h2", "h3", "h4", "h5"):
+            title = element.get_text(strip=True)
+            if not title or should_skip_title(title):
+                current_track = None
+                continue
+            current_track = {"track_title": title, "track_url": None, "paper_links": []}
+            grouped_data.append(current_track)
+        elif current_track is not None:
+            href = (element.get("href") or "").strip()
+            if href.lower().endswith(".pdf"):
+                current_track["paper_links"].append(urljoin(proceeding_url, href))
+
+    grouped_data = [t for t in grouped_data if t["paper_links"]]
+
+    if not grouped_data:
+        paper_links = sorted({
+            urljoin(proceeding_url, a["href"].strip())
+            for a in soup.find_all("a", href=True)
+            if a["href"].strip().lower().endswith(".pdf")
+        })
+        if paper_links:
+            grouped_data.append({
+                "track_title": "All papers",
+                "track_url": None,
+                "paper_links": paper_links
+            })
+
+    return grouped_data
+
+
 def extract_grouped_links(html_path: str, conference: str, year: str, proceeding_url: str="") -> str:
     """
     Extracts paper links grouped by tracks/sessions for ACL and ACM-style conferences.
@@ -125,7 +170,18 @@ def extract_grouped_links(html_path: str, conference: str, year: str, proceeding
         )
 
     else:
-        raise ValueError(f"[ERROR] Unsupported grouped conference: {conference}")
+        print(
+            f"[WARN] No dedicated extractor for '{conference}' — "
+            "falling back to generic single-page heading-grouped extraction. "
+            "Spot-check the resulting track/paper counts before trusting this run."
+        )
+        grouped_data = _extract_generic_heading_grouped(soup, proceeding_url)
+        if not grouped_data:
+            raise ValueError(
+                f"[ERROR] Unsupported grouped conference: {conference}. "
+                "Generic fallback found no heading + PDF-link structure either — "
+                "this venue needs a dedicated extractor."
+            )
 
     # Save Output JSON
     save_dir = Path(f"data/links_raw/{conference}/{year}")
