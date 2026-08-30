@@ -108,6 +108,23 @@ def get_summary_content(conference: str, year: str, _: None = Depends(require_ap
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+@app.post("/v1/tools/summarize/{conference}/{year}")
+def trigger_summary(conference: str, year: str, refresh_cache: bool = False, _: None = Depends(require_api_key)):
+    """
+    Calls orchestrator.tools.summarize_indian_authors directly — no
+    orchestrator LLM call at all, so this can't be slowed down by a cold
+    Ollama model load or multi-step tool-selection reasoning the way asking
+    the orchestrator to "summarize X" in chat can be. summarize_indian_authors
+    itself only checks disk and enqueues onto summary_runner's background
+    worker thread (milliseconds), so this endpoint is always fast regardless
+    of whether the actual job then takes minutes — poll /v1/summary or
+    get_summary_status for progress.
+    """
+    from orchestrator.tools import summarize_indian_authors
+
+    return summarize_indian_authors(conference=conference, year=year, refresh_cache=refresh_cache)
+
+
 @app.get("/v1/models")
 def list_models(_: None = Depends(require_api_key)):
     return {
