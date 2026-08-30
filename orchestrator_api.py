@@ -1,32 +1,63 @@
 """
 orchestrator_api.py — minimal OpenAI-compatible /v1/chat/completions server
-wrapping the SENTRY orchestrator, so a self-hosted OpenWebUI can talk to it
-as a custom "Connection".
+wrapping the SENTRY orchestrator, so a self-hosted OpenWebUI (or the sentry
+pip client) can talk to it as a custom "Connection".
 
     pip install fastapi uvicorn --break-system-packages
     python orchestrator_api.py            # listens on 0.0.0.0:8091
 
-Then in OpenWebUI: Settings > Admin Settings > Connections > OpenAI API >
-add a connection with Base URL "http://host.docker.internal:8091/v1"
-(or your host's LAN IP if OpenWebUI is on another machine) and any
-placeholder API key — this server doesn't check it. A model called
-"sentry-orchestrator" will then show up in the model picker.
+Auth: set SENTRY_API_KEYS in .env as a comma-separated list of accepted
+keys, e.g. SENTRY_API_KEYS=key-for-alice,key-for-bob. Requests must send
+Authorization: Bearer <key>. If SENTRY_API_KEYS is unset, auth is skipped
+entirely (local/dev use, e.g. plain OpenWebUI on localhost) — set it before
+exposing this over the Cloudflare Tunnel.
 
 """
+import subprocess
 import time
 import uuid
-from typing import List
+from typing import List, Optional
 
 from dotenv import load_dotenv
 
 load_dotenv()
 
-from fastapi import FastAPI  
-from pydantic import BaseModel  
+import os
 
-from orchestrator.agent import Orchestrator 
+from fastapi import Depends, FastAPI, Header, HTTPException
+from pydantic import BaseModel
+
+from orchestrator.agent import Orchestrator
 
 app = FastAPI(title="SENTRY Orchestrator (OpenAI-compatible)")
+
+_API_KEYS = {k.strip() for k in os.getenv("SENTRY_API_KEYS", "").split(",") if k.strip()}
+
+
+def _git_commit() -> str:
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"], text=True
+        ).strip()
+    except Exception:
+        return "unknown"
+
+
+# Resolved once at process start — this is exactly the value that changes
+# when the watcher (scripts/watch_and_restart.sh) restarts the service on a
+# new commit, so /v1/version is also the cheapest way to confirm a restart
+# actually picked up the latest code.
+_SERVER_COMMIT = _git_commit()
+
+
+def require_api_key(authorization: Optional[str] = Header(None)) -> None:
+    if not _API_KEYS:
+        return  # auth disabled — no SENTRY_API_KEYS configured
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing bearer token")
+    token = authorization.removeprefix("Bearer ").strip()
+    if token not in _API_KEYS:
+        raise HTTPException(status_code=401, detail="Invalid API key")
 
 
 class ChatMessage(BaseModel):
@@ -40,8 +71,15 @@ class ChatCompletionRequest(BaseModel):
     stream: bool = False
 
 
+@app.get("/v1/version")
+def version():
+    # Unauthenticated on purpose: cheap liveness/staleness check for the
+    # watcher and for teammates without needing a key handy.
+    return {"commit": _SERVER_COMMIT, "auth_enabled": bool(_API_KEYS)}
+
+
 @app.get("/v1/models")
-def list_models():
+def list_models(_: None = Depends(require_api_key)):
     return {
         "object": "list",
         "data": [{"id": "sentry-orchestrator", "object": "model", "owned_by": "local"}],
@@ -49,7 +87,7 @@ def list_models():
 
 
 @app.post("/v1/chat/completions")
-def chat_completions(req: ChatCompletionRequest):
+def chat_completions(req: ChatCompletionRequest, _: None = Depends(require_api_key)):
     orch = Orchestrator()
 
     # Only real conversation turns matter — drop any system message
