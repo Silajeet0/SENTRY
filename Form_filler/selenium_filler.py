@@ -148,10 +148,18 @@ def fill_single_paper(driver: webdriver.Chrome, paper_data: dict, form_config: d
         return False
 
 
-def process_papers_with_selenium(papers: list, form_config: dict) -> list:
+def process_papers_with_selenium(papers: list, form_config: dict, on_progress=None) -> list:
     """
     Main processing function. Sets up a single browser instance and loops through
     all papers, filling the form for each one.
+
+    on_progress, if given, is called as on_progress(results) after every
+    single paper (submitted or failed) — so a caller (rpa_runner._job) can
+    push live counts into RPA_REGISTRY as the run progresses, rather than
+    the registry only updating once this whole loop finishes. This loop can
+    legitimately run for well over an hour on ~80+ papers given the
+    per-paper/per-author waits below, so incremental reporting is the
+    difference between get_rpa_status being useful mid-run or not.
 
     Returns a list of per-paper result dicts:
         [{"paper_title": str, "status": "submitted" | "failed"}, ...]
@@ -178,7 +186,13 @@ def process_papers_with_selenium(papers: list, form_config: dict) -> list:
             # Call the function to fill the form for this specific paper
             success = fill_single_paper(driver, paper, form_config)
             results.append({"paper_title": title, "status": "submitted" if success else "failed"})
-            
+
+            if on_progress is not None:
+                try:
+                    on_progress(results)
+                except Exception as e:  # noqa: BLE001
+                    print(f"   -> (progress callback failed, continuing anyway: {e})")
+
             if success and i < total_papers - 1:
                 print("--- Pausing for 5 seconds before next paper ---")
                 time.sleep(5)

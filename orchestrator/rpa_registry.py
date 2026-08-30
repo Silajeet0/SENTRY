@@ -59,6 +59,24 @@ class RPARegistry:
                 rec.state = "running"
                 rec.started_at = datetime.now().isoformat()
 
+    def update_progress(self, conference: str, year: str, submitted: int, failed: int, total_candidates: int, duplicates_skipped: int = 0) -> None:
+        """
+        Called after each paper during a running job — this is what makes
+        get_rpa_status actually move while the job is still in progress,
+        instead of showing a frozen 0/0/0 for the entire run (which for
+        ~80+ papers, several multi-author, can genuinely take over an
+        hour — see process_papers_with_selenium's per-author/per-paper
+        sleeps). Does not touch state/started_at/finished_at — only
+        mark_completed/mark_failed own those transitions.
+        """
+        with self._lock:
+            rec = self._jobs.get(_key(conference, year))
+            if rec:
+                rec.submitted = submitted
+                rec.failed = failed
+                rec.total_candidates = total_candidates
+                rec.duplicates_skipped = duplicates_skipped
+
     def mark_completed(self, conference: str, year: str, result: dict) -> None:
         with self._lock:
             rec = self._jobs.get(_key(conference, year))

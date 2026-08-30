@@ -63,6 +63,7 @@ def run_form_filler(
     venue: str,
     form_url: str = None,
     refresh_dedup_cache: bool = True,
+    on_progress=None,
 ) -> dict:
     """
     Programmatic entry point — dedup-checks `conference`/`year`'s extracted
@@ -78,6 +79,9 @@ def run_form_filler(
         refresh_dedup_cache: if True (default), re-scrapes IKDD's (or any other suitable venue's) New +
             Approved lists before checking. If False, uses whatever is
             already cached on disk (faster, but may be stale).
+        on_progress: optional callback(results_so_far) forwarded to
+            process_papers_with_selenium — called after every paper, not
+            just once at the end. See that function's docstring for why.
 
     Returns a summary dict:
         {
@@ -159,7 +163,17 @@ def run_form_filler(
     # 3. Fill and submit only the genuinely new papers.
     form_config = {"form_url": form_url, "venue": venue, "year": year, "month": month}
     print(f"\n Proceeding to fill and submit {len(new_papers)} new paper(s)...")
-    details = process_papers_with_selenium(new_papers, form_config)
+
+    wrapped_progress = None
+    if on_progress is not None:
+        def wrapped_progress(results_so_far):
+            on_progress(
+                results_so_far,
+                total_candidates=len(papers_data),
+                duplicates_skipped=len(duplicates),
+            )
+
+    details = process_papers_with_selenium(new_papers, form_config, on_progress=wrapped_progress)
 
     submitted = sum(1 for d in details if d["status"] == "submitted")
     failed = sum(1 for d in details if d["status"] == "failed")

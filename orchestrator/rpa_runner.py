@@ -86,6 +86,15 @@ def _job(conference, year, month, venue, form_url, refresh_dedup_cache) -> None:
         return
 
     try:
+        def _report_progress(results_so_far, total_candidates=0, duplicates_skipped=0):
+            submitted = sum(1 for d in results_so_far if d["status"] == "submitted")
+            failed = sum(1 for d in results_so_far if d["status"] == "failed")
+            RPA_REGISTRY.update_progress(
+                conference, year,
+                submitted=submitted, failed=failed,
+                total_candidates=total_candidates, duplicates_skipped=duplicates_skipped,
+            )
+
         result = run_form_filler(
             conference=conference,
             year=str(year),
@@ -93,6 +102,7 @@ def _job(conference, year, month, venue, form_url, refresh_dedup_cache) -> None:
             venue=venue,
             form_url=form_url,
             refresh_dedup_cache=refresh_dedup_cache,
+            on_progress=_report_progress,
         )
         RPA_REGISTRY.mark_completed(conference, year, result)
     except Exception as e:  # noqa: BLE001
