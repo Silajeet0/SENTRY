@@ -12,10 +12,18 @@ Authorization: Bearer <key>. If SENTRY_API_KEYS is unset, auth is skipped
 entirely (local/dev use, e.g. plain OpenWebUI on localhost) — set it before
 exposing this over the Cloudflare Tunnel.
 
+Then in OpenWebUI: Settings > Admin Settings > Connections > OpenAI API >
+add a connection with Base URL "http://host.docker.internal:8091/v1"
+(or your host's LAN IP if OpenWebUI is on another machine) and one of the
+SENTRY_API_KEYS values as the API key. A model called "sentry-orchestrator"
+will then show up in the model picker.
+
 """
+import json
 import subprocess
 import time
 import uuid
+from pathlib import Path
 from typing import List, Optional
 
 from dotenv import load_dotenv
@@ -76,6 +84,28 @@ def version():
     # Unauthenticated on purpose: cheap liveness/staleness check for the
     # watcher and for teammates without needing a key handy.
     return {"commit": _SERVER_COMMIT, "auth_enabled": bool(_API_KEYS)}
+
+
+@app.get("/v1/summary/{conference}/{year}")
+def get_summary_content(conference: str, year: str, _: None = Depends(require_api_key)):
+    """
+    Serves an already-generated email_summary.json straight off disk — no
+    orchestrator/LLM call involved. This exists specifically because asking
+    the orchestrator to "show me the summary" makes the 20B model re-compose
+    the entire cached digest as fresh output inside one synchronous request,
+    which for a large digest can exceed Cloudflare's ~100-120s proxy read
+    timeout (a 524, not adjustable on free tiers) — and worse, the
+    generation keeps running on the Mac's GPU even after the client sees
+    that timeout, since a disconnected client doesn't cancel an in-flight
+    sync thread. A plain file read can't hit either problem.
+    """
+    path = Path(f"data/final_output/{conference}/{year}/email_summary.json")
+    if not path.exists():
+        raise HTTPException(
+            status_code=404,
+            detail=f"No email_summary.json for {conference} {year} — run summarize_indian_authors first.",
+        )
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 @app.get("/v1/models")
