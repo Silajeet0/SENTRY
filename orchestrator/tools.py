@@ -231,8 +231,8 @@ def list_rpa_runs() -> dict:
 # ---------------------------------------------------------------------------
 # Email-summary tools
 # ---------------------------------------------------------------------------
-def summarize_indian_authors(conference: str, year: str, refresh_cache: bool = False) -> dict:
-    return summary_runner.start_summary(conference=conference, year=year, refresh_cache=refresh_cache)
+def summarize_indian_authors(conference: str, year: str, refresh_cache: bool = False, force: bool = False) -> dict:
+    return summary_runner.start_summary(conference=conference, year=year, refresh_cache=refresh_cache, force=force)
 
 
 def get_summary_status(conference: str, year: str) -> dict:
@@ -241,6 +241,10 @@ def get_summary_status(conference: str, year: str) -> dict:
 
 def list_summary_runs() -> dict:
     return summary_runner.list_runs()
+
+
+def check_existing_summary(conference: str = None, year: str = None) -> dict:
+    return summary_runner.check_existing_summary(conference=conference, year=year)
 
 
 # ---------------------------------------------------------------------------
@@ -284,6 +288,7 @@ TOOL_FUNCTIONS = {
     "summarize_indian_authors": summarize_indian_authors,
     "get_summary_status": get_summary_status,
     "list_summary_runs": list_summary_runs,
+    "check_existing_summary": check_existing_summary,
     "verify_indian_affiliations": verify_indian_affiliations,
 }
 
@@ -639,7 +644,16 @@ TOOL_SCHEMAS = [
                 "model. Runs in the BACKGROUND and returns immediately — "
                 "poll get_summary_status for progress and the final "
                 "subject/body once done, the same pattern as run_pipeline/"
-                "get_run_status."
+                "get_run_status.\n"
+                "Guards against redundant re-generation the same way "
+                "run_pipeline guards against redundant re-extraction: if "
+                "data/final_output/<conference>/<year>/email_summary.json "
+                "already exists, this returns status='already_summarized' "
+                "(with the existing subject/body in 'result') INSTEAD of "
+                "starting a new run — so it's always safe to call directly. "
+                "Prefer calling check_existing_summary first when you just "
+                "need to know whether a summary exists (it's a plain disk "
+                "read, cheaper than this)."
             ),
             "parameters": {
                 "type": "object",
@@ -656,8 +670,55 @@ TOOL_SCHEMAS = [
                             "normally no reason to re-scrape."
                         ),
                     },
+                    "force": {
+                        "type": "boolean",
+                        "description": (
+                            "Regenerate even if an email_summary.json already "
+                            "exists on disk for this conference/year. Default "
+                            "false. Only set true if the person explicitly wants "
+                            "a fresh summary regenerated despite one already "
+                            "existing — never set this on your own initiative "
+                            "just because status came back 'already_summarized'."
+                        ),
+                    },
                 },
                 "required": ["conference", "year"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "check_existing_summary",
+            "description": (
+                "Read-only check for an already-generated email-summary on "
+                "disk — never starts, queues, or affects anything, just "
+                "reads data/final_output/. Call this BEFORE "
+                "summarize_indian_authors whenever you're not already sure "
+                "a summary exists, so you can hand back the cached result "
+                "directly instead of regenerating it. Two modes:\n"
+                "- conference AND year given: checks just that pair; "
+                "exists=true includes the cached subject/paper_count/"
+                "generated_at and the full result.\n"
+                "- conference AND year both omitted: lists EVERY "
+                "conference/year on disk that already has a summary — this "
+                "is the direct answer to questions like 'which conferences "
+                "have already been summarized?' or 'what summaries do we "
+                "already have?' without generating anything."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "conference": {
+                        "type": "string",
+                        "description": "Omit along with year to list every already-summarized conference/year.",
+                    },
+                    "year": {
+                        "type": "string",
+                        "description": "Omit along with conference to list every already-summarized conference/year.",
+                    },
+                },
+                "required": [],
             },
         },
     },

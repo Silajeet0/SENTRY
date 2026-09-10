@@ -25,5 +25,17 @@ module.exports = {
       autorestart: true,
       max_restarts: 10,
     },
+    {
+      // Deliberately its own pm2 app, separate from sentry-api — the
+      // watcher restarts sentry-api on every new commit, and this must
+      // NOT be restarted along with it, or the public URL would rotate
+      // on every deploy. This one only restarts if cloudflared itself
+      // dies (crash, Mac reboot, long network outage).
+      name: "sentry-tunnel",
+      script: "cloudflared",
+      args: "tunnel --url http://localhost:8091",
+      autorestart: true,
+      max_restarts: 10,
+    },
   ],
 };

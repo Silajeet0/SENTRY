@@ -100,6 +100,52 @@ Return ONLY this JSON (no markdown, no explanation):
 If no Indian affiliations exist, use empty lists for the last two fields.
 """
 
+# Ollama-native JSON schema mirroring the shape described in
+# EXTRACTION_PROMPT (paper_title / area_of_research / area_of_research_other /
+# total_authors / all_authors / authors_with_indian_affiliations /
+# indian_institutions). Passing this constrains decoding via GBNF grammar the
+# same way SUMMARIES_JSON_SCHEMA does in summarizer/email_summarizer.py, so
+# the model literally cannot emit a token that breaks the schema — this
+# covers both the paper-metadata extraction AND the Indian-affiliation
+# classification, since both are produced by this single call.
+EXTRACTION_JSON_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "paper_title": {"type": "string"},
+        "area_of_research": {"type": "string"},
+        "area_of_research_other": {"type": "string"},
+        "total_authors": {"type": "integer"},
+        "all_authors": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string"},
+                    "affiliation": {"type": "string"},
+                },
+                "required": ["name", "affiliation"],
+            },
+        },
+        "authors_with_indian_affiliations": {
+            "type": "array",
+            "items": {"type": "string"},
+        },
+        "indian_institutions": {
+            "type": "array",
+            "items": {"type": "string"},
+        },
+    },
+    "required": [
+        "paper_title",
+        "area_of_research",
+        "area_of_research_other",
+        "total_authors",
+        "all_authors",
+        "authors_with_indian_affiliations",
+        "indian_institutions",
+    ],
+}
+
 
 class LLMExtractor:
 
@@ -130,7 +176,10 @@ class LLMExtractor:
                     "\n\nIMPORTANT: Your previous response was not valid JSON. "
                     "Return one valid JSON object only, with double-quoted keys and strings."
                 )
-                raw = self._call_llm(prompt + (retry_instruction if attempt else ""))
+                raw = self._call_llm(
+                    prompt + (retry_instruction if attempt else ""),
+                    json_schema=EXTRACTION_JSON_SCHEMA,
+                )
                 try:
                     parsed = self._parse_json(raw)
                     break
@@ -163,7 +212,7 @@ class LLMExtractor:
 
         return info
 
-    def _call_llm(self, prompt: str) -> str:
+    def _call_llm(self, prompt: str, json_schema: Optional[dict] = None) -> str:
         """LLM call"""
         from openai import OpenAI
 
@@ -180,11 +229,19 @@ class LLMExtractor:
             temperature=0.0, # we don't need creativity
             max_tokens=2000,
         )
+        extra_body = {}
         if self._should_request_json_mode():
             request["response_format"] = {"type": "json_object"}
+            # Ollama-native grammar-constrained decoding — same mechanism
+            # used for the summarizer LLM (SUMMARY_LLM_* / SUMMARIES_JSON_SCHEMA
+            # in summarizer/email_summarizer.py). Only Ollama accepts the
+            # raw JSON-schema "format" field; other providers just get the
+            # looser response_format=json_object above.
+            if json_schema and self.provider == "ollama":
+                extra_body["format"] = json_schema
 
         try:
-            response = client.chat.completions.create(**request)
+            response = client.chat.completions.create(**request, extra_body=extra_body or None)
         except Exception:
             request.pop("response_format", None)
             response = client.chat.completions.create(**request)

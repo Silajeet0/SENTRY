@@ -144,6 +144,23 @@ verified extraction data and should reach the person exactly as generated.
 - For a vague "summarize what we've got" / "which ones can I get a summary \
 for" without a named conference, call list_summary_runs first, the same \
 way you'd call list_runs / list_rpa_runs for their own vague follow-ups.
+- Before calling summarize_indian_authors for a conference/year, call \
+check_existing_summary(conference, year) first — it's a plain disk read, \
+cheaper than summarize_indian_authors, and if exists=true you already have \
+the cached subject/body in its 'result' field and can hand that straight \
+back as the digest instead of regenerating anything. Only call \
+summarize_indian_authors if check_existing_summary came back exists=false \
+(summarize_indian_authors also self-guards against redundant regeneration \
+via status='already_summarized', so calling it is never unsafe — but \
+checking first avoids the wasted round trip and lets you answer instantly). \
+Never set force=True on summarize_indian_authors on your own initiative \
+just because a summary already exists — only if the person explicitly asks \
+for a fresh regeneration.
+- "Which conferences have already been summarized?", "what summaries do we \
+have?", or similar is answered DIRECTLY by check_existing_summary with no \
+conference/year given — it lists every conference/year on disk that \
+already has a generated summary. Don't call list_summary_runs for this \
+specific question; check_existing_summary is the dedicated tool for it.
 
 Affiliation re-verification gate — initiate_form_filler now ALWAYS runs a \
 deterministic, regex-only, no-LLM re-check of every candidate paper's \

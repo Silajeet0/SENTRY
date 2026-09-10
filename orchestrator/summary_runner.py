@@ -125,11 +125,87 @@ def _job(conference: str, year: str, refresh_cache: bool, delay_seconds: float) 
         )
 
 
+def check_existing_summary(conference: str = None, year: str = None) -> dict:
+    """
+    Read-only check for an already-generated email_summary.json on disk —
+    never enqueues or affects anything. Two modes:
+
+      - conference AND year given: checks just that pair and returns the
+        cached result (subject/paper_count/generated_at) if present, so a
+        caller can decide whether summarize_indian_authors is even needed.
+      - neither given: scans data/final_output/ for EVERY conference/year
+        that already has a summary, e.g. to answer "which conferences have
+        already been summarized?" directly, without generating anything.
+    """
+    if conference and year:
+        path = _email_summary_path(conference, year)
+        if not path.exists():
+            return {
+                "conference": conference,
+                "year": str(year),
+                "exists": False,
+                "message": f"No existing summary on disk for {conference} {year}.",
+            }
+        try:
+            result = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            result = None
+        return {
+            "conference": conference,
+            "year": str(year),
+            "exists": True,
+            "paper_count": (result or {}).get("paper_count"),
+            "subject": (result or {}).get("subject"),
+            "generated_at": (result or {}).get("generated_at"),
+            "result": result,
+            "message": (
+                f"A summary for {conference} {year} already exists on disk — "
+                "use it directly (get_summary_status / this result's 'result' "
+                "field) instead of calling summarize_indian_authors again."
+            ),
+        }
+
+    summarized = []
+    if FINAL_OUTPUT_DIR.exists():
+        for conf_dir in sorted(FINAL_OUTPUT_DIR.iterdir()):
+            if not conf_dir.is_dir():
+                continue
+            for year_dir in sorted(conf_dir.iterdir()):
+                if not year_dir.is_dir():
+                    continue
+                summary_path = year_dir / "email_summary.json"
+                if not summary_path.exists():
+                    continue
+                try:
+                    result = json.loads(summary_path.read_text(encoding="utf-8"))
+                except Exception:
+                    result = {}
+                summarized.append({
+                    "conference": conf_dir.name,
+                    "year": year_dir.name,
+                    "paper_count": result.get("paper_count"),
+                    "subject": result.get("subject"),
+                    "generated_at": result.get("generated_at"),
+                })
+
+    return {
+        "exists": bool(summarized),
+        "count": len(summarized),
+        "summarized": summarized,
+        "message": (
+            f"{len(summarized)} conference/year(s) already have a generated "
+            "summary on disk." if summarized else
+            "No conference/year has a generated summary on disk yet."
+        ),
+    }
+
+
 def start_summary(
     conference: str,
     year: str,
     refresh_cache: bool = False,
     delay_seconds: float = 3,
+    force: bool = False,
 ) -> dict:
     existing = SUMMARY_REGISTRY.get(conference, year)
     if existing and existing.state in ("running", "queued"):
@@ -144,6 +220,31 @@ def start_summary(
                 "starting another one."
             ),
         }
+
+    if not force:
+        existing_summary_path = _email_summary_path(conference, year)
+        if existing_summary_path.exists():
+            try:
+                result = json.loads(existing_summary_path.read_text(encoding="utf-8"))
+            except Exception:
+                result = None
+            return {
+                "status": "already_summarized",
+                "conference": conference,
+                "year": year,
+                "result": result,
+                "message": (
+                    f"{conference} {year} already has a generated summary on "
+                    "disk — not starting a new run. Fetching abstracts and "
+                    "re-running the summarizer LLM on every paper again is "
+                    "expensive and unnecessary if this cached summary is what "
+                    "was actually wanted; use the 'result' field above (or "
+                    "get_summary_status) directly for the digest instead. "
+                    "Only call summarize_indian_authors again with force=True "
+                    "if a genuinely fresh summary is needed (e.g. abstracts "
+                    "changed, or refresh_cache is specifically wanted)."
+                ),
+            }
 
     if _load_papers(conference, year) is None:
         return {
