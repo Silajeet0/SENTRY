@@ -10,6 +10,8 @@ from pathlib import Path
 from orchestrator import conference_catalog, ikdd_form_catalog, runner, rpa_runner, summary_runner
 from orchestrator.registry import REGISTRY
 
+FINAL_OUTPUT_DIR = Path("data/final_output")
+
 
 def resolve_conference_url(conference: str, year: str) -> dict:
     return conference_catalog.resolve_conference_url(conference, year)
@@ -171,6 +173,58 @@ def list_runs() -> dict:
     return {"runs": [r.to_dict() for r in REGISTRY.all()]}
 
 
+def list_extracted_conferences() -> dict:
+    """
+    Read-only disk scan — never enqueues or affects anything. Scans
+    data/final_output/ for EVERY conference/year that already has a
+    completed extraction (indian_papers_structured.json present), e.g. to
+    answer "which conferences have already been processed and are on
+    disk?" or "what's already extracted?" directly, without running
+    anything.
+
+    Deliberately independent of REGISTRY/list_runs: REGISTRY only tracks
+    runs enqueued during this orchestrator process's current lifetime, and
+    is empty again every time sentry-api restarts (which happens
+    automatically on every new commit via sentry-watcher, or manually) —
+    so list_runs can under-report older completed work it has no memory
+    of, even though the data is still sitting on disk. This tool is the
+    authoritative source for "is it actually done and on disk", the same
+    way check_existing_summary is for summaries rather than
+    list_summary_runs.
+    """
+    found = []
+    if FINAL_OUTPUT_DIR.exists():
+        for conf_dir in sorted(FINAL_OUTPUT_DIR.iterdir()):
+            if not conf_dir.is_dir():
+                continue
+            for year_dir in sorted(conf_dir.iterdir()):
+                if not year_dir.is_dir():
+                    continue
+                json_path = year_dir / "indian_papers_structured.json"
+                if not json_path.exists():
+                    continue
+                try:
+                    data = json.loads(json_path.read_text(encoding="utf-8"))
+                    paper_count = len(data) if isinstance(data, list) else None
+                except Exception:
+                    paper_count = None
+                found.append({
+                    "conference": conf_dir.name,
+                    "year": year_dir.name,
+                    "indian_paper_count": paper_count,
+                })
+
+    return {
+        "count": len(found),
+        "completed_extractions": found,
+        "message": (
+            f"{len(found)} conference/year(s) already have completed "
+            "extraction data on disk." if found else
+            "No conference/year has completed extraction data on disk yet."
+        ),
+    }
+
+
 # --------------------------------------------------------------------------------------------
 # RPA / IKDD (or any other suitable venue, may need some apt modifications) form-filler tools
 # --------------------------------------------------------------------------------------------
@@ -281,6 +335,7 @@ TOOL_FUNCTIONS = {
     "get_run_status": get_run_status,
     "retry_errors": retry_errors,
     "list_runs": list_runs,
+    "list_extracted_conferences": list_extracted_conferences,
     "resolve_ikdd_form_metadata": resolve_ikdd_form_metadata,
     "initiate_form_filler": initiate_form_filler,
     "get_rpa_status": get_rpa_status,
@@ -498,12 +553,39 @@ TOOL_SCHEMAS = [
             "name": "list_runs",
             "description": (
                 "List every EXTRACTION (scraping/classification) conference/"
-                "year run this orchestrator session knows about, with "
-                "current state. Useful when the person gives a vague "
-                "follow-up like 'retry the errors' without naming a "
-                "conference — call this first to see which runs actually "
-                "have errors. For IKDD form-filler/RPA submission runs, use "
-                "list_rpa_runs instead — the two are tracked separately."
+                "year run THIS ORCHESTRATOR PROCESS has enqueued and has in "
+                "memory — NOT a disk scan, and resets to empty every time "
+                "sentry-api restarts (which happens automatically on every "
+                "new commit via sentry-watcher, or manually), so it can "
+                "under-report older completed work with no error or "
+                "warning. Useful when the person gives a vague follow-up "
+                "like 'retry the errors' without naming a conference — call "
+                "this first to see which runs actually have errors. For "
+                "'which conferences are already done/extracted/on disk?' "
+                "or anything about what's actually persisted, use "
+                "list_extracted_conferences instead — that one is the "
+                "disk-authoritative answer. For IKDD form-filler/RPA "
+                "submission runs, use list_rpa_runs instead — the two are "
+                "tracked separately."
+            ),
+            "parameters": {"type": "object", "properties": {}},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "list_extracted_conferences",
+            "description": (
+                "Read-only disk scan (data/final_output/*/*/"
+                "indian_papers_structured.json) — never enqueues or affects "
+                "anything. THE authoritative answer to 'which conferences "
+                "have already been processed and are on disk?', 'what's "
+                "already extracted?', or similar — independent of what "
+                "this orchestrator process happens to remember (see "
+                "list_runs's description for why that can under-report). "
+                "Prefer this over list_runs whenever the question is about "
+                "what's actually done/persisted rather than what this "
+                "session has been tracking."
             ),
             "parameters": {"type": "object", "properties": {}},
         },

@@ -72,6 +72,15 @@ force=True if they specifically want a fresh re-extraction.
 - When asked to "retry the errors" without a named conference, call \
 list_runs first to see which runs actually have errors, then retry each \
 of those — don't guess which one was meant.
+- "Which conferences have already been processed and are on disk?", \
+"what's already extracted?", or similar is answered DIRECTLY by \
+list_extracted_conferences — a disk scan, not list_runs. list_runs only \
+reflects runs THIS PROCESS has enqueued in memory and resets to empty on \
+every sentry-api restart (automatic on every new commit via \
+sentry-watcher), so it can under-report older completed work with no \
+error or warning; don't use it to answer questions about what's actually \
+on disk, and don't tell the person only what list_runs happens to \
+remember if the question was about persisted data.
 - If the person says to skip or only include certain tracks (e.g. "skip \
 workshop tracks"), pass that straight through as skip_track_keywords / \
 include_track_keywords on run_pipeline — don't try to filter tracks \
