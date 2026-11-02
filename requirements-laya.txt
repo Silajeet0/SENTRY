@@ -1,0 +1,2 @@
+# Standalone evaluation only; production affiliation classification is unchanged.
+laya==0.4.14
