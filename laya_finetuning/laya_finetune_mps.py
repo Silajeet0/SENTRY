@@ -13,7 +13,7 @@ from huggingface_hub import snapshot_download
 from laya.agent import _fix_tokenizer_config
 
 MODEL_ID = "convaiinnovations/laya"
-DATASET_PATH = "./data/train.jsonl"
+DATASET_PATH = "./finetuning_data/train.jsonl"
 DEFAULT_MODEL_DIR = "./laya_base"
 DEFAULT_OUTPUT_DIR = "./laya_finetuned_SENTRY"
 

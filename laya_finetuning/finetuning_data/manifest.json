@@ -1,0 +1,112 @@
+{
+  "schema_version": "laya-affiliation-finetuning/1",
+  "dataset_version": "2026-10-29.3",
+  "description": "Synthetic, template-generated binary supervised data for Laya choice fine-tuning using INDIAN/NOT_INDIAN expected choices. Former ambiguous cases are mapped to NOT_INDIAN because they do not establish a current Indian affiliation. Human review is required before treating labels as gold data.",
+  "generation_seed": 20261029,
+  "policy": {
+    "INDIAN": "Sufficient evidence that the current institution or campus is in India.",
+    "NOT_INDIAN": "No sufficient evidence that the current institution or campus is in India.",
+    "ignore": "Nationality, email addresses, former affiliations, and India as a subject/department do not establish current Indian location.",
+    "overseas_campus": "Classify the current campus location, not the parent institution's country."
+  },
+  "conversion_rule": "original_label=ambiguous -> expected=NOT_INDIAN; positive -> expected=INDIAN; negative -> expected=NOT_INDIAN",
+  "laya_format": {
+    "state": "affiliation string",
+    "questions": {
+      "affiliation_geography": {
+        "type": "choice",
+        "instructions": "Does this affiliation provide sufficient evidence that the current institution or campus is located in India?",
+        "criteria": {
+          "INDIAN": "Sufficient evidence that the current institution or campus is in India.",
+          "NOT_INDIAN": "No sufficient evidence that the current institution or campus is in India."
+        }
+      }
+    },
+    "expected": {
+      "affiliation_geography": "one label"
+    }
+  },
+  "source_label_counts": {
+    "positive": 400,
+    "negative": 400,
+    "ambiguous": 400
+  },
+  "label_counts": {
+    "INDIAN": 400,
+    "NOT_INDIAN": 800
+  },
+  "internal_binary_counts": {
+    "positive": 400,
+    "negative": 800
+  },
+  "conversion_counts": {
+    "unchanged": 800,
+    "ambiguous_to_negative": 400
+  },
+  "expected_counts": {
+    "INDIAN": 400,
+    "NOT_INDIAN": 800
+  },
+  "category_counts": {
+    "indian_corporate_lab": 57,
+    "multiple_affiliations": 58,
+    "full_institution_name": 57,
+    "explicit_india": 57,
+    "indian_city_state": 57,
+    "noisy_department_prefix": 57,
+    "qualified_acronym": 57,
+    "bare_acronym": 50,
+    "multinational_without_location": 50,
+    "foreign_corporate_branch": 57,
+    "multiple_unresolved_affiliations": 50,
+    "conflicting_evidence": 50,
+    "overseas_campus": 57,
+    "missing_location": 50,
+    "city_only": 50,
+    "acronym_collision": 57,
+    "foreign_city_country": 57,
+    "missing_institution": 50,
+    "email_only": 50,
+    "historical_indian_affiliation": 57,
+    "india_topic_or_department": 58,
+    "explicit_foreign_institution": 57
+  },
+  "split_counts": {
+    "train": {
+      "INDIAN": 320,
+      "NOT_INDIAN": 640
+    },
+    "validation": {
+      "INDIAN": 40,
+      "NOT_INDIAN": 80
+    },
+    "test": {
+      "INDIAN": 40,
+      "NOT_INDIAN": 80
+    }
+  },
+  "files": {
+    "all.jsonl": {
+      "rows": 1200,
+      "sha256": "ac0493a92c0fdd41b46ef12e84c87e9cc438eb84c7f1e24277343f0d80a9f2c3"
+    },
+    "train.jsonl": {
+      "rows": 960,
+      "sha256": "5fdc14662630a91263705d1f4d5a3f5635892afeb4ed1168be9ca6bd9207afd5"
+    },
+    "validation.jsonl": {
+      "rows": 120,
+      "sha256": "fc35878dd9ebd2dec4744c036e03bba2355fd36d8abe359acfdc099c3d2cb843"
+    },
+    "test.jsonl": {
+      "rows": 120,
+      "sha256": "8d94815a303def43825b8500e78834ee65297720b3fdfaab7659f8b40ad5db91"
+    }
+  },
+  "limitations": [
+    "Synthetic templates are not a representative sample of scholarly affiliations.",
+    "The same institution families appear across splits; this measures policy coverage, not unseen-entity generalization.",
+    "Binary negative includes unresolved evidence, so the negative class is intentionally broader than foreign-only affiliations.",
+    "Review every label and remove generated near-duplicates before publication or high-stakes training."
+  ]
+}
