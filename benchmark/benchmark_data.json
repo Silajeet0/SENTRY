@@ -1,0 +1,1083 @@
+{
+  "schema_version": "1.0",
+  "dataset_version": "2026-10-24.1",
+  "description": "Synthetic, manually specified affiliation challenge set; labels require human review before scientific evaluation. Not a representative sample of scholarly papers.",
+  "policy": {
+    "positive": "At least one current institutional affiliation located in India.",
+    "negative": "All identified current affiliations are outside India.",
+    "ambiguous": "Insufficient institutional/location evidence, conflicting or unresolved acronym; no established Indian affiliation.",
+    "ignore": "Names, nationality, email addresses, former affiliations, and India as a research subject are not current affiliation evidence.",
+    "overseas_campuses": "Classify by campus location rather than parent institution country."
+  },
+  "cases": [
+    {
+      "id": "P001",
+      "affiliation": "Indian Institute of Technology Bombay",
+      "label": "positive",
+      "category": "full_name",
+      "rationale": "Unambiguous Indian institution.",
+      "split": "test"
+    },
+    {
+      "id": "P002",
+      "affiliation": "IIT Bombay, Mumbai",
+      "label": "positive",
+      "category": "qualified_acronym",
+      "rationale": "Campus-qualified acronym.",
+      "split": "test"
+    },
+    {
+      "id": "P003",
+      "affiliation": "IIT Delhi",
+      "label": "positive",
+      "category": "qualified_acronym",
+      "rationale": "Campus-qualified acronym.",
+      "split": "test"
+    },
+    {
+      "id": "P004",
+      "affiliation": "IIT Madras, Chennai",
+      "label": "positive",
+      "category": "qualified_acronym",
+      "rationale": "Campus-qualified acronym.",
+      "split": "test"
+    },
+    {
+      "id": "P005",
+      "affiliation": "IIT Kanpur",
+      "label": "positive",
+      "category": "qualified_acronym",
+      "rationale": "Campus-qualified acronym.",
+      "split": "validation"
+    },
+    {
+      "id": "P006",
+      "affiliation": "IIT Kharagpur",
+      "label": "positive",
+      "category": "qualified_acronym",
+      "rationale": "Campus-qualified acronym.",
+      "split": "test"
+    },
+    {
+      "id": "P007",
+      "affiliation": "IIT (BHU), Varanasi",
+      "label": "positive",
+      "category": "qualified_acronym",
+      "rationale": "Campus-qualified acronym.",
+      "split": "test"
+    },
+    {
+      "id": "P008",
+      "affiliation": "Indian Institute of Technology (ISM), Dhanbad",
+      "label": "positive",
+      "category": "full_name",
+      "rationale": "Indian campus explicitly named.",
+      "split": "test"
+    },
+    {
+      "id": "P009",
+      "affiliation": "Indian Institute of Science, Bengaluru",
+      "label": "positive",
+      "category": "full_name",
+      "rationale": "Indian institution explicitly named.",
+      "split": "test"
+    },
+    {
+      "id": "P010",
+      "affiliation": "IISc Bangalore",
+      "label": "positive",
+      "category": "qualified_acronym",
+      "rationale": "Unambiguous institution and campus.",
+      "split": "validation"
+    },
+    {
+      "id": "P011",
+      "affiliation": "Indian Statistical Institute, Kolkata",
+      "label": "positive",
+      "category": "full_name",
+      "rationale": "Unambiguous institution and campus.",
+      "split": "test"
+    },
+    {
+      "id": "P012",
+      "affiliation": "ISI Kolkata",
+      "label": "positive",
+      "category": "qualified_acronym",
+      "rationale": "City resolves acronym collision.",
+      "split": "test"
+    },
+    {
+      "id": "P013",
+      "affiliation": "ISI Bangalore",
+      "label": "positive",
+      "category": "qualified_acronym",
+      "rationale": "City resolves acronym collision.",
+      "split": "test"
+    },
+    {
+      "id": "P014",
+      "affiliation": "National Institute of Technology, Tiruchirappalli, India",
+      "label": "positive",
+      "category": "explicit_country",
+      "rationale": "India is explicit.",
+      "split": "test"
+    },
+    {
+      "id": "P015",
+      "affiliation": "NIT Surathkal",
+      "label": "positive",
+      "category": "qualified_acronym",
+      "rationale": "Campus-qualified acronym.",
+      "split": "validation"
+    },
+    {
+      "id": "P016",
+      "affiliation": "IIIT Hyderabad, India",
+      "label": "positive",
+      "category": "explicit_country",
+      "rationale": "India is explicit.",
+      "split": "test"
+    },
+    {
+      "id": "P017",
+      "affiliation": "International Institute of Information Technology Hyderabad",
+      "label": "positive",
+      "category": "full_name",
+      "rationale": "Unambiguous Indian institution.",
+      "split": "test"
+    },
+    {
+      "id": "P018",
+      "affiliation": "Jadavpur University, Kolkata",
+      "label": "positive",
+      "category": "full_name",
+      "rationale": "Unambiguous Indian institution.",
+      "split": "test"
+    },
+    {
+      "id": "P019",
+      "affiliation": "Anna University, Chennai",
+      "label": "positive",
+      "category": "full_name",
+      "rationale": "Unambiguous Indian institution.",
+      "split": "test"
+    },
+    {
+      "id": "P020",
+      "affiliation": "Banaras Hindu University, Varanasi",
+      "label": "positive",
+      "category": "full_name",
+      "rationale": "Unambiguous Indian institution.",
+      "split": "validation"
+    },
+    {
+      "id": "P021",
+      "affiliation": "University of Delhi, India",
+      "label": "positive",
+      "category": "explicit_country",
+      "rationale": "India is explicit.",
+      "split": "test"
+    },
+    {
+      "id": "P022",
+      "affiliation": "University of Hyderabad, Telangana, India",
+      "label": "positive",
+      "category": "explicit_country",
+      "rationale": "India is explicit.",
+      "split": "test"
+    },
+    {
+      "id": "P023",
+      "affiliation": "Birla Institute of Technology and Science, Pilani, India",
+      "label": "positive",
+      "category": "explicit_country",
+      "rationale": "Indian campus explicitly identified.",
+      "split": "test"
+    },
+    {
+      "id": "P024",
+      "affiliation": "BITS Pilani, Rajasthan",
+      "label": "positive",
+      "category": "qualified_acronym",
+      "rationale": "Indian campus explicitly identified.",
+      "split": "test"
+    },
+    {
+      "id": "P025",
+      "affiliation": "Manipal Academy of Higher Education, Manipal, India",
+      "label": "positive",
+      "category": "explicit_country",
+      "rationale": "Indian campus explicitly identified.",
+      "split": "validation"
+    },
+    {
+      "id": "P026",
+      "affiliation": "Shiv Nadar University, Greater Noida, India",
+      "label": "positive",
+      "category": "explicit_country",
+      "rationale": "India is explicit.",
+      "split": "test"
+    },
+    {
+      "id": "P027",
+      "affiliation": "O. P. Jindal Global University, Sonipat, India",
+      "label": "positive",
+      "category": "explicit_country",
+      "rationale": "India is explicit.",
+      "split": "test"
+    },
+    {
+      "id": "P028",
+      "affiliation": "Tata Institute of Fundamental Research, Mumbai",
+      "label": "positive",
+      "category": "full_name",
+      "rationale": "Unambiguous Indian research institution.",
+      "split": "test"
+    },
+    {
+      "id": "P029",
+      "affiliation": "Indian Institute of Science Education and Research, Pune",
+      "label": "positive",
+      "category": "full_name",
+      "rationale": "Indian campus explicitly identified.",
+      "split": "test"
+    },
+    {
+      "id": "P030",
+      "affiliation": "CSIR-National Physical Laboratory, New Delhi, India",
+      "label": "positive",
+      "category": "explicit_country",
+      "rationale": "India is explicit.",
+      "split": "validation"
+    },
+    {
+      "id": "P031",
+      "affiliation": "Microsoft Research India, Bengaluru",
+      "label": "positive",
+      "category": "corporate_location",
+      "rationale": "India office explicitly identified.",
+      "split": "test"
+    },
+    {
+      "id": "P032",
+      "affiliation": "Google Research, Bengaluru, India",
+      "label": "positive",
+      "category": "corporate_location",
+      "rationale": "India office explicitly identified.",
+      "split": "test"
+    },
+    {
+      "id": "P033",
+      "affiliation": "IBM Research India, New Delhi",
+      "label": "positive",
+      "category": "corporate_location",
+      "rationale": "India office explicitly identified.",
+      "split": "test"
+    },
+    {
+      "id": "P034",
+      "affiliation": "Adobe Research, Bangalore, India",
+      "label": "positive",
+      "category": "corporate_location",
+      "rationale": "India office explicitly identified.",
+      "split": "test"
+    },
+    {
+      "id": "P035",
+      "affiliation": "Samsung R&D Institute India, Bangalore",
+      "label": "positive",
+      "category": "corporate_location",
+      "rationale": "India office explicitly identified.",
+      "split": "validation"
+    },
+    {
+      "id": "P036",
+      "affiliation": "Dept. of CSE, Indian Institute of Technology, Bombay, India",
+      "label": "positive",
+      "category": "department_noise",
+      "rationale": "Department does not change institution location.",
+      "split": "test"
+    },
+    {
+      "id": "P037",
+      "affiliation": "Department of Statistics, University of Calcutta, India",
+      "label": "positive",
+      "category": "explicit_country",
+      "rationale": "India is explicit.",
+      "split": "test"
+    },
+    {
+      "id": "P038",
+      "affiliation": "  IIT   Bombay , Mumbai , INDIA  ",
+      "label": "positive",
+      "category": "formatting",
+      "rationale": "Whitespace and case do not change identity.",
+      "split": "test"
+    },
+    {
+      "id": "P039",
+      "affiliation": "IISc, Bengaluru; contact: scientist@example.org",
+      "label": "positive",
+      "category": "email_noise",
+      "rationale": "Institution is explicit; email irrelevant.",
+      "split": "test"
+    },
+    {
+      "id": "P040",
+      "affiliation": "Indian Institute of Technology Bombay; Stanford University, USA",
+      "label": "positive",
+      "category": "multiple_affiliations",
+      "rationale": "At least one current affiliation is in India.",
+      "split": "validation"
+    },
+    {
+      "id": "N001",
+      "affiliation": "Stanford University, California, USA",
+      "label": "negative",
+      "category": "foreign_institution",
+      "rationale": "Only foreign affiliation.",
+      "split": "test"
+    },
+    {
+      "id": "N002",
+      "affiliation": "Massachusetts Institute of Technology, Cambridge, USA",
+      "label": "negative",
+      "category": "foreign_institution",
+      "rationale": "MIT is in the USA.",
+      "split": "test"
+    },
+    {
+      "id": "N003",
+      "affiliation": "University of Cambridge, United Kingdom",
+      "label": "negative",
+      "category": "foreign_institution",
+      "rationale": "Only foreign affiliation.",
+      "split": "test"
+    },
+    {
+      "id": "N004",
+      "affiliation": "University of Oxford, United Kingdom",
+      "label": "negative",
+      "category": "foreign_institution",
+      "rationale": "Only foreign affiliation.",
+      "split": "test"
+    },
+    {
+      "id": "N005",
+      "affiliation": "ETH Zurich, Switzerland",
+      "label": "negative",
+      "category": "foreign_institution",
+      "rationale": "Only foreign affiliation.",
+      "split": "validation"
+    },
+    {
+      "id": "N006",
+      "affiliation": "National University of Singapore, Singapore",
+      "label": "negative",
+      "category": "foreign_institution",
+      "rationale": "Only foreign affiliation.",
+      "split": "test"
+    },
+    {
+      "id": "N007",
+      "affiliation": "Tsinghua University, Beijing, China",
+      "label": "negative",
+      "category": "foreign_institution",
+      "rationale": "Only foreign affiliation.",
+      "split": "test"
+    },
+    {
+      "id": "N008",
+      "affiliation": "University of Tokyo, Japan",
+      "label": "negative",
+      "category": "foreign_institution",
+      "rationale": "Only foreign affiliation.",
+      "split": "test"
+    },
+    {
+      "id": "N009",
+      "affiliation": "University of Toronto, Canada",
+      "label": "negative",
+      "category": "foreign_institution",
+      "rationale": "Only foreign affiliation.",
+      "split": "test"
+    },
+    {
+      "id": "N010",
+      "affiliation": "University of Melbourne, Australia",
+      "label": "negative",
+      "category": "foreign_institution",
+      "rationale": "Only foreign affiliation.",
+      "split": "validation"
+    },
+    {
+      "id": "N011",
+      "affiliation": "Illinois Institute of Technology, Chicago, USA",
+      "label": "negative",
+      "category": "acronym_collision",
+      "rationale": "IIT here is an American institution.",
+      "split": "test"
+    },
+    {
+      "id": "N012",
+      "affiliation": "IIT, Chicago, USA",
+      "label": "negative",
+      "category": "acronym_collision",
+      "rationale": "Foreign location disambiguates IIT.",
+      "split": "test"
+    },
+    {
+      "id": "N013",
+      "affiliation": "Istituto Italiano di Tecnologia, Genova, Italy",
+      "label": "negative",
+      "category": "acronym_collision",
+      "rationale": "Italian institution, not an Indian IIT.",
+      "split": "test"
+    },
+    {
+      "id": "N014",
+      "affiliation": "IIT Genova, Italy",
+      "label": "negative",
+      "category": "acronym_collision",
+      "rationale": "Foreign location disambiguates IIT.",
+      "split": "test"
+    },
+    {
+      "id": "N015",
+      "affiliation": "Institute of Informatics and Telecommunications, NCSR Demokritos, Greece",
+      "label": "negative",
+      "category": "acronym_collision",
+      "rationale": "Greek institution.",
+      "split": "validation"
+    },
+    {
+      "id": "N016",
+      "affiliation": "ISI, University of Southern California, USA",
+      "label": "negative",
+      "category": "acronym_collision",
+      "rationale": "Foreign location disambiguates ISI.",
+      "split": "test"
+    },
+    {
+      "id": "N017",
+      "affiliation": "Information Sciences Institute, USC, USA",
+      "label": "negative",
+      "category": "acronym_collision",
+      "rationale": "American institution.",
+      "split": "test"
+    },
+    {
+      "id": "N018",
+      "affiliation": "Istituto Superiore di Sanita, Rome, Italy",
+      "label": "negative",
+      "category": "acronym_collision",
+      "rationale": "Italian institution.",
+      "split": "test"
+    },
+    {
+      "id": "N019",
+      "affiliation": "ISI, Rome, Italy",
+      "label": "negative",
+      "category": "acronym_collision",
+      "rationale": "Foreign location disambiguates ISI.",
+      "split": "test"
+    },
+    {
+      "id": "N020",
+      "affiliation": "Nagoya Institute of Technology, Japan",
+      "label": "negative",
+      "category": "acronym_collision",
+      "rationale": "Japanese institution.",
+      "split": "validation"
+    },
+    {
+      "id": "N021",
+      "affiliation": "NIT, Nagoya, Japan",
+      "label": "negative",
+      "category": "acronym_collision",
+      "rationale": "Foreign location disambiguates NIT.",
+      "split": "test"
+    },
+    {
+      "id": "N022",
+      "affiliation": "Victorian Institute of Technology, Melbourne, Australia",
+      "label": "negative",
+      "category": "acronym_collision",
+      "rationale": "Australian institution.",
+      "split": "test"
+    },
+    {
+      "id": "N023",
+      "affiliation": "VIT, Melbourne, Australia",
+      "label": "negative",
+      "category": "acronym_collision",
+      "rationale": "Foreign location disambiguates VIT.",
+      "split": "test"
+    },
+    {
+      "id": "N024",
+      "affiliation": "Indian Institute of Technology Madras, Zanzibar, Tanzania",
+      "label": "negative",
+      "category": "overseas_campus",
+      "rationale": "Campus is outside India despite parent institution name.",
+      "split": "test"
+    },
+    {
+      "id": "N025",
+      "affiliation": "IIT Delhi Abu Dhabi, United Arab Emirates",
+      "label": "negative",
+      "category": "overseas_campus",
+      "rationale": "Campus is outside India.",
+      "split": "validation"
+    },
+    {
+      "id": "N026",
+      "affiliation": "BITS Pilani, Dubai Campus, UAE",
+      "label": "negative",
+      "category": "overseas_campus",
+      "rationale": "Campus is outside India.",
+      "split": "test"
+    },
+    {
+      "id": "N027",
+      "affiliation": "Manipal International University, Malaysia",
+      "label": "negative",
+      "category": "overseas_campus",
+      "rationale": "Only Malaysian institution.",
+      "split": "test"
+    },
+    {
+      "id": "N028",
+      "affiliation": "Amity University Dubai, United Arab Emirates",
+      "label": "negative",
+      "category": "overseas_campus",
+      "rationale": "Only overseas campus.",
+      "split": "test"
+    },
+    {
+      "id": "N029",
+      "affiliation": "Microsoft Research, Redmond, USA",
+      "label": "negative",
+      "category": "corporate_location",
+      "rationale": "Explicit overseas office.",
+      "split": "test"
+    },
+    {
+      "id": "N030",
+      "affiliation": "Google Research, Zurich, Switzerland",
+      "label": "negative",
+      "category": "corporate_location",
+      "rationale": "Explicit overseas office.",
+      "split": "validation"
+    },
+    {
+      "id": "N031",
+      "affiliation": "IBM Research, Almaden, USA",
+      "label": "negative",
+      "category": "corporate_location",
+      "rationale": "Explicit overseas office.",
+      "split": "test"
+    },
+    {
+      "id": "N032",
+      "affiliation": "Infosys, London, United Kingdom",
+      "label": "negative",
+      "category": "corporate_location",
+      "rationale": "Company origin does not override office location.",
+      "split": "test"
+    },
+    {
+      "id": "N033",
+      "affiliation": "Tata Consultancy Services, Toronto, Canada",
+      "label": "negative",
+      "category": "corporate_location",
+      "rationale": "Company origin does not override office location.",
+      "split": "test"
+    },
+    {
+      "id": "N034",
+      "affiliation": "Wipro, Sydney, Australia",
+      "label": "negative",
+      "category": "corporate_location",
+      "rationale": "Company origin does not override office location.",
+      "split": "test"
+    },
+    {
+      "id": "N035",
+      "affiliation": "Indiana University, Bloomington, USA",
+      "label": "negative",
+      "category": "substring_trap",
+      "rationale": "Indiana is not India.",
+      "split": "validation"
+    },
+    {
+      "id": "N036",
+      "affiliation": "Indiana Institute of Technology, Fort Wayne, USA",
+      "label": "negative",
+      "category": "substring_trap",
+      "rationale": "Indiana is not India.",
+      "split": "test"
+    },
+    {
+      "id": "N037",
+      "affiliation": "University of Indianapolis, USA",
+      "label": "negative",
+      "category": "substring_trap",
+      "rationale": "Substring is not country evidence.",
+      "split": "test"
+    },
+    {
+      "id": "N038",
+      "affiliation": "University of Oxford, UK; email: researcher@iitb.ac.in",
+      "label": "negative",
+      "category": "email_trap",
+      "rationale": "Email does not override foreign affiliation.",
+      "split": "test"
+    },
+    {
+      "id": "N039",
+      "affiliation": "Department of India Studies, University of Tokyo, Japan",
+      "label": "negative",
+      "category": "department_trap",
+      "rationale": "India is a subject, not an institutional location.",
+      "split": "test"
+    },
+    {
+      "id": "N040",
+      "affiliation": "Stanford University, USA; formerly IIT Bombay, India",
+      "label": "negative",
+      "category": "historical_affiliation",
+      "rationale": "Only current affiliation counts; former job does not.",
+      "split": "validation"
+    },
+    {
+      "id": "A001",
+      "affiliation": "IIT",
+      "label": "ambiguous",
+      "category": "bare_acronym",
+      "rationale": "Multiple institutions share acronym.",
+      "split": "test"
+    },
+    {
+      "id": "A002",
+      "affiliation": "NIT",
+      "label": "ambiguous",
+      "category": "bare_acronym",
+      "rationale": "Multiple institutions share acronym.",
+      "split": "test"
+    },
+    {
+      "id": "A003",
+      "affiliation": "ISI",
+      "label": "ambiguous",
+      "category": "bare_acronym",
+      "rationale": "Multiple institutions share acronym.",
+      "split": "test"
+    },
+    {
+      "id": "A004",
+      "affiliation": "VIT",
+      "label": "ambiguous",
+      "category": "bare_acronym",
+      "rationale": "Multiple institutions share acronym.",
+      "split": "test"
+    },
+    {
+      "id": "A005",
+      "affiliation": "MIT",
+      "label": "ambiguous",
+      "category": "bare_acronym",
+      "rationale": "Multiple institutions share acronym.",
+      "split": "validation"
+    },
+    {
+      "id": "A006",
+      "affiliation": "JU",
+      "label": "ambiguous",
+      "category": "bare_acronym",
+      "rationale": "Multiple institutions share acronym.",
+      "split": "test"
+    },
+    {
+      "id": "A007",
+      "affiliation": "IIIT",
+      "label": "ambiguous",
+      "category": "bare_acronym",
+      "rationale": "No uniquely identified institution or location.",
+      "split": "test"
+    },
+    {
+      "id": "A008",
+      "affiliation": "IIM",
+      "label": "ambiguous",
+      "category": "bare_acronym",
+      "rationale": "No uniquely identified institution or location.",
+      "split": "test"
+    },
+    {
+      "id": "A009",
+      "affiliation": "Microsoft Research",
+      "label": "ambiguous",
+      "category": "missing_location",
+      "rationale": "Multinational organization without office location.",
+      "split": "test"
+    },
+    {
+      "id": "A010",
+      "affiliation": "Google Research",
+      "label": "ambiguous",
+      "category": "missing_location",
+      "rationale": "Multinational organization without office location.",
+      "split": "validation"
+    },
+    {
+      "id": "A011",
+      "affiliation": "IBM Research",
+      "label": "ambiguous",
+      "category": "missing_location",
+      "rationale": "Multinational organization without office location.",
+      "split": "test"
+    },
+    {
+      "id": "A012",
+      "affiliation": "Amazon Science",
+      "label": "ambiguous",
+      "category": "missing_location",
+      "rationale": "Multinational organization without office location.",
+      "split": "test"
+    },
+    {
+      "id": "A013",
+      "affiliation": "Adobe Research",
+      "label": "ambiguous",
+      "category": "missing_location",
+      "rationale": "Multinational organization without office location.",
+      "split": "test"
+    },
+    {
+      "id": "A014",
+      "affiliation": "Samsung Research",
+      "label": "ambiguous",
+      "category": "missing_location",
+      "rationale": "Multinational organization without office location.",
+      "split": "test"
+    },
+    {
+      "id": "A015",
+      "affiliation": "Infosys",
+      "label": "ambiguous",
+      "category": "missing_location",
+      "rationale": "Company origin does not identify office.",
+      "split": "validation"
+    },
+    {
+      "id": "A016",
+      "affiliation": "Tata Consultancy Services",
+      "label": "ambiguous",
+      "category": "missing_location",
+      "rationale": "Company origin does not identify office.",
+      "split": "test"
+    },
+    {
+      "id": "A017",
+      "affiliation": "Wipro",
+      "label": "ambiguous",
+      "category": "missing_location",
+      "rationale": "Company origin does not identify office.",
+      "split": "test"
+    },
+    {
+      "id": "A018",
+      "affiliation": "Intel Labs",
+      "label": "ambiguous",
+      "category": "missing_location",
+      "rationale": "Multinational organization without office location.",
+      "split": "test"
+    },
+    {
+      "id": "A019",
+      "affiliation": "Unknown",
+      "label": "ambiguous",
+      "category": "missing_affiliation",
+      "rationale": "No affiliation evidence.",
+      "split": "test"
+    },
+    {
+      "id": "A020",
+      "affiliation": "N/A",
+      "label": "ambiguous",
+      "category": "missing_affiliation",
+      "rationale": "No affiliation evidence.",
+      "split": "validation"
+    },
+    {
+      "id": "A021",
+      "affiliation": "Not provided",
+      "label": "ambiguous",
+      "category": "missing_affiliation",
+      "rationale": "No affiliation evidence.",
+      "split": "test"
+    },
+    {
+      "id": "A022",
+      "affiliation": "Independent researcher",
+      "label": "ambiguous",
+      "category": "missing_affiliation",
+      "rationale": "No location supplied.",
+      "split": "test"
+    },
+    {
+      "id": "A023",
+      "affiliation": "Department of Computer Science",
+      "label": "ambiguous",
+      "category": "missing_institution",
+      "rationale": "Only a department name.",
+      "split": "test"
+    },
+    {
+      "id": "A024",
+      "affiliation": "School of Engineering",
+      "label": "ambiguous",
+      "category": "missing_institution",
+      "rationale": "Only a generic unit name.",
+      "split": "test"
+    },
+    {
+      "id": "A025",
+      "affiliation": "Center for Artificial Intelligence",
+      "label": "ambiguous",
+      "category": "missing_institution",
+      "rationale": "No identifiable organization or location.",
+      "split": "validation"
+    },
+    {
+      "id": "A026",
+      "affiliation": "National Research Laboratory",
+      "label": "ambiguous",
+      "category": "missing_institution",
+      "rationale": "Generic name without location.",
+      "split": "test"
+    },
+    {
+      "id": "A027",
+      "affiliation": "University Research Centre",
+      "label": "ambiguous",
+      "category": "missing_institution",
+      "rationale": "Generic name without location.",
+      "split": "test"
+    },
+    {
+      "id": "A028",
+      "affiliation": "Bangalore",
+      "label": "ambiguous",
+      "category": "city_only",
+      "rationale": "City alone is not an institutional affiliation.",
+      "split": "test"
+    },
+    {
+      "id": "A029",
+      "affiliation": "Mumbai",
+      "label": "ambiguous",
+      "category": "city_only",
+      "rationale": "City alone is not an institutional affiliation.",
+      "split": "test"
+    },
+    {
+      "id": "A030",
+      "affiliation": "Delhi",
+      "label": "ambiguous",
+      "category": "city_only",
+      "rationale": "City alone is not an institutional affiliation.",
+      "split": "validation"
+    },
+    {
+      "id": "A031",
+      "affiliation": "Hyderabad",
+      "label": "ambiguous",
+      "category": "city_only",
+      "rationale": "Location without an institution and geographically nonunique.",
+      "split": "test"
+    },
+    {
+      "id": "A032",
+      "affiliation": "researcher@iitb.ac.in",
+      "label": "ambiguous",
+      "category": "email_only",
+      "rationale": "Email alone cannot establish affiliation.",
+      "split": "test"
+    },
+    {
+      "id": "A033",
+      "affiliation": "researcher@iisc.ac.in",
+      "label": "ambiguous",
+      "category": "email_only",
+      "rationale": "Email alone cannot establish affiliation.",
+      "split": "test"
+    },
+    {
+      "id": "A034",
+      "affiliation": "user.iitd@gmail.com",
+      "label": "ambiguous",
+      "category": "email_only",
+      "rationale": "Email handle is not affiliation evidence.",
+      "split": "test"
+    },
+    {
+      "id": "A035",
+      "affiliation": "Indian researcher",
+      "label": "ambiguous",
+      "category": "nationality_trap",
+      "rationale": "Nationality is not institutional affiliation.",
+      "split": "validation"
+    },
+    {
+      "id": "A036",
+      "affiliation": "Visiting scholar, institution not specified",
+      "label": "ambiguous",
+      "category": "missing_affiliation",
+      "rationale": "No current institution identified.",
+      "split": "test"
+    },
+    {
+      "id": "A037",
+      "affiliation": "Formerly IIT Bombay; current affiliation unknown",
+      "label": "ambiguous",
+      "category": "historical_affiliation",
+      "rationale": "Former affiliation does not establish current affiliation.",
+      "split": "test"
+    },
+    {
+      "id": "A038",
+      "affiliation": "IIT, Department of Computing",
+      "label": "ambiguous",
+      "category": "bare_acronym",
+      "rationale": "Department does not resolve acronym.",
+      "split": "test"
+    },
+    {
+      "id": "A039",
+      "affiliation": "ISI, Statistical Learning Group",
+      "label": "ambiguous",
+      "category": "bare_acronym",
+      "rationale": "Research field alone does not resolve acronym.",
+      "split": "test"
+    },
+    {
+      "id": "A040",
+      "affiliation": "Microsoft Research; Google Research",
+      "label": "ambiguous",
+      "category": "multiple_affiliations",
+      "rationale": "Neither organization has an office location.",
+      "split": "validation"
+    },
+    {
+      "id": "A041",
+      "affiliation": "",
+      "label": "ambiguous",
+      "category": "missing_affiliation",
+      "rationale": "Empty affiliation provides no evidence.",
+      "split": "test"
+    }
+  ],
+  "paper_cases": [
+    {
+      "id": "paper_india_foreign",
+      "case_ids": [
+        "P001",
+        "N001"
+      ],
+      "label": "positive"
+    },
+    {
+      "id": "paper_foreign_only",
+      "case_ids": [
+        "N001",
+        "N003"
+      ],
+      "label": "negative"
+    },
+    {
+      "id": "paper_ambiguous_only",
+      "case_ids": [
+        "A001",
+        "A009"
+      ],
+      "label": "ambiguous"
+    },
+    {
+      "id": "paper_foreign_ambiguous",
+      "case_ids": [
+        "N001",
+        "A001"
+      ],
+      "label": "ambiguous"
+    },
+    {
+      "id": "paper_india_ambiguous",
+      "case_ids": [
+        "P009",
+        "A009"
+      ],
+      "label": "positive"
+    },
+    {
+      "id": "paper_overseas",
+      "case_ids": [
+        "N024",
+        "N025",
+        "N026"
+      ],
+      "label": "negative"
+    },
+    {
+      "id": "paper_corporate",
+      "case_ids": [
+        "P031",
+        "N029",
+        "A009"
+      ],
+      "label": "positive"
+    },
+    {
+      "id": "paper_emails",
+      "case_ids": [
+        "A032",
+        "A033",
+        "N038"
+      ],
+      "label": "ambiguous"
+    },
+    {
+      "id": "paper_collision",
+      "case_ids": [
+        "N012",
+        "N019",
+        "N023"
+      ],
+      "label": "negative"
+    },
+    {
+      "id": "paper_historical",
+      "case_ids": [
+        "N040",
+        "A037"
+      ],
+      "label": "ambiguous"
+    },
+    {
+      "id": "paper_dual",
+      "case_ids": [
+        "P040",
+        "N006"
+      ],
+      "label": "positive"
+    },
+    {
+      "id": "paper_empty",
+      "case_ids": [
+        "A041"
+      ],
+      "label": "ambiguous"
+    }
+  ]
+}

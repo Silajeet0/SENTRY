@@ -1,0 +1,2192 @@
+{
+  "corpus": "Existing SENTRY ACL 2025 (64 records) and ACM_SIGCOMM 2025 (4 records); previously predicted-positive subset, titles available, abstracts absent.",
+  "node_counts": {
+    "AUTHOR": 357,
+    "CANDIDATE": 139,
+    "CITY": 25,
+    "CONFERENCE": 2,
+    "COUNTRY": 1,
+    "ORGANIZATION": 1279,
+    "PAPER": 68,
+    "REVIEW_RECORD": 6,
+    "STATE": 34,
+    "TOPIC": 6
+  },
+  "kg_version": 1972,
+  "embedding": "sentence-transformers:sentence-transformers/all-MiniLM-L6-v2@1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+  "new_vectors": 94,
+  "queries": {
+    "vector": {
+      "query": "language model hallucination detection",
+      "kg_version": 1972,
+      "citations": {
+        "P1": {
+          "paper_id": "PAPER_af414e9eb91cb3c008f090d6",
+          "url": "https://aclanthology.org/2025.acl-long.1480.pdf",
+          "title": "ETF: An Entity Tracing Framework for Hallucination Detection in Code Summaries"
+        },
+        "P2": {
+          "paper_id": "PAPER_0c224651a553deb91b3a36a4",
+          "url": "https://aclanthology.org/2025.findings-acl.773.pdf",
+          "title": "VADE: Visual Attention Guided Hallucination Detection and Elimination"
+        },
+        "P3": {
+          "paper_id": "PAPER_b228b1c5325447cd428aad6a",
+          "url": "https://aclanthology.org/2025.findings-acl.1209.pdf",
+          "title": "FREE: Fast and Robust Vision Language Models with Early Exits"
+        }
+      },
+      "evidence": [
+        {
+          "citation": "P1",
+          "title": "ETF: An Entity Tracing Framework for Hallucination Detection in Code Summaries",
+          "abstract": "",
+          "year": 2025,
+          "url": "https://aclanthology.org/2025.acl-long.1480.pdf",
+          "retrieved_text": "ETF: An Entity Tracing Framework for Hallucination Detection in Code Summaries\n",
+          "document_id": "DOC_3b0fe7d9352fb4cf25a569ed",
+          "nodes": [
+            {
+              "id": "AUTH_35b7eaad45e5aa6602db7187",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Abhijit Mishra",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_3ce800cdc3f284cf61f5dc5d",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Prince Kumar",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_41bdd3024fb574a473cf9988",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Pushpak Bhattacharyya",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_7ce0498110547247864a2e46",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Srikanth G. Tamilselvam",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_88d6966fa505f7f00e3ba78e",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Palani Kodeswaran",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_c173f4706cfab1438bdaf90c",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Sayandeep Sen",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_d6ae8f2e6d7468b95a173f41",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Kishan Maharaj",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_db5b483c5245b473a81b70fb",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Vitobha Munigala",
+              "orcid": ""
+            },
+            {
+              "id": "CAND_34cc03a240fe39f30c440d6c",
+              "kind": "CANDIDATE",
+              "canonical_name": "IBM Research, India",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CAND_a4c83a4edfe6d0ea92dc75f5",
+              "kind": "CANDIDATE",
+              "canonical_name": "Indian Institute of Technology Bombay, Mumbai, India",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CAND_acca5da2c1cc772b9935e45c",
+              "kind": "CANDIDATE",
+              "canonical_name": "University of Texas at Austin, Texas, United States",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CONF_68331fdce3b7e2a07a924633",
+              "kind": "CONFERENCE",
+              "name": "ACL",
+              "year": 2025
+            },
+            {
+              "id": "TOPIC_46fb078d98c2df164f326518",
+              "kind": "TOPIC",
+              "name": "NLP"
+            }
+          ],
+          "relationships": [
+            {
+              "id": "EDGE_0ae2834013fcf9cad2ca15ce",
+              "src": "AUTH_d6ae8f2e6d7468b95a173f41",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_a4c83a4edfe6d0ea92dc75f5",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "observed_affiliation": "Indian Institute of Technology Bombay, Mumbai, India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_1d66e22e8f5e3a01847b6164",
+              "src": "AUTH_db5b483c5245b473a81b70fb",
+              "relation": "AUTHORED",
+              "dst": "PAPER_af414e9eb91cb3c008f090d6",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_229e16fe410b48478ade1a3b",
+              "src": "AUTH_db5b483c5245b473a81b70fb",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_34cc03a240fe39f30c440d6c",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "observed_affiliation": "IBM Research India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_3b4ef157f2578bb39b78ca07",
+              "src": "AUTH_35b7eaad45e5aa6602db7187",
+              "relation": "AUTHORED",
+              "dst": "PAPER_af414e9eb91cb3c008f090d6",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_4818153bd6b97283c688773c",
+              "src": "AUTH_35b7eaad45e5aa6602db7187",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_acca5da2c1cc772b9935e45c",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "observed_affiliation": "University of Texas at Austin, Texas, United States",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_59e8d6b09dfa1d582c04e76a",
+              "src": "PAPER_af414e9eb91cb3c008f090d6",
+              "relation": "HAS_TOPIC",
+              "dst": "TOPIC_46fb078d98c2df164f326518",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_5df4558f7c5f37fc75e86ab4",
+              "src": "AUTH_d6ae8f2e6d7468b95a173f41",
+              "relation": "AUTHORED",
+              "dst": "PAPER_af414e9eb91cb3c008f090d6",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_6af6423f8e257e0dab0f88ce",
+              "src": "AUTH_3ce800cdc3f284cf61f5dc5d",
+              "relation": "AUTHORED",
+              "dst": "PAPER_af414e9eb91cb3c008f090d6",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_7891519cf3c667c33225bd79",
+              "src": "AUTH_7ce0498110547247864a2e46",
+              "relation": "AUTHORED",
+              "dst": "PAPER_af414e9eb91cb3c008f090d6",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_7b3b2f9bf907011c588c09cb",
+              "src": "PAPER_af414e9eb91cb3c008f090d6",
+              "relation": "PUBLISHED_AT",
+              "dst": "CONF_68331fdce3b7e2a07a924633",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_8708454d4cff80e5f76439b5",
+              "src": "AUTH_c173f4706cfab1438bdaf90c",
+              "relation": "AUTHORED",
+              "dst": "PAPER_af414e9eb91cb3c008f090d6",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_9e97e0c455e390632d7407be",
+              "src": "AUTH_41bdd3024fb574a473cf9988",
+              "relation": "AUTHORED",
+              "dst": "PAPER_af414e9eb91cb3c008f090d6",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_9ffc873d66c517a4e6f0ca68",
+              "src": "AUTH_88d6966fa505f7f00e3ba78e",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_34cc03a240fe39f30c440d6c",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "observed_affiliation": "IBM Research India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_a76d0438b9ae7e20fe9db8a4",
+              "src": "AUTH_c173f4706cfab1438bdaf90c",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_34cc03a240fe39f30c440d6c",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "observed_affiliation": "IBM Research India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_bb2d9e165a2190931f5c2956",
+              "src": "AUTH_41bdd3024fb574a473cf9988",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_a4c83a4edfe6d0ea92dc75f5",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "observed_affiliation": "Indian Institute of Technology Bombay, Mumbai, India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_c6a085629edb7775ef467c39",
+              "src": "AUTH_7ce0498110547247864a2e46",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_34cc03a240fe39f30c440d6c",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "observed_affiliation": "IBM Research India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_ce0e8681e4d25d6104028fd6",
+              "src": "AUTH_3ce800cdc3f284cf61f5dc5d",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_34cc03a240fe39f30c440d6c",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "observed_affiliation": "IBM Research India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_dca71e09e5f0c8430793b05b",
+              "src": "AUTH_88d6966fa505f7f00e3ba78e",
+              "relation": "AUTHORED",
+              "dst": "PAPER_af414e9eb91cb3c008f090d6",
+              "evidence_id": "PAPER_af414e9eb91cb3c008f090d6",
+              "data": {
+                "status": "OBSERVED"
+              }
+            }
+          ]
+        },
+        {
+          "citation": "P2",
+          "title": "VADE: Visual Attention Guided Hallucination Detection and Elimination",
+          "abstract": "",
+          "year": 2025,
+          "url": "https://aclanthology.org/2025.findings-acl.773.pdf",
+          "retrieved_text": "VADE: Visual Attention Guided Hallucination Detection and Elimination\n",
+          "document_id": "DOC_2ef98c027b017218db2a3b9e",
+          "nodes": [
+            {
+              "id": "AUTH_32bebe99ed025aa2c34af4c6",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Gokul Swamy",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_433e52f7e0779241400041dc",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Vinay Kumar Verma",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_4db28a13d869e34839049dde",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Vishnu Prabhakaran",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_809b175e965bdf6dc31b19f2",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Purav Aggarwal",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_9172a9fec272c2c08f782672",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Anoop Saladi",
+              "orcid": ""
+            },
+            {
+              "id": "CAND_01a64b1400d3faa9abb1506e",
+              "kind": "CANDIDATE",
+              "canonical_name": "Amazon, USA",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CAND_e1b3ce1b0616de4e578ce1c4",
+              "kind": "CANDIDATE",
+              "canonical_name": "Amazon, India",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CONF_68331fdce3b7e2a07a924633",
+              "kind": "CONFERENCE",
+              "name": "ACL",
+              "year": 2025
+            },
+            {
+              "id": "TOPIC_5944ae849448011ca08c3785",
+              "kind": "TOPIC",
+              "name": "Vision"
+            }
+          ],
+          "relationships": [
+            {
+              "id": "EDGE_01b4e7c6e517845602126d55",
+              "src": "AUTH_4db28a13d869e34839049dde",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_e1b3ce1b0616de4e578ce1c4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "observed_affiliation": "Amazon, India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_03fad31c70519f55c0d2d863",
+              "src": "AUTH_433e52f7e0779241400041dc",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0c224651a553deb91b3a36a4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_21205128fa9dcd007df6c0e1",
+              "src": "PAPER_0c224651a553deb91b3a36a4",
+              "relation": "HAS_TOPIC",
+              "dst": "TOPIC_5944ae849448011ca08c3785",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_2ed7e77f958937e80d37d727",
+              "src": "AUTH_809b175e965bdf6dc31b19f2",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_e1b3ce1b0616de4e578ce1c4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "observed_affiliation": "Amazon, India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_71f20e940d58c2fee3011a23",
+              "src": "AUTH_9172a9fec272c2c08f782672",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_e1b3ce1b0616de4e578ce1c4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "observed_affiliation": "Amazon, India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_9d71a6a6425b8d38ec0b052f",
+              "src": "AUTH_809b175e965bdf6dc31b19f2",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0c224651a553deb91b3a36a4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_9f44f17a3717cb059ef618f3",
+              "src": "AUTH_9172a9fec272c2c08f782672",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0c224651a553deb91b3a36a4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_add3feb5129921967cc72af7",
+              "src": "AUTH_32bebe99ed025aa2c34af4c6",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_01a64b1400d3faa9abb1506e",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "observed_affiliation": "Amazon, USA",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_d5f5be8e443dd4e32bda7b7f",
+              "src": "AUTH_433e52f7e0779241400041dc",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_e1b3ce1b0616de4e578ce1c4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "observed_affiliation": "Amazon, India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_e2b05369e6e311a1ac405ebd",
+              "src": "AUTH_4db28a13d869e34839049dde",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0c224651a553deb91b3a36a4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_f4f635bf574c4d66decdbd1b",
+              "src": "AUTH_32bebe99ed025aa2c34af4c6",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0c224651a553deb91b3a36a4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_faba4602b2dcef353544473b",
+              "src": "PAPER_0c224651a553deb91b3a36a4",
+              "relation": "PUBLISHED_AT",
+              "dst": "CONF_68331fdce3b7e2a07a924633",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "status": "OBSERVED"
+              }
+            }
+          ]
+        },
+        {
+          "citation": "P3",
+          "title": "FREE: Fast and Robust Vision Language Models with Early Exits",
+          "abstract": "",
+          "year": 2025,
+          "url": "https://aclanthology.org/2025.findings-acl.1209.pdf",
+          "retrieved_text": "FREE: Fast and Robust Vision Language Models with Early Exits\n",
+          "document_id": "DOC_592fcf82adfa28d737938175",
+          "nodes": [
+            {
+              "id": "AUTH_0f8542aded135fc90105b65e",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Manjesh Kumar Hanawal",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_570459f580b5a3c40cb3e2ba",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Divya Jyoti Bajpai",
+              "orcid": ""
+            },
+            {
+              "id": "CAND_7412dace952b048354a7477e",
+              "kind": "CANDIDATE",
+              "canonical_name": "Department of IEOR, IIT Bombay",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CONF_68331fdce3b7e2a07a924633",
+              "kind": "CONFERENCE",
+              "name": "ACL",
+              "year": 2025
+            },
+            {
+              "id": "TOPIC_5944ae849448011ca08c3785",
+              "kind": "TOPIC",
+              "name": "Vision"
+            }
+          ],
+          "relationships": [
+            {
+              "id": "EDGE_8532bb8b6564911664ce9bb9",
+              "src": "AUTH_570459f580b5a3c40cb3e2ba",
+              "relation": "AUTHORED",
+              "dst": "PAPER_b228b1c5325447cd428aad6a",
+              "evidence_id": "PAPER_b228b1c5325447cd428aad6a",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_8f34bbc342a62acd3dd1c538",
+              "src": "AUTH_570459f580b5a3c40cb3e2ba",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_7412dace952b048354a7477e",
+              "evidence_id": "PAPER_b228b1c5325447cd428aad6a",
+              "data": {
+                "observed_affiliation": "Department of IEOR, IIT Bombay",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_9ab7c4c3252e1beb3084c099",
+              "src": "AUTH_0f8542aded135fc90105b65e",
+              "relation": "AUTHORED",
+              "dst": "PAPER_b228b1c5325447cd428aad6a",
+              "evidence_id": "PAPER_b228b1c5325447cd428aad6a",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_a1931ebfceeb012450fe25e1",
+              "src": "PAPER_b228b1c5325447cd428aad6a",
+              "relation": "HAS_TOPIC",
+              "dst": "TOPIC_5944ae849448011ca08c3785",
+              "evidence_id": "PAPER_b228b1c5325447cd428aad6a",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_b133f738cca982f120fb299a",
+              "src": "AUTH_0f8542aded135fc90105b65e",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_7412dace952b048354a7477e",
+              "evidence_id": "PAPER_b228b1c5325447cd428aad6a",
+              "data": {
+                "observed_affiliation": "Department of IEOR, IIT Bombay",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_ce83132fa60de087e328b3e4",
+              "src": "PAPER_b228b1c5325447cd428aad6a",
+              "relation": "PUBLISHED_AT",
+              "dst": "CONF_68331fdce3b7e2a07a924633",
+              "evidence_id": "PAPER_b228b1c5325447cd428aad6a",
+              "data": {
+                "status": "OBSERVED"
+              }
+            }
+          ]
+        }
+      ],
+      "answer": "[P1] ETF: An Entity Tracing Framework for Hallucination Detection in Code Summaries \u2014 https://aclanthology.org/2025.acl-long.1480.pdf\n[P2] VADE: Visual Attention Guided Hallucination Detection and Elimination \u2014 https://aclanthology.org/2025.findings-acl.773.pdf\n[P3] FREE: Fast and Robust Vision Language Models with Early Exits \u2014 https://aclanthology.org/2025.findings-acl.1209.pdf",
+      "generation": "extractive"
+    },
+    "graph": {
+      "query": "language model hallucination detection",
+      "kg_version": 1972,
+      "citations": {
+        "P1": {
+          "paper_id": "PAPER_00e885f0b0b4f2dadf2777bf",
+          "url": "https://aclanthology.org/2025.findings-acl.527.pdf",
+          "title": "LoRMA: Low-Rank Multiplicative Adaptation for LLMs"
+        },
+        "P2": {
+          "paper_id": "PAPER_0624d1f2f32ee70a7fbba730",
+          "url": "https://aclanthology.org/2025.acl-short.52.pdf",
+          "title": "SELF-PERCEPT: Introspection Improves Large Language Models\u2019 Detection of Multi-Person Mental Manipulation in Conversations"
+        },
+        "P3": {
+          "paper_id": "PAPER_067b3442522e707c53218eb6",
+          "url": "https://aclanthology.org/2025.acl-short.74.pdf",
+          "title": "Leveraging Self-Attention for Input-Dependent Soft Prompting in LLMs"
+        }
+      },
+      "evidence": [
+        {
+          "citation": "P1",
+          "title": "LoRMA: Low-Rank Multiplicative Adaptation for LLMs",
+          "abstract": "",
+          "year": 2025,
+          "url": "https://aclanthology.org/2025.findings-acl.527.pdf",
+          "retrieved_text": "",
+          "document_id": null,
+          "nodes": [
+            {
+              "id": "AUTH_1e01a12f41fda103e85dc65b",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Ashutosh Modi",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_56d5b66b5045eb0a619ab08b",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Harsh Bihany",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_a668292e159420ebd61b1217",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Shubham Patel",
+              "orcid": ""
+            },
+            {
+              "id": "CAND_2f527d62724f479756dc978f",
+              "kind": "CANDIDATE",
+              "canonical_name": "Indian Institute of Technology Kanpur (IIT Kanpur)",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CONF_68331fdce3b7e2a07a924633",
+              "kind": "CONFERENCE",
+              "name": "ACL",
+              "year": 2025
+            },
+            {
+              "id": "TOPIC_46fb078d98c2df164f326518",
+              "kind": "TOPIC",
+              "name": "NLP"
+            }
+          ],
+          "relationships": [
+            {
+              "id": "EDGE_0e9cc4a517c0515187a6bd43",
+              "src": "AUTH_56d5b66b5045eb0a619ab08b",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_2f527d62724f479756dc978f",
+              "evidence_id": "PAPER_00e885f0b0b4f2dadf2777bf",
+              "data": {
+                "observed_affiliation": "Indian Institute of Technology Kanpur (IIT Kanpur)",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_19644564946053529b5671ee",
+              "src": "AUTH_56d5b66b5045eb0a619ab08b",
+              "relation": "AUTHORED",
+              "dst": "PAPER_00e885f0b0b4f2dadf2777bf",
+              "evidence_id": "PAPER_00e885f0b0b4f2dadf2777bf",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_4106fe15539d82285b1dea12",
+              "src": "PAPER_00e885f0b0b4f2dadf2777bf",
+              "relation": "HAS_TOPIC",
+              "dst": "TOPIC_46fb078d98c2df164f326518",
+              "evidence_id": "PAPER_00e885f0b0b4f2dadf2777bf",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_41da3ef5f11319d5bb10cecd",
+              "src": "AUTH_1e01a12f41fda103e85dc65b",
+              "relation": "AUTHORED",
+              "dst": "PAPER_00e885f0b0b4f2dadf2777bf",
+              "evidence_id": "PAPER_00e885f0b0b4f2dadf2777bf",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_5a385610f0ef37662a189158",
+              "src": "AUTH_a668292e159420ebd61b1217",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_2f527d62724f479756dc978f",
+              "evidence_id": "PAPER_00e885f0b0b4f2dadf2777bf",
+              "data": {
+                "observed_affiliation": "Indian Institute of Technology Kanpur (IIT Kanpur)",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_92341b5d813c8e6817bac0dd",
+              "src": "PAPER_00e885f0b0b4f2dadf2777bf",
+              "relation": "PUBLISHED_AT",
+              "dst": "CONF_68331fdce3b7e2a07a924633",
+              "evidence_id": "PAPER_00e885f0b0b4f2dadf2777bf",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_e62c6f81112487bc309eb3e3",
+              "src": "AUTH_a668292e159420ebd61b1217",
+              "relation": "AUTHORED",
+              "dst": "PAPER_00e885f0b0b4f2dadf2777bf",
+              "evidence_id": "PAPER_00e885f0b0b4f2dadf2777bf",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_f9cec3d40164eab209e3a11e",
+              "src": "AUTH_1e01a12f41fda103e85dc65b",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_2f527d62724f479756dc978f",
+              "evidence_id": "PAPER_00e885f0b0b4f2dadf2777bf",
+              "data": {
+                "observed_affiliation": "Indian Institute of Technology Kanpur (IIT Kanpur)",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            }
+          ]
+        },
+        {
+          "citation": "P2",
+          "title": "SELF-PERCEPT: Introspection Improves Large Language Models\u2019 Detection of Multi-Person Mental Manipulation in Conversations",
+          "abstract": "",
+          "year": 2025,
+          "url": "https://aclanthology.org/2025.acl-short.52.pdf",
+          "retrieved_text": "",
+          "document_id": null,
+          "nodes": [
+            {
+              "id": "AUTH_0dcf3da8f6d31121211ea793",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Aditya Guru",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_202f869d30bd26f814d916aa",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Tanuj Tyagi",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_7c68624409f3c311f569af09",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Kripabandhu Ghosh",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_8d16e78b2b3ac1a3cb73180d",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Pratinav Seth",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_a191778e38a1ca5f36459613",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Siddharth Shukla",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_b97593d8a7fea4368328a503",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Sandeep Chaurasia",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_e28430c42c048406bc03ca82",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Danush Khanna",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_e627709827e1136740a337ef",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Sidhaarth Murali",
+              "orcid": ""
+            },
+            {
+              "id": "CAND_95051fb423021061aa41d124",
+              "kind": "CANDIDATE",
+              "canonical_name": "IISER Kolkata, India",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CAND_a1f405971eb5c874d2f79172",
+              "kind": "CANDIDATE",
+              "canonical_name": "National Institute of Technology Karnataka, Surathkal, India",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CAND_f77899e4e4b6e66d17a5372a",
+              "kind": "CANDIDATE",
+              "canonical_name": "Manipal Institute of Technology, India; AryaXAI Alignment Lab, AryaXAI.com, India",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CONF_68331fdce3b7e2a07a924633",
+              "kind": "CONFERENCE",
+              "name": "ACL",
+              "year": 2025
+            },
+            {
+              "id": "ORG_320a5d2a36a22aa6a7fabd52",
+              "kind": "ORGANIZATION",
+              "address": "Manipal University Jaipur ,  Dehmi Kalan, Off Jaipur-Ajmer Expressway, Jaipur, (Raj.) Rajasthan 303007.Jaipur-Ajmer ExpressJaipur",
+              "aliases": [],
+              "canonical_name": "Manipal University",
+              "city": "",
+              "country": "India",
+              "entity_type": "UNIVERSITY",
+              "normalized_name": "manipal university",
+              "notes": "",
+              "sources": [
+                {
+                  "file": "Universities.csv",
+                  "retrieved_at": "",
+                  "row": 728,
+                  "sha256": "f12b62e464c8e185707aeed8ea52dfa48c6fed50501bb1c46a6b5de478a63370",
+                  "source_type": "UGC_USER_SUPPLIED",
+                  "source_url": "",
+                  "verification_status": "TRUSTED"
+                }
+              ],
+              "state": "Rajasthan",
+              "verification_status": "TRUSTED",
+              "website": ""
+            },
+            {
+              "id": "TOPIC_46fb078d98c2df164f326518",
+              "kind": "TOPIC",
+              "name": "NLP"
+            }
+          ],
+          "relationships": [
+            {
+              "id": "EDGE_08eee371d2072da5d720b3b4",
+              "src": "AUTH_0dcf3da8f6d31121211ea793",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0624d1f2f32ee70a7fbba730",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_1e54e4595284893b3b19a79a",
+              "src": "AUTH_a191778e38a1ca5f36459613",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0624d1f2f32ee70a7fbba730",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_1e56b6152163a1c457b05e95",
+              "src": "AUTH_0dcf3da8f6d31121211ea793",
+              "relation": "AFFILIATED_WITH",
+              "dst": "ORG_320a5d2a36a22aa6a7fabd52",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "observed_affiliation": "Manipal University Jaipur, India",
+                "observed_year": 2025,
+                "resolution_method": "CANONICAL",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_2a09395a6f34c3699295e29f",
+              "src": "AUTH_7c68624409f3c311f569af09",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0624d1f2f32ee70a7fbba730",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_2efee8a0f8c4ccd164e835bb",
+              "src": "AUTH_8d16e78b2b3ac1a3cb73180d",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_f77899e4e4b6e66d17a5372a",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "observed_affiliation": "Manipal Institute of Technology, India; AryaXAI Alignment Lab, AryaXAI.com, India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_34ca01b0f106ea5c13b91302",
+              "src": "AUTH_b97593d8a7fea4368328a503",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0624d1f2f32ee70a7fbba730",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_56022663269f3e7b169fa004",
+              "src": "PAPER_0624d1f2f32ee70a7fbba730",
+              "relation": "HAS_TOPIC",
+              "dst": "TOPIC_46fb078d98c2df164f326518",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_5fc42f4f081140d8b2f11d2c",
+              "src": "AUTH_e627709827e1136740a337ef",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0624d1f2f32ee70a7fbba730",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_7c3e3388b96bfd470edab55a",
+              "src": "AUTH_8d16e78b2b3ac1a3cb73180d",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0624d1f2f32ee70a7fbba730",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_8026f7435da94ea1ba80fb3c",
+              "src": "AUTH_e28430c42c048406bc03ca82",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0624d1f2f32ee70a7fbba730",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_84e2e6b46249345ed809a902",
+              "src": "PAPER_0624d1f2f32ee70a7fbba730",
+              "relation": "PUBLISHED_AT",
+              "dst": "CONF_68331fdce3b7e2a07a924633",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_aa5808f8cc3fca7f33b391c0",
+              "src": "AUTH_b97593d8a7fea4368328a503",
+              "relation": "AFFILIATED_WITH",
+              "dst": "ORG_320a5d2a36a22aa6a7fabd52",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "observed_affiliation": "Manipal University Jaipur, India",
+                "observed_year": 2025,
+                "resolution_method": "CANONICAL",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_b4ec212b97c2da07322f9941",
+              "src": "AUTH_e28430c42c048406bc03ca82",
+              "relation": "AFFILIATED_WITH",
+              "dst": "ORG_320a5d2a36a22aa6a7fabd52",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "observed_affiliation": "Manipal University Jaipur, India",
+                "observed_year": 2025,
+                "resolution_method": "CANONICAL",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_d72369d092cfb063b2c70d1c",
+              "src": "AUTH_a191778e38a1ca5f36459613",
+              "relation": "AFFILIATED_WITH",
+              "dst": "ORG_320a5d2a36a22aa6a7fabd52",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "observed_affiliation": "Manipal University Jaipur, India",
+                "observed_year": 2025,
+                "resolution_method": "CANONICAL",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_dda850a7fa6c6ebb930cf81f",
+              "src": "AUTH_e627709827e1136740a337ef",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_a1f405971eb5c874d2f79172",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "observed_affiliation": "National Institute of Technology Karnataka, Surathkal, India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_e8adb08dcd973fcb04136eac",
+              "src": "AUTH_7c68624409f3c311f569af09",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_95051fb423021061aa41d124",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "observed_affiliation": "IISER Kolkata, India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_ec29e5fc83c8b9ca1cbc55c7",
+              "src": "AUTH_202f869d30bd26f814d916aa",
+              "relation": "AFFILIATED_WITH",
+              "dst": "ORG_320a5d2a36a22aa6a7fabd52",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "observed_affiliation": "Manipal University Jaipur, India",
+                "observed_year": 2025,
+                "resolution_method": "CANONICAL",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_fb23a612902faf94c4eb3b84",
+              "src": "AUTH_202f869d30bd26f814d916aa",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0624d1f2f32ee70a7fbba730",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            }
+          ]
+        },
+        {
+          "citation": "P3",
+          "title": "Leveraging Self-Attention for Input-Dependent Soft Prompting in LLMs",
+          "abstract": "",
+          "year": 2025,
+          "url": "https://aclanthology.org/2025.acl-short.74.pdf",
+          "retrieved_text": "",
+          "document_id": null,
+          "nodes": [
+            {
+              "id": "AUTH_639f63b0972df4bfab3aa4fb",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Sambaran Bandyopadhyay",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_64b5603cfb23873426ef5ef5",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Ananth Muppidi",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_85dd5a8195bac37554d45405",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Abhilash Nandy",
+              "orcid": ""
+            },
+            {
+              "id": "CAND_1820a35199df3a77e563b846",
+              "kind": "CANDIDATE",
+              "canonical_name": "IIIT Hyderabad",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CAND_7a0d6a63667ac750ed078fee",
+              "kind": "CANDIDATE",
+              "canonical_name": "Adobe Research",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CAND_8b8635c9a70aaf8ec0a1939e",
+              "kind": "CANDIDATE",
+              "canonical_name": "IIT Kharagpur",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CONF_68331fdce3b7e2a07a924633",
+              "kind": "CONFERENCE",
+              "name": "ACL",
+              "year": 2025
+            },
+            {
+              "id": "TOPIC_46fb078d98c2df164f326518",
+              "kind": "TOPIC",
+              "name": "NLP"
+            }
+          ],
+          "relationships": [
+            {
+              "id": "EDGE_2dcdcb0fb38d234d10821ef6",
+              "src": "PAPER_067b3442522e707c53218eb6",
+              "relation": "PUBLISHED_AT",
+              "dst": "CONF_68331fdce3b7e2a07a924633",
+              "evidence_id": "PAPER_067b3442522e707c53218eb6",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_54b9a4f18c87eb849db75d1f",
+              "src": "AUTH_639f63b0972df4bfab3aa4fb",
+              "relation": "AUTHORED",
+              "dst": "PAPER_067b3442522e707c53218eb6",
+              "evidence_id": "PAPER_067b3442522e707c53218eb6",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_726be3ec40bcfb3d4cec979d",
+              "src": "AUTH_64b5603cfb23873426ef5ef5",
+              "relation": "AUTHORED",
+              "dst": "PAPER_067b3442522e707c53218eb6",
+              "evidence_id": "PAPER_067b3442522e707c53218eb6",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_7ccd6189828ab62b7d314ea3",
+              "src": "AUTH_85dd5a8195bac37554d45405",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_8b8635c9a70aaf8ec0a1939e",
+              "evidence_id": "PAPER_067b3442522e707c53218eb6",
+              "data": {
+                "observed_affiliation": "IIT Kharagpur",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_8475b7ef4528171cb7df027a",
+              "src": "PAPER_067b3442522e707c53218eb6",
+              "relation": "HAS_TOPIC",
+              "dst": "TOPIC_46fb078d98c2df164f326518",
+              "evidence_id": "PAPER_067b3442522e707c53218eb6",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_8f96960719823c75f5aa3431",
+              "src": "AUTH_64b5603cfb23873426ef5ef5",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_1820a35199df3a77e563b846",
+              "evidence_id": "PAPER_067b3442522e707c53218eb6",
+              "data": {
+                "observed_affiliation": "IIIT Hyderabad",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_9ec162ad04b6831df0a8d0b3",
+              "src": "AUTH_639f63b0972df4bfab3aa4fb",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_7a0d6a63667ac750ed078fee",
+              "evidence_id": "PAPER_067b3442522e707c53218eb6",
+              "data": {
+                "observed_affiliation": "Adobe Research",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_ac3cc48085dd89ffa4b007e2",
+              "src": "AUTH_85dd5a8195bac37554d45405",
+              "relation": "AUTHORED",
+              "dst": "PAPER_067b3442522e707c53218eb6",
+              "evidence_id": "PAPER_067b3442522e707c53218eb6",
+              "data": {
+                "status": "OBSERVED"
+              }
+            }
+          ]
+        }
+      ],
+      "answer": "[P1] LoRMA: Low-Rank Multiplicative Adaptation for LLMs \u2014 https://aclanthology.org/2025.findings-acl.527.pdf\n[P2] SELF-PERCEPT: Introspection Improves Large Language Models\u2019 Detection of Multi-Person Mental Manipulation in Conversations \u2014 https://aclanthology.org/2025.acl-short.52.pdf\n[P3] Leveraging Self-Attention for Input-Dependent Soft Prompting in LLMs \u2014 https://aclanthology.org/2025.acl-short.74.pdf",
+      "generation": "extractive"
+    },
+    "hybrid": {
+      "query": "language model hallucination detection",
+      "kg_version": 1972,
+      "citations": {
+        "P1": {
+          "paper_id": "PAPER_0c224651a553deb91b3a36a4",
+          "url": "https://aclanthology.org/2025.findings-acl.773.pdf",
+          "title": "VADE: Visual Attention Guided Hallucination Detection and Elimination"
+        },
+        "P2": {
+          "paper_id": "PAPER_0624d1f2f32ee70a7fbba730",
+          "url": "https://aclanthology.org/2025.acl-short.52.pdf",
+          "title": "SELF-PERCEPT: Introspection Improves Large Language Models\u2019 Detection of Multi-Person Mental Manipulation in Conversations"
+        },
+        "P3": {
+          "paper_id": "PAPER_2a3b5aae736c1f489855c72e",
+          "url": "https://aclanthology.org/2025.acl-long.1294.pdf",
+          "title": "Scaling Laws and Efficient Inference for Ternary Language Models"
+        }
+      },
+      "evidence": [
+        {
+          "citation": "P1",
+          "title": "VADE: Visual Attention Guided Hallucination Detection and Elimination",
+          "abstract": "",
+          "year": 2025,
+          "url": "https://aclanthology.org/2025.findings-acl.773.pdf",
+          "retrieved_text": "VADE: Visual Attention Guided Hallucination Detection and Elimination\n",
+          "document_id": "DOC_2ef98c027b017218db2a3b9e",
+          "nodes": [
+            {
+              "id": "AUTH_32bebe99ed025aa2c34af4c6",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Gokul Swamy",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_433e52f7e0779241400041dc",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Vinay Kumar Verma",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_4db28a13d869e34839049dde",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Vishnu Prabhakaran",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_809b175e965bdf6dc31b19f2",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Purav Aggarwal",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_9172a9fec272c2c08f782672",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Anoop Saladi",
+              "orcid": ""
+            },
+            {
+              "id": "CAND_01a64b1400d3faa9abb1506e",
+              "kind": "CANDIDATE",
+              "canonical_name": "Amazon, USA",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CAND_e1b3ce1b0616de4e578ce1c4",
+              "kind": "CANDIDATE",
+              "canonical_name": "Amazon, India",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CONF_68331fdce3b7e2a07a924633",
+              "kind": "CONFERENCE",
+              "name": "ACL",
+              "year": 2025
+            },
+            {
+              "id": "TOPIC_5944ae849448011ca08c3785",
+              "kind": "TOPIC",
+              "name": "Vision"
+            }
+          ],
+          "relationships": [
+            {
+              "id": "EDGE_01b4e7c6e517845602126d55",
+              "src": "AUTH_4db28a13d869e34839049dde",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_e1b3ce1b0616de4e578ce1c4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "observed_affiliation": "Amazon, India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_03fad31c70519f55c0d2d863",
+              "src": "AUTH_433e52f7e0779241400041dc",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0c224651a553deb91b3a36a4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_21205128fa9dcd007df6c0e1",
+              "src": "PAPER_0c224651a553deb91b3a36a4",
+              "relation": "HAS_TOPIC",
+              "dst": "TOPIC_5944ae849448011ca08c3785",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_2ed7e77f958937e80d37d727",
+              "src": "AUTH_809b175e965bdf6dc31b19f2",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_e1b3ce1b0616de4e578ce1c4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "observed_affiliation": "Amazon, India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_71f20e940d58c2fee3011a23",
+              "src": "AUTH_9172a9fec272c2c08f782672",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_e1b3ce1b0616de4e578ce1c4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "observed_affiliation": "Amazon, India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_9d71a6a6425b8d38ec0b052f",
+              "src": "AUTH_809b175e965bdf6dc31b19f2",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0c224651a553deb91b3a36a4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_9f44f17a3717cb059ef618f3",
+              "src": "AUTH_9172a9fec272c2c08f782672",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0c224651a553deb91b3a36a4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_add3feb5129921967cc72af7",
+              "src": "AUTH_32bebe99ed025aa2c34af4c6",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_01a64b1400d3faa9abb1506e",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "observed_affiliation": "Amazon, USA",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_d5f5be8e443dd4e32bda7b7f",
+              "src": "AUTH_433e52f7e0779241400041dc",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_e1b3ce1b0616de4e578ce1c4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "observed_affiliation": "Amazon, India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_e2b05369e6e311a1ac405ebd",
+              "src": "AUTH_4db28a13d869e34839049dde",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0c224651a553deb91b3a36a4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_f4f635bf574c4d66decdbd1b",
+              "src": "AUTH_32bebe99ed025aa2c34af4c6",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0c224651a553deb91b3a36a4",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_faba4602b2dcef353544473b",
+              "src": "PAPER_0c224651a553deb91b3a36a4",
+              "relation": "PUBLISHED_AT",
+              "dst": "CONF_68331fdce3b7e2a07a924633",
+              "evidence_id": "PAPER_0c224651a553deb91b3a36a4",
+              "data": {
+                "status": "OBSERVED"
+              }
+            }
+          ]
+        },
+        {
+          "citation": "P2",
+          "title": "SELF-PERCEPT: Introspection Improves Large Language Models\u2019 Detection of Multi-Person Mental Manipulation in Conversations",
+          "abstract": "",
+          "year": 2025,
+          "url": "https://aclanthology.org/2025.acl-short.52.pdf",
+          "retrieved_text": "SELF-PERCEPT: Introspection Improves Large Language Models\u2019 Detection of Multi-Person Mental Manipulation in Conversations\n",
+          "document_id": "DOC_fe94ccbbd1478c5a1530598e",
+          "nodes": [
+            {
+              "id": "AUTH_0dcf3da8f6d31121211ea793",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Aditya Guru",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_202f869d30bd26f814d916aa",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Tanuj Tyagi",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_7c68624409f3c311f569af09",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Kripabandhu Ghosh",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_8d16e78b2b3ac1a3cb73180d",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Pratinav Seth",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_a191778e38a1ca5f36459613",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Siddharth Shukla",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_b97593d8a7fea4368328a503",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Sandeep Chaurasia",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_e28430c42c048406bc03ca82",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Danush Khanna",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_e627709827e1136740a337ef",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Sidhaarth Murali",
+              "orcid": ""
+            },
+            {
+              "id": "CAND_95051fb423021061aa41d124",
+              "kind": "CANDIDATE",
+              "canonical_name": "IISER Kolkata, India",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CAND_a1f405971eb5c874d2f79172",
+              "kind": "CANDIDATE",
+              "canonical_name": "National Institute of Technology Karnataka, Surathkal, India",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CAND_f77899e4e4b6e66d17a5372a",
+              "kind": "CANDIDATE",
+              "canonical_name": "Manipal Institute of Technology, India; AryaXAI Alignment Lab, AryaXAI.com, India",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CONF_68331fdce3b7e2a07a924633",
+              "kind": "CONFERENCE",
+              "name": "ACL",
+              "year": 2025
+            },
+            {
+              "id": "ORG_320a5d2a36a22aa6a7fabd52",
+              "kind": "ORGANIZATION",
+              "address": "Manipal University Jaipur ,  Dehmi Kalan, Off Jaipur-Ajmer Expressway, Jaipur, (Raj.) Rajasthan 303007.Jaipur-Ajmer ExpressJaipur",
+              "aliases": [],
+              "canonical_name": "Manipal University",
+              "city": "",
+              "country": "India",
+              "entity_type": "UNIVERSITY",
+              "normalized_name": "manipal university",
+              "notes": "",
+              "sources": [
+                {
+                  "file": "Universities.csv",
+                  "retrieved_at": "",
+                  "row": 728,
+                  "sha256": "f12b62e464c8e185707aeed8ea52dfa48c6fed50501bb1c46a6b5de478a63370",
+                  "source_type": "UGC_USER_SUPPLIED",
+                  "source_url": "",
+                  "verification_status": "TRUSTED"
+                }
+              ],
+              "state": "Rajasthan",
+              "verification_status": "TRUSTED",
+              "website": ""
+            },
+            {
+              "id": "TOPIC_46fb078d98c2df164f326518",
+              "kind": "TOPIC",
+              "name": "NLP"
+            }
+          ],
+          "relationships": [
+            {
+              "id": "EDGE_08eee371d2072da5d720b3b4",
+              "src": "AUTH_0dcf3da8f6d31121211ea793",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0624d1f2f32ee70a7fbba730",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_1e54e4595284893b3b19a79a",
+              "src": "AUTH_a191778e38a1ca5f36459613",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0624d1f2f32ee70a7fbba730",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_1e56b6152163a1c457b05e95",
+              "src": "AUTH_0dcf3da8f6d31121211ea793",
+              "relation": "AFFILIATED_WITH",
+              "dst": "ORG_320a5d2a36a22aa6a7fabd52",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "observed_affiliation": "Manipal University Jaipur, India",
+                "observed_year": 2025,
+                "resolution_method": "CANONICAL",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_2a09395a6f34c3699295e29f",
+              "src": "AUTH_7c68624409f3c311f569af09",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0624d1f2f32ee70a7fbba730",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_2efee8a0f8c4ccd164e835bb",
+              "src": "AUTH_8d16e78b2b3ac1a3cb73180d",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_f77899e4e4b6e66d17a5372a",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "observed_affiliation": "Manipal Institute of Technology, India; AryaXAI Alignment Lab, AryaXAI.com, India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_34ca01b0f106ea5c13b91302",
+              "src": "AUTH_b97593d8a7fea4368328a503",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0624d1f2f32ee70a7fbba730",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_56022663269f3e7b169fa004",
+              "src": "PAPER_0624d1f2f32ee70a7fbba730",
+              "relation": "HAS_TOPIC",
+              "dst": "TOPIC_46fb078d98c2df164f326518",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_5fc42f4f081140d8b2f11d2c",
+              "src": "AUTH_e627709827e1136740a337ef",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0624d1f2f32ee70a7fbba730",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_7c3e3388b96bfd470edab55a",
+              "src": "AUTH_8d16e78b2b3ac1a3cb73180d",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0624d1f2f32ee70a7fbba730",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_8026f7435da94ea1ba80fb3c",
+              "src": "AUTH_e28430c42c048406bc03ca82",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0624d1f2f32ee70a7fbba730",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_84e2e6b46249345ed809a902",
+              "src": "PAPER_0624d1f2f32ee70a7fbba730",
+              "relation": "PUBLISHED_AT",
+              "dst": "CONF_68331fdce3b7e2a07a924633",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_aa5808f8cc3fca7f33b391c0",
+              "src": "AUTH_b97593d8a7fea4368328a503",
+              "relation": "AFFILIATED_WITH",
+              "dst": "ORG_320a5d2a36a22aa6a7fabd52",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "observed_affiliation": "Manipal University Jaipur, India",
+                "observed_year": 2025,
+                "resolution_method": "CANONICAL",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_b4ec212b97c2da07322f9941",
+              "src": "AUTH_e28430c42c048406bc03ca82",
+              "relation": "AFFILIATED_WITH",
+              "dst": "ORG_320a5d2a36a22aa6a7fabd52",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "observed_affiliation": "Manipal University Jaipur, India",
+                "observed_year": 2025,
+                "resolution_method": "CANONICAL",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_d72369d092cfb063b2c70d1c",
+              "src": "AUTH_a191778e38a1ca5f36459613",
+              "relation": "AFFILIATED_WITH",
+              "dst": "ORG_320a5d2a36a22aa6a7fabd52",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "observed_affiliation": "Manipal University Jaipur, India",
+                "observed_year": 2025,
+                "resolution_method": "CANONICAL",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_dda850a7fa6c6ebb930cf81f",
+              "src": "AUTH_e627709827e1136740a337ef",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_a1f405971eb5c874d2f79172",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "observed_affiliation": "National Institute of Technology Karnataka, Surathkal, India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_e8adb08dcd973fcb04136eac",
+              "src": "AUTH_7c68624409f3c311f569af09",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_95051fb423021061aa41d124",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "observed_affiliation": "IISER Kolkata, India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_ec29e5fc83c8b9ca1cbc55c7",
+              "src": "AUTH_202f869d30bd26f814d916aa",
+              "relation": "AFFILIATED_WITH",
+              "dst": "ORG_320a5d2a36a22aa6a7fabd52",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "observed_affiliation": "Manipal University Jaipur, India",
+                "observed_year": 2025,
+                "resolution_method": "CANONICAL",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_fb23a612902faf94c4eb3b84",
+              "src": "AUTH_202f869d30bd26f814d916aa",
+              "relation": "AUTHORED",
+              "dst": "PAPER_0624d1f2f32ee70a7fbba730",
+              "evidence_id": "PAPER_0624d1f2f32ee70a7fbba730",
+              "data": {
+                "status": "OBSERVED"
+              }
+            }
+          ]
+        },
+        {
+          "citation": "P3",
+          "title": "Scaling Laws and Efficient Inference for Ternary Language Models",
+          "abstract": "",
+          "year": 2025,
+          "url": "https://aclanthology.org/2025.acl-long.1294.pdf",
+          "retrieved_text": "Scaling Laws and Efficient Inference for Ternary Language Models\n",
+          "document_id": "DOC_6e0f685f93e262294e5ce765",
+          "nodes": [
+            {
+              "id": "AUTH_32a0fb2e37690f390172d3bd",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Tejas Vaidhya",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_37aa5589490cee53c56038c7",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Majid Behbahani",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_7c7ef3d7201b60f97f3d729e",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Yuriy Nevmyvaka",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_925f51ecb20b6aa8a4785edc",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Vineet Jain",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_ae4ba072aee7537ef9aa11db",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Ayush Kaushal",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_dcc9342e308b2b5c1738c6c6",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Francis Couture-Harpin",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_e8c965b3f696d50448395b88",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Prashant Shishodia",
+              "orcid": ""
+            },
+            {
+              "id": "AUTH_f8cae6d94d6b0d01f395215c",
+              "kind": "AUTHOR",
+              "identity_scope": "PAPER",
+              "name": "Irina Rish",
+              "orcid": ""
+            },
+            {
+              "id": "CAND_18ac1130b0cb89e4896399d8",
+              "kind": "CANDIDATE",
+              "canonical_name": "Nolano AI, Mila-Quebec AI institute, Universit\u00e9 de Montr\u00e9al",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CAND_1cf60a3d77bdac449366be00",
+              "kind": "CANDIDATE",
+              "canonical_name": "Mila-Quebec AI institute, McGill University",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CAND_6228a5824a1e8d1554519125",
+              "kind": "CANDIDATE",
+              "canonical_name": "Morgan Stanley",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CAND_69d0daa4035dcb435b9f5ec1",
+              "kind": "CANDIDATE",
+              "canonical_name": "Nolano AI",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CAND_a6d45b131d825fef5969b051",
+              "kind": "CANDIDATE",
+              "canonical_name": "\u00c9cole de technologie sup\u00e9rieure, Universit\u00e9 du Qu\u00e9bec",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CAND_c8670f1e10ed2e76626aa5f5",
+              "kind": "CANDIDATE",
+              "canonical_name": "Google, India",
+              "verification_status": "NEEDS_REVIEW"
+            },
+            {
+              "id": "CONF_68331fdce3b7e2a07a924633",
+              "kind": "CONFERENCE",
+              "name": "ACL",
+              "year": 2025
+            },
+            {
+              "id": "TOPIC_46fb078d98c2df164f326518",
+              "kind": "TOPIC",
+              "name": "NLP"
+            }
+          ],
+          "relationships": [
+            {
+              "id": "EDGE_08d5ebc6d9ab0199999b03b6",
+              "src": "AUTH_32a0fb2e37690f390172d3bd",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_18ac1130b0cb89e4896399d8",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "observed_affiliation": "Nolano AI, Mila-Quebec AI institute, Universit\u00e9 de Montr\u00e9al",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_206094da363dba5c5755775d",
+              "src": "AUTH_dcc9342e308b2b5c1738c6c6",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_a6d45b131d825fef5969b051",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "observed_affiliation": "\u00c9cole de technologie sup\u00e9rieure, Universit\u00e9 du Qu\u00e9bec",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_296377ce46dbccdd7c38be9c",
+              "src": "AUTH_ae4ba072aee7537ef9aa11db",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_69d0daa4035dcb435b9f5ec1",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "observed_affiliation": "Nolano AI",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_300d986b30f56f25f02a2662",
+              "src": "PAPER_2a3b5aae736c1f489855c72e",
+              "relation": "PUBLISHED_AT",
+              "dst": "CONF_68331fdce3b7e2a07a924633",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_308c8cea245d37d8a7df83f3",
+              "src": "PAPER_2a3b5aae736c1f489855c72e",
+              "relation": "HAS_TOPIC",
+              "dst": "TOPIC_46fb078d98c2df164f326518",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_4f0d89c61038c9c0d40420f7",
+              "src": "AUTH_e8c965b3f696d50448395b88",
+              "relation": "AUTHORED",
+              "dst": "PAPER_2a3b5aae736c1f489855c72e",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_63757c831632df66292232d2",
+              "src": "AUTH_ae4ba072aee7537ef9aa11db",
+              "relation": "AUTHORED",
+              "dst": "PAPER_2a3b5aae736c1f489855c72e",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_64a1802b1ad4bb56ecd852e5",
+              "src": "AUTH_925f51ecb20b6aa8a4785edc",
+              "relation": "AUTHORED",
+              "dst": "PAPER_2a3b5aae736c1f489855c72e",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_6dfecd7bbf919877ae102a77",
+              "src": "AUTH_f8cae6d94d6b0d01f395215c",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_18ac1130b0cb89e4896399d8",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "observed_affiliation": "Nolano AI, Mila-Quebec AI institute, Universit\u00e9 de Montr\u00e9al",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_793490bb4ffc16a3a63a9304",
+              "src": "AUTH_7c7ef3d7201b60f97f3d729e",
+              "relation": "AUTHORED",
+              "dst": "PAPER_2a3b5aae736c1f489855c72e",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_8377da5f59b3b8ca9af1e86d",
+              "src": "AUTH_e8c965b3f696d50448395b88",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_c8670f1e10ed2e76626aa5f5",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "observed_affiliation": "Google, India",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_8dc1492f12010d68ab7cc661",
+              "src": "AUTH_925f51ecb20b6aa8a4785edc",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_1cf60a3d77bdac449366be00",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "observed_affiliation": "Mila-Quebec AI institute, McGill University",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_9452aa66cb20df058fd85216",
+              "src": "AUTH_37aa5589490cee53c56038c7",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_6228a5824a1e8d1554519125",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "observed_affiliation": "Morgan Stanley",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_96b396fbeeb54b0efd72d7bf",
+              "src": "AUTH_37aa5589490cee53c56038c7",
+              "relation": "AUTHORED",
+              "dst": "PAPER_2a3b5aae736c1f489855c72e",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_9736db9fc50dede673ebb85b",
+              "src": "AUTH_7c7ef3d7201b60f97f3d729e",
+              "relation": "AFFILIATED_WITH",
+              "dst": "CAND_6228a5824a1e8d1554519125",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "observed_affiliation": "Morgan Stanley",
+                "observed_year": 2025,
+                "resolution_method": "UNRESOLVED",
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_98f90864c0b4484360a9bc4b",
+              "src": "AUTH_dcc9342e308b2b5c1738c6c6",
+              "relation": "AUTHORED",
+              "dst": "PAPER_2a3b5aae736c1f489855c72e",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_c3050401a9b6b76c4c08ddd7",
+              "src": "AUTH_32a0fb2e37690f390172d3bd",
+              "relation": "AUTHORED",
+              "dst": "PAPER_2a3b5aae736c1f489855c72e",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "status": "OBSERVED"
+              }
+            },
+            {
+              "id": "EDGE_d1a3eb949f916efa356e634e",
+              "src": "AUTH_f8cae6d94d6b0d01f395215c",
+              "relation": "AUTHORED",
+              "dst": "PAPER_2a3b5aae736c1f489855c72e",
+              "evidence_id": "PAPER_2a3b5aae736c1f489855c72e",
+              "data": {
+                "status": "OBSERVED"
+              }
+            }
+          ]
+        }
+      ],
+      "answer": "[P1] VADE: Visual Attention Guided Hallucination Detection and Elimination \u2014 https://aclanthology.org/2025.findings-acl.773.pdf\n[P2] SELF-PERCEPT: Introspection Improves Large Language Models\u2019 Detection of Multi-Person Mental Manipulation in Conversations \u2014 https://aclanthology.org/2025.acl-short.52.pdf\n[P3] Scaling Laws and Efficient Inference for Ternary Language Models \u2014 https://aclanthology.org/2025.acl-long.1294.pdf",
+      "generation": "extractive"
+    }
+  },
+  "checks": {
+    "all_modes_return_citations": true,
+    "idempotent_index": true,
+    "paper_count": true
+  }
+}

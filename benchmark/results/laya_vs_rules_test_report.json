@@ -1,0 +1,2586 @@
+{
+  "created_at": "2026-11-15T16:54:55.024304+00:00",
+  "data": "/home/silajeet0/workspace/IKDD_Internship_IITB/SENTRY/laya_finetuning/finetuning_data/test.jsonl",
+  "data_sha256": "8d94815a303def43825b8500e78834ee65297720b3fdfaab7659f8b40ad5db91",
+  "model": {
+    "model": "/home/silajeet0/workspace/IKDD_Internship_IITB/SENTRY/laya_finetuning/laya_finetuned_SENTRY",
+    "device": "cpu",
+    "threads": 2,
+    "config_sha256": "1b1278cb95be14078873edac850c0d92d32379da29d1d032427e51cd40a510f0",
+    "versions": {
+      "laya": "0.4.33",
+      "torch": "2.14.1+cpu",
+      "transformers": "5.20.2",
+      "huggingface-hub": "2.3.0"
+    }
+  },
+  "model_load_seconds": 16.357850402999702,
+  "n": 120,
+  "label_counts": {
+    "INDIAN": 40,
+    "NOT_INDIAN": 80
+  },
+  "binary_rule_mapping": {
+    "positive": "INDIAN",
+    "negative": "NOT_INDIAN",
+    "ambiguous": "NOT_INDIAN"
+  },
+  "results": {
+    "rules": {
+      "metrics": {
+        "n": 120,
+        "accuracy": 0.8333333333333334,
+        "macro_f1": 0.8222222222222222,
+        "balanced_accuracy": 0.84375,
+        "per_class": {
+          "INDIAN": {
+            "precision": 0.7,
+            "recall": 0.875,
+            "f1": 0.7777777777777777,
+            "support": 40
+          },
+          "NOT_INDIAN": {
+            "precision": 0.9285714285714286,
+            "recall": 0.8125,
+            "f1": 0.8666666666666666,
+            "support": 80
+          }
+        },
+        "confusion_matrix": {
+          "INDIAN": {
+            "INDIAN": 35,
+            "NOT_INDIAN": 5
+          },
+          "NOT_INDIAN": {
+            "INDIAN": 15,
+            "NOT_INDIAN": 65
+          }
+        }
+      },
+      "latency": {
+        "mean_ms": 0.29463070834860144,
+        "p50_ms": 0.10920950012405228,
+        "p95_ms": 0.2499980000720825
+      },
+      "predictions": [
+        {
+          "state": "Adobe Research Bangalore, Bengaluru, India",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "Affiliations: IIT Bombay; Stanford University",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bbombay\\b"
+          ]
+        },
+        {
+          "state": "Affiliations: TIFR Mumbai; CERN Switzerland",
+          "expected": "INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "BITS Pilani, Hyderabad, Telangana",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bbits pilani\\b"
+          ]
+        },
+        {
+          "state": "Centre for AI, Tata Institute of Fundamental Research, Bengaluru",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\btata institute of fundamental research\\b"
+          ]
+        },
+        {
+          "state": "Defence Research and Development Organisation",
+          "expected": "INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Department of Computer Science, Jadavpur University, India",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "IBM Research India, Mumbai, Maharashtra",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "IIIT Hyderabad, Bengaluru, Karnataka",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biiit\\b"
+          ]
+        },
+        {
+          "state": "IIIT Hyderabad, New Delhi, Delhi",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biiit\\b"
+          ]
+        },
+        {
+          "state": "IISc, Mumbai",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biisc\\b"
+          ]
+        },
+        {
+          "state": "IISc, Mumbai, Maharashtra",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biisc\\b"
+          ]
+        },
+        {
+          "state": "IIT Bombay, Chennai, Tamil Nadu",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bbombay\\b",
+            "\\bchennai\\b"
+          ]
+        },
+        {
+          "state": "IIT Bombay, Mumbai",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bbombay\\b",
+            "\\bmumbai\\b"
+          ]
+        },
+        {
+          "state": "IIT Bombay, research group",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bbombay\\b"
+          ]
+        },
+        {
+          "state": "IIT Bombay; author affiliation",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bbombay\\b"
+          ]
+        },
+        {
+          "state": "IIT Guwahati, India",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "IIT Hyderabad campus",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bhyderabad\\b"
+          ]
+        },
+        {
+          "state": "IIT Kanpur, Chennai, Tamil Nadu",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bkanpur\\b",
+            "\\bchennai\\b"
+          ]
+        },
+        {
+          "state": "IIT Kharagpur, Chennai, Tamil Nadu",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bkharagpur\\b",
+            "\\bchennai\\b"
+          ]
+        },
+        {
+          "state": "IIT Kharagpur, Indian Institute campus",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindian institute\\b"
+          ]
+        },
+        {
+          "state": "IIT Kharagpur; Google Research Zurich; joint appointment",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bkharagpur\\b"
+          ]
+        },
+        {
+          "state": "IIT Madras, Mumbai, Maharashtra",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bmadras\\b",
+            "\\bmumbai\\b"
+          ]
+        },
+        {
+          "state": "IIT Madras; National University of Singapore; joint appointment",
+          "expected": "INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\biit\\b"
+          ]
+        },
+        {
+          "state": "Indian Institute of Science; author affiliation",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindian institute\\b",
+            "\\bindian institute of science\\b"
+          ]
+        },
+        {
+          "state": "Indian Institute of Technology (Indian School of Mines), Dhanbad",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindian institute\\b"
+          ]
+        },
+        {
+          "state": "Indian Institute of Technology Bombay, India",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b",
+            "\\bindian institute\\b"
+          ]
+        },
+        {
+          "state": "Indian Statistical Institute, Kolkata, India",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b",
+            "\\bindian statistical institute\\b"
+          ]
+        },
+        {
+          "state": "Infosys Research Bengaluru, New Delhi, India",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "Jadavpur University, India 560012",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "Microsoft Research India, Bengaluru, India",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "NIT Tiruchirappalli, Mumbai, Maharashtra",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bnit\\b",
+            "\\bmumbai\\b"
+          ]
+        },
+        {
+          "state": "Research Lab, IIT Madras, Indian campus",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bmadras\\b"
+          ]
+        },
+        {
+          "state": "Samsung R&D Institute India, Mumbai, Maharashtra",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "School of Engineering; IIIT Hyderabad; Mumbai, India",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "School of Engineering; Tata Institute of Fundamental Research; Mumbai, India",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "TCS Research Mumbai, Bangalore",
+          "expected": "INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bbangalore\\b",
+            "\\bmumbai\\b"
+          ]
+        },
+        {
+          "state": "TIFR Mumbai; CERN Switzerland; author has multiple current affiliations",
+          "expected": "INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "University of Hyderabad (India)",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "[1] ISI Kolkata; University of Cambridge",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bisi\\b",
+            "\\bkolkata\\b"
+          ]
+        },
+        {
+          "state": "AIIMS",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "AIIMS department",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Affiliations: ISI; Microsoft Research",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bisi\\b"
+          ]
+        },
+        {
+          "state": "Affiliations: University; India email",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "Affiliations: University; location unknown",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Amazon Science, Zurich, Switzerland",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Amity University Mauritius campus",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Applied Science University",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "BITS Pilani Mauritius campus",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bbits pilani\\b"
+          ]
+        },
+        {
+          "state": "BITS; research group",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Based in Bengaluru",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bbengaluru\\b"
+          ]
+        },
+        {
+          "state": "Boston",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Current affiliation: Microsoft Research; India",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "Current: ETH Zurich; former affiliation Jadavpur University",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bjadavpur university\\b"
+          ]
+        },
+        {
+          "state": "Department of Computer Science, Bengaluru",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bbengaluru\\b"
+          ]
+        },
+        {
+          "state": "Department of India Studies, University of Cambridge, UK",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "Department of India Studies, University of Oxford, UK",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "Department of India Studies, University of Toronto, UK",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "Department of Statistics, India",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "Department; Company; current status unknown",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "ETH Zurich, USA; formerly IIT Bombay, India",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "Faculty of Computing, Boston, USA",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Faculty of Science, New Delhi",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bdelhi\\b"
+          ]
+        },
+        {
+          "state": "IBM Research, Toronto, Canada",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "IIM Ahmedabad Abu Dhabi campus, UAE",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biim\\b"
+          ]
+        },
+        {
+          "state": "IIM, Chicago, USA",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "IIM, Melbourne, Australia",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "IIT,",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\biit\\b"
+          ]
+        },
+        {
+          "state": "IIT, Tokyo, Japan",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\biit\\b"
+          ]
+        },
+        {
+          "state": "IIT.",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\biit\\b"
+          ]
+        },
+        {
+          "state": "ISI; Microsoft Research; both locations omitted",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bisi\\b"
+          ]
+        },
+        {
+          "state": "Indian Institute of Science Abu Dhabi campus, UAE",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindian institute\\b",
+            "\\bindian institute of science\\b"
+          ]
+        },
+        {
+          "state": "Indian Institute of Technology Madras, research group",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindian institute\\b"
+          ]
+        },
+        {
+          "state": "Information Sciences Institute, London, United Kingdom",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Information Sciences Institute, Tokyo, Japan",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Infosys Research laboratory",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\binfosys\\b"
+          ]
+        },
+        {
+          "state": "Infosys Research; scientist",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\binfosys\\b"
+          ]
+        },
+        {
+          "state": "Institute of Science",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Institute of Science; Department of CSE",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Institute of Technology; research group",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Intel Labs, Sydney, Australia",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "International Research Centre; Department of CSE",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Kolkata, India",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "Machine Learning Group, New Delhi",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bdelhi\\b"
+          ]
+        },
+        {
+          "state": "Massachusetts Institute of Technology; author affiliation",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Microsoft Research, campus",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Microsoft Research; research collaboration",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Microsoft Research; scientist",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "NIT, Genova, Italy",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bnit\\b"
+          ]
+        },
+        {
+          "state": "National Research Laboratory, Bengaluru",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bbengaluru\\b"
+          ]
+        },
+        {
+          "state": "Qualcomm Research group",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "School of Engineering, Boston, USA",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "School of Engineering, London, United Kingdom",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Stanford University, United Kingdom",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Stanford University, main campus; additional affiliation detail 2",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Stanford University; India language project",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ]
+        },
+        {
+          "state": "Stanford University; academic unit; additional affiliation detail 2",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Systems Lab, Boston, USA",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Systems Lab, Tokyo, Japan",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "TCS Research group",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "Tata Consultancy Services, London, United Kingdom",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\btata\\b"
+          ]
+        },
+        {
+          "state": "USC, Melbourne, Australia",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "University Research Centre, New Delhi",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bdelhi\\b"
+          ]
+        },
+        {
+          "state": "University campus; overseas office; both locations omitted",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "University of Melbourne, Switzerland; alumni of IIT Delhi",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bdelhi\\b"
+          ]
+        },
+        {
+          "state": "University of Oxford, Switzerland",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "University of Toronto, Australia",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "University of Toronto; moved from IIT Madras in 2020",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bmadras\\b"
+          ]
+        },
+        {
+          "state": "University; Mumbai or London; location unclear",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bmumbai\\b"
+          ]
+        },
+        {
+          "state": "University; Research Lab",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "VIT, Melbourne, Australia",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bvit\\b"
+          ]
+        },
+        {
+          "state": "Wipro Research, Sydney, Australia",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bwipro\\b"
+          ]
+        },
+        {
+          "state": "Wipro Research, Toronto, Canada",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bwipro\\b"
+          ]
+        },
+        {
+          "state": "contact@example.org",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "name@university.edu",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "name@university.edu (email)",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "name@university.edu; corresponding author",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "person@google.com",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "person@google.com (email)",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        },
+        {
+          "state": "scientist@stanford.edu; corresponding author",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": []
+        }
+      ]
+    },
+    "laya": {
+      "metrics": {
+        "n": 120,
+        "accuracy": 0.9916666666666667,
+        "macro_f1": 0.9906825064057768,
+        "balanced_accuracy": 0.99375,
+        "per_class": {
+          "INDIAN": {
+            "precision": 0.975609756097561,
+            "recall": 1.0,
+            "f1": 0.9876543209876543,
+            "support": 40
+          },
+          "NOT_INDIAN": {
+            "precision": 1.0,
+            "recall": 0.9875,
+            "f1": 0.9937106918238994,
+            "support": 80
+          }
+        },
+        "confusion_matrix": {
+          "INDIAN": {
+            "INDIAN": 40,
+            "NOT_INDIAN": 0
+          },
+          "NOT_INDIAN": {
+            "INDIAN": 1,
+            "NOT_INDIAN": 79
+          }
+        }
+      },
+      "latency": {
+        "mean_ms": 1423.9975639750317,
+        "p50_ms": 1392.8650804998597,
+        "p95_ms": 1529.4236899999305
+      },
+      "predictions": [
+        {
+          "state": "Adobe Research Bangalore, Bengaluru, India",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9815,
+            "NOT_INDIAN": 0.0185
+          },
+          "confidence": 0.8671
+        },
+        {
+          "state": "Affiliations: IIT Bombay; Stanford University",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9809,
+            "NOT_INDIAN": 0.0191
+          },
+          "confidence": 0.8637
+        },
+        {
+          "state": "Affiliations: TIFR Mumbai; CERN Switzerland",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9733,
+            "NOT_INDIAN": 0.0267
+          },
+          "confidence": 0.8226
+        },
+        {
+          "state": "BITS Pilani, Hyderabad, Telangana",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9797,
+            "NOT_INDIAN": 0.0203
+          },
+          "confidence": 0.8569
+        },
+        {
+          "state": "Centre for AI, Tata Institute of Fundamental Research, Bengaluru",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9813,
+            "NOT_INDIAN": 0.0187
+          },
+          "confidence": 0.8659
+        },
+        {
+          "state": "Defence Research and Development Organisation",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.8874,
+            "NOT_INDIAN": 0.1126
+          },
+          "confidence": 0.4922
+        },
+        {
+          "state": "Department of Computer Science, Jadavpur University, India",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9812,
+            "NOT_INDIAN": 0.0188
+          },
+          "confidence": 0.8654
+        },
+        {
+          "state": "IBM Research India, Mumbai, Maharashtra",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.981,
+            "NOT_INDIAN": 0.019
+          },
+          "confidence": 0.8639
+        },
+        {
+          "state": "IIIT Hyderabad, Bengaluru, Karnataka",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9796,
+            "NOT_INDIAN": 0.0204
+          },
+          "confidence": 0.8564
+        },
+        {
+          "state": "IIIT Hyderabad, New Delhi, Delhi",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9798,
+            "NOT_INDIAN": 0.0202
+          },
+          "confidence": 0.8575
+        },
+        {
+          "state": "IISc, Mumbai",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9799,
+            "NOT_INDIAN": 0.0201
+          },
+          "confidence": 0.8582
+        },
+        {
+          "state": "IISc, Mumbai, Maharashtra",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9805,
+            "NOT_INDIAN": 0.0195
+          },
+          "confidence": 0.8613
+        },
+        {
+          "state": "IIT Bombay, Chennai, Tamil Nadu",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9801,
+            "NOT_INDIAN": 0.0199
+          },
+          "confidence": 0.859
+        },
+        {
+          "state": "IIT Bombay, Mumbai",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9794,
+            "NOT_INDIAN": 0.0206
+          },
+          "confidence": 0.8555
+        },
+        {
+          "state": "IIT Bombay, research group",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9537,
+            "NOT_INDIAN": 0.0463
+          },
+          "confidence": 0.7296
+        },
+        {
+          "state": "IIT Bombay; author affiliation",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9389,
+            "NOT_INDIAN": 0.0611
+          },
+          "confidence": 0.6681
+        },
+        {
+          "state": "IIT Guwahati, India",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9803,
+            "NOT_INDIAN": 0.0197
+          },
+          "confidence": 0.8603
+        },
+        {
+          "state": "IIT Hyderabad campus",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9794,
+            "NOT_INDIAN": 0.0206
+          },
+          "confidence": 0.8554
+        },
+        {
+          "state": "IIT Kanpur, Chennai, Tamil Nadu",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9816,
+            "NOT_INDIAN": 0.0184
+          },
+          "confidence": 0.8676
+        },
+        {
+          "state": "IIT Kharagpur, Chennai, Tamil Nadu",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9812,
+            "NOT_INDIAN": 0.0188
+          },
+          "confidence": 0.8655
+        },
+        {
+          "state": "IIT Kharagpur, Indian Institute campus",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9795,
+            "NOT_INDIAN": 0.0205
+          },
+          "confidence": 0.8558
+        },
+        {
+          "state": "IIT Kharagpur; Google Research Zurich; joint appointment",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9804,
+            "NOT_INDIAN": 0.0196
+          },
+          "confidence": 0.8607
+        },
+        {
+          "state": "IIT Madras, Mumbai, Maharashtra",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9812,
+            "NOT_INDIAN": 0.0188
+          },
+          "confidence": 0.8653
+        },
+        {
+          "state": "IIT Madras; National University of Singapore; joint appointment",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9792,
+            "NOT_INDIAN": 0.0208
+          },
+          "confidence": 0.8543
+        },
+        {
+          "state": "Indian Institute of Science; author affiliation",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9812,
+            "NOT_INDIAN": 0.0188
+          },
+          "confidence": 0.8651
+        },
+        {
+          "state": "Indian Institute of Technology (Indian School of Mines), Dhanbad",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.98,
+            "NOT_INDIAN": 0.02
+          },
+          "confidence": 0.8586
+        },
+        {
+          "state": "Indian Institute of Technology Bombay, India",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9806,
+            "NOT_INDIAN": 0.0194
+          },
+          "confidence": 0.8622
+        },
+        {
+          "state": "Indian Statistical Institute, Kolkata, India",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.981,
+            "NOT_INDIAN": 0.019
+          },
+          "confidence": 0.8641
+        },
+        {
+          "state": "Infosys Research Bengaluru, New Delhi, India",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9804,
+            "NOT_INDIAN": 0.0196
+          },
+          "confidence": 0.861
+        },
+        {
+          "state": "Jadavpur University, India 560012",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9799,
+            "NOT_INDIAN": 0.0201
+          },
+          "confidence": 0.8582
+        },
+        {
+          "state": "Microsoft Research India, Bengaluru, India",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9829,
+            "NOT_INDIAN": 0.0171
+          },
+          "confidence": 0.875
+        },
+        {
+          "state": "NIT Tiruchirappalli, Mumbai, Maharashtra",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9813,
+            "NOT_INDIAN": 0.0187
+          },
+          "confidence": 0.8661
+        },
+        {
+          "state": "Research Lab, IIT Madras, Indian campus",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9804,
+            "NOT_INDIAN": 0.0196
+          },
+          "confidence": 0.861
+        },
+        {
+          "state": "Samsung R&D Institute India, Mumbai, Maharashtra",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9821,
+            "NOT_INDIAN": 0.0179
+          },
+          "confidence": 0.8707
+        },
+        {
+          "state": "School of Engineering; IIIT Hyderabad; Mumbai, India",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9809,
+            "NOT_INDIAN": 0.0191
+          },
+          "confidence": 0.8638
+        },
+        {
+          "state": "School of Engineering; Tata Institute of Fundamental Research; Mumbai, India",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.982,
+            "NOT_INDIAN": 0.018
+          },
+          "confidence": 0.8698
+        },
+        {
+          "state": "TCS Research Mumbai, Bangalore",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9792,
+            "NOT_INDIAN": 0.0208
+          },
+          "confidence": 0.8543
+        },
+        {
+          "state": "TIFR Mumbai; CERN Switzerland; author has multiple current affiliations",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9699,
+            "NOT_INDIAN": 0.0301
+          },
+          "confidence": 0.8049
+        },
+        {
+          "state": "University of Hyderabad (India)",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9795,
+            "NOT_INDIAN": 0.0205
+          },
+          "confidence": 0.8559
+        },
+        {
+          "state": "[1] ISI Kolkata; University of Cambridge",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9792,
+            "NOT_INDIAN": 0.0208
+          },
+          "confidence": 0.854
+        },
+        {
+          "state": "AIIMS",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0208,
+            "NOT_INDIAN": 0.9792
+          },
+          "confidence": 0.854
+        },
+        {
+          "state": "AIIMS department",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0202,
+            "NOT_INDIAN": 0.9798
+          },
+          "confidence": 0.8574
+        },
+        {
+          "state": "Affiliations: ISI; Microsoft Research",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0213,
+            "NOT_INDIAN": 0.9787
+          },
+          "confidence": 0.8513
+        },
+        {
+          "state": "Affiliations: University; India email",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0205,
+            "NOT_INDIAN": 0.9795
+          },
+          "confidence": 0.8558
+        },
+        {
+          "state": "Affiliations: University; location unknown",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0195,
+            "NOT_INDIAN": 0.9805
+          },
+          "confidence": 0.8615
+        },
+        {
+          "state": "Amazon Science, Zurich, Switzerland",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0181,
+            "NOT_INDIAN": 0.9819
+          },
+          "confidence": 0.8693
+        },
+        {
+          "state": "Amity University Mauritius campus",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0184,
+            "NOT_INDIAN": 0.9816
+          },
+          "confidence": 0.8676
+        },
+        {
+          "state": "Applied Science University",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0207,
+            "NOT_INDIAN": 0.9793
+          },
+          "confidence": 0.8549
+        },
+        {
+          "state": "BITS Pilani Mauritius campus",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0182,
+            "NOT_INDIAN": 0.9818
+          },
+          "confidence": 0.8685
+        },
+        {
+          "state": "BITS; research group",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0196,
+            "NOT_INDIAN": 0.9804
+          },
+          "confidence": 0.8606
+        },
+        {
+          "state": "Based in Bengaluru",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0208,
+            "NOT_INDIAN": 0.9792
+          },
+          "confidence": 0.8539
+        },
+        {
+          "state": "Boston",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0187,
+            "NOT_INDIAN": 0.9813
+          },
+          "confidence": 0.8656
+        },
+        {
+          "state": "Current affiliation: Microsoft Research; India",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0195,
+            "NOT_INDIAN": 0.9805
+          },
+          "confidence": 0.8612
+        },
+        {
+          "state": "Current: ETH Zurich; former affiliation Jadavpur University",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0198,
+            "NOT_INDIAN": 0.9802
+          },
+          "confidence": 0.8598
+        },
+        {
+          "state": "Department of Computer Science, Bengaluru",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0256,
+            "NOT_INDIAN": 0.9744
+          },
+          "confidence": 0.8283
+        },
+        {
+          "state": "Department of India Studies, University of Cambridge, UK",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0213,
+            "NOT_INDIAN": 0.9787
+          },
+          "confidence": 0.8514
+        },
+        {
+          "state": "Department of India Studies, University of Oxford, UK",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0241,
+            "NOT_INDIAN": 0.9759
+          },
+          "confidence": 0.8364
+        },
+        {
+          "state": "Department of India Studies, University of Toronto, UK",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.019,
+            "NOT_INDIAN": 0.981
+          },
+          "confidence": 0.8641
+        },
+        {
+          "state": "Department of Statistics, India",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.022,
+            "NOT_INDIAN": 0.978
+          },
+          "confidence": 0.8477
+        },
+        {
+          "state": "Department; Company; current status unknown",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0191,
+            "NOT_INDIAN": 0.9809
+          },
+          "confidence": 0.8637
+        },
+        {
+          "state": "ETH Zurich, USA; formerly IIT Bombay, India",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0195,
+            "NOT_INDIAN": 0.9805
+          },
+          "confidence": 0.8611
+        },
+        {
+          "state": "Faculty of Computing, Boston, USA",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0172,
+            "NOT_INDIAN": 0.9828
+          },
+          "confidence": 0.8746
+        },
+        {
+          "state": "Faculty of Science, New Delhi",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0223,
+            "NOT_INDIAN": 0.9777
+          },
+          "confidence": 0.8457
+        },
+        {
+          "state": "IBM Research, Toronto, Canada",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0187,
+            "NOT_INDIAN": 0.9813
+          },
+          "confidence": 0.866
+        },
+        {
+          "state": "IIM Ahmedabad Abu Dhabi campus, UAE",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0203,
+            "NOT_INDIAN": 0.9797
+          },
+          "confidence": 0.8571
+        },
+        {
+          "state": "IIM, Chicago, USA",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0191,
+            "NOT_INDIAN": 0.9809
+          },
+          "confidence": 0.8634
+        },
+        {
+          "state": "IIM, Melbourne, Australia",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.019,
+            "NOT_INDIAN": 0.981
+          },
+          "confidence": 0.8643
+        },
+        {
+          "state": "IIT,",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0201,
+            "NOT_INDIAN": 0.9799
+          },
+          "confidence": 0.8579
+        },
+        {
+          "state": "IIT, Tokyo, Japan",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0198,
+            "NOT_INDIAN": 0.9802
+          },
+          "confidence": 0.8597
+        },
+        {
+          "state": "IIT.",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.02,
+            "NOT_INDIAN": 0.98
+          },
+          "confidence": 0.8585
+        },
+        {
+          "state": "ISI; Microsoft Research; both locations omitted",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.02,
+            "NOT_INDIAN": 0.98
+          },
+          "confidence": 0.8584
+        },
+        {
+          "state": "Indian Institute of Science Abu Dhabi campus, UAE",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0254,
+            "NOT_INDIAN": 0.9746
+          },
+          "confidence": 0.829
+        },
+        {
+          "state": "Indian Institute of Technology Madras, research group",
+          "expected": "NOT_INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.979,
+            "NOT_INDIAN": 0.021
+          },
+          "confidence": 0.8527
+        },
+        {
+          "state": "Information Sciences Institute, London, United Kingdom",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0195,
+            "NOT_INDIAN": 0.9805
+          },
+          "confidence": 0.8615
+        },
+        {
+          "state": "Information Sciences Institute, Tokyo, Japan",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0196,
+            "NOT_INDIAN": 0.9804
+          },
+          "confidence": 0.861
+        },
+        {
+          "state": "Infosys Research laboratory",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0196,
+            "NOT_INDIAN": 0.9804
+          },
+          "confidence": 0.8609
+        },
+        {
+          "state": "Infosys Research; scientist",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0198,
+            "NOT_INDIAN": 0.9802
+          },
+          "confidence": 0.8596
+        },
+        {
+          "state": "Institute of Science",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0202,
+            "NOT_INDIAN": 0.9798
+          },
+          "confidence": 0.8576
+        },
+        {
+          "state": "Institute of Science; Department of CSE",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0211,
+            "NOT_INDIAN": 0.9789
+          },
+          "confidence": 0.8522
+        },
+        {
+          "state": "Institute of Technology; research group",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0191,
+            "NOT_INDIAN": 0.9809
+          },
+          "confidence": 0.8636
+        },
+        {
+          "state": "Intel Labs, Sydney, Australia",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0184,
+            "NOT_INDIAN": 0.9816
+          },
+          "confidence": 0.8676
+        },
+        {
+          "state": "International Research Centre; Department of CSE",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0197,
+            "NOT_INDIAN": 0.9803
+          },
+          "confidence": 0.8604
+        },
+        {
+          "state": "Kolkata, India",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0336,
+            "NOT_INDIAN": 0.9664
+          },
+          "confidence": 0.7879
+        },
+        {
+          "state": "Machine Learning Group, New Delhi",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0262,
+            "NOT_INDIAN": 0.9738
+          },
+          "confidence": 0.8252
+        },
+        {
+          "state": "Massachusetts Institute of Technology; author affiliation",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0195,
+            "NOT_INDIAN": 0.9805
+          },
+          "confidence": 0.8614
+        },
+        {
+          "state": "Microsoft Research, campus",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0209,
+            "NOT_INDIAN": 0.9791
+          },
+          "confidence": 0.8535
+        },
+        {
+          "state": "Microsoft Research; research collaboration",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0197,
+            "NOT_INDIAN": 0.9803
+          },
+          "confidence": 0.8601
+        },
+        {
+          "state": "Microsoft Research; scientist",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0199,
+            "NOT_INDIAN": 0.9801
+          },
+          "confidence": 0.8591
+        },
+        {
+          "state": "NIT, Genova, Italy",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0178,
+            "NOT_INDIAN": 0.9822
+          },
+          "confidence": 0.8712
+        },
+        {
+          "state": "National Research Laboratory, Bengaluru",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0263,
+            "NOT_INDIAN": 0.9737
+          },
+          "confidence": 0.8247
+        },
+        {
+          "state": "Qualcomm Research group",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0192,
+            "NOT_INDIAN": 0.9808
+          },
+          "confidence": 0.8629
+        },
+        {
+          "state": "School of Engineering, Boston, USA",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0196,
+            "NOT_INDIAN": 0.9804
+          },
+          "confidence": 0.8609
+        },
+        {
+          "state": "School of Engineering, London, United Kingdom",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.019,
+            "NOT_INDIAN": 0.981
+          },
+          "confidence": 0.8639
+        },
+        {
+          "state": "Stanford University, United Kingdom",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.018,
+            "NOT_INDIAN": 0.982
+          },
+          "confidence": 0.87
+        },
+        {
+          "state": "Stanford University, main campus; additional affiliation detail 2",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0216,
+            "NOT_INDIAN": 0.9784
+          },
+          "confidence": 0.8496
+        },
+        {
+          "state": "Stanford University; India language project",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0204,
+            "NOT_INDIAN": 0.9796
+          },
+          "confidence": 0.8562
+        },
+        {
+          "state": "Stanford University; academic unit; additional affiliation detail 2",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.02,
+            "NOT_INDIAN": 0.98
+          },
+          "confidence": 0.8586
+        },
+        {
+          "state": "Systems Lab, Boston, USA",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0184,
+            "NOT_INDIAN": 0.9816
+          },
+          "confidence": 0.8677
+        },
+        {
+          "state": "Systems Lab, Tokyo, Japan",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0192,
+            "NOT_INDIAN": 0.9808
+          },
+          "confidence": 0.8632
+        },
+        {
+          "state": "TCS Research group",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0196,
+            "NOT_INDIAN": 0.9804
+          },
+          "confidence": 0.861
+        },
+        {
+          "state": "Tata Consultancy Services, London, United Kingdom",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0534,
+            "NOT_INDIAN": 0.9466
+          },
+          "confidence": 0.6993
+        },
+        {
+          "state": "USC, Melbourne, Australia",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0182,
+            "NOT_INDIAN": 0.9818
+          },
+          "confidence": 0.8686
+        },
+        {
+          "state": "University Research Centre, New Delhi",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0324,
+            "NOT_INDIAN": 0.9676
+          },
+          "confidence": 0.7939
+        },
+        {
+          "state": "University campus; overseas office; both locations omitted",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0185,
+            "NOT_INDIAN": 0.9815
+          },
+          "confidence": 0.8672
+        },
+        {
+          "state": "University of Melbourne, Switzerland; alumni of IIT Delhi",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0182,
+            "NOT_INDIAN": 0.9818
+          },
+          "confidence": 0.8685
+        },
+        {
+          "state": "University of Oxford, Switzerland",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0179,
+            "NOT_INDIAN": 0.9821
+          },
+          "confidence": 0.8708
+        },
+        {
+          "state": "University of Toronto, Australia",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0175,
+            "NOT_INDIAN": 0.9825
+          },
+          "confidence": 0.8727
+        },
+        {
+          "state": "University of Toronto; moved from IIT Madras in 2020",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0188,
+            "NOT_INDIAN": 0.9812
+          },
+          "confidence": 0.8654
+        },
+        {
+          "state": "University; Mumbai or London; location unclear",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.024,
+            "NOT_INDIAN": 0.976
+          },
+          "confidence": 0.8365
+        },
+        {
+          "state": "University; Research Lab",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0211,
+            "NOT_INDIAN": 0.9789
+          },
+          "confidence": 0.8527
+        },
+        {
+          "state": "VIT, Melbourne, Australia",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0184,
+            "NOT_INDIAN": 0.9816
+          },
+          "confidence": 0.8676
+        },
+        {
+          "state": "Wipro Research, Sydney, Australia",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0185,
+            "NOT_INDIAN": 0.9815
+          },
+          "confidence": 0.8673
+        },
+        {
+          "state": "Wipro Research, Toronto, Canada",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0186,
+            "NOT_INDIAN": 0.9814
+          },
+          "confidence": 0.8667
+        },
+        {
+          "state": "contact@example.org",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0199,
+            "NOT_INDIAN": 0.9801
+          },
+          "confidence": 0.8589
+        },
+        {
+          "state": "name@university.edu",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0199,
+            "NOT_INDIAN": 0.9801
+          },
+          "confidence": 0.8591
+        },
+        {
+          "state": "name@university.edu (email)",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.02,
+            "NOT_INDIAN": 0.98
+          },
+          "confidence": 0.8584
+        },
+        {
+          "state": "name@university.edu; corresponding author",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0196,
+            "NOT_INDIAN": 0.9804
+          },
+          "confidence": 0.861
+        },
+        {
+          "state": "person@google.com",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0198,
+            "NOT_INDIAN": 0.9802
+          },
+          "confidence": 0.86
+        },
+        {
+          "state": "person@google.com (email)",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0195,
+            "NOT_INDIAN": 0.9805
+          },
+          "confidence": 0.8615
+        },
+        {
+          "state": "scientist@stanford.edu; corresponding author",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0197,
+            "NOT_INDIAN": 0.9803
+          },
+          "confidence": 0.8604
+        }
+      ]
+    }
+  },
+  "disagreements": [
+    {
+      "state": "Affiliations: TIFR Mumbai; CERN Switzerland",
+      "expected": "INDIAN",
+      "rule_prediction": "NOT_INDIAN",
+      "rule_raw_prediction": "negative",
+      "rule_matches": [],
+      "laya_prediction": "INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.9733,
+        "NOT_INDIAN": 0.0267
+      }
+    },
+    {
+      "state": "Defence Research and Development Organisation",
+      "expected": "INDIAN",
+      "rule_prediction": "NOT_INDIAN",
+      "rule_raw_prediction": "negative",
+      "rule_matches": [],
+      "laya_prediction": "INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.8874,
+        "NOT_INDIAN": 0.1126
+      }
+    },
+    {
+      "state": "IIT Madras; National University of Singapore; joint appointment",
+      "expected": "INDIAN",
+      "rule_prediction": "NOT_INDIAN",
+      "rule_raw_prediction": "ambiguous",
+      "rule_matches": [
+        "\\biit\\b"
+      ],
+      "laya_prediction": "INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.9792,
+        "NOT_INDIAN": 0.0208
+      }
+    },
+    {
+      "state": "TCS Research Mumbai, Bangalore",
+      "expected": "INDIAN",
+      "rule_prediction": "NOT_INDIAN",
+      "rule_raw_prediction": "ambiguous",
+      "rule_matches": [
+        "\\bbangalore\\b",
+        "\\bmumbai\\b"
+      ],
+      "laya_prediction": "INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.9792,
+        "NOT_INDIAN": 0.0208
+      }
+    },
+    {
+      "state": "TIFR Mumbai; CERN Switzerland; author has multiple current affiliations",
+      "expected": "INDIAN",
+      "rule_prediction": "NOT_INDIAN",
+      "rule_raw_prediction": "negative",
+      "rule_matches": [],
+      "laya_prediction": "INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.9699,
+        "NOT_INDIAN": 0.0301
+      }
+    },
+    {
+      "state": "Affiliations: University; India email",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bindia\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0205,
+        "NOT_INDIAN": 0.9795
+      }
+    },
+    {
+      "state": "BITS Pilani Mauritius campus",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bbits pilani\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0182,
+        "NOT_INDIAN": 0.9818
+      }
+    },
+    {
+      "state": "Current affiliation: Microsoft Research; India",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bindia\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0195,
+        "NOT_INDIAN": 0.9805
+      }
+    },
+    {
+      "state": "Current: ETH Zurich; former affiliation Jadavpur University",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bjadavpur university\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0198,
+        "NOT_INDIAN": 0.9802
+      }
+    },
+    {
+      "state": "Department of India Studies, University of Cambridge, UK",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bindia\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0213,
+        "NOT_INDIAN": 0.9787
+      }
+    },
+    {
+      "state": "Department of India Studies, University of Oxford, UK",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bindia\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0241,
+        "NOT_INDIAN": 0.9759
+      }
+    },
+    {
+      "state": "Department of India Studies, University of Toronto, UK",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bindia\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.019,
+        "NOT_INDIAN": 0.981
+      }
+    },
+    {
+      "state": "Department of Statistics, India",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bindia\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.022,
+        "NOT_INDIAN": 0.978
+      }
+    },
+    {
+      "state": "ETH Zurich, USA; formerly IIT Bombay, India",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bindia\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0195,
+        "NOT_INDIAN": 0.9805
+      }
+    },
+    {
+      "state": "IIM Ahmedabad Abu Dhabi campus, UAE",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\biim\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0203,
+        "NOT_INDIAN": 0.9797
+      }
+    },
+    {
+      "state": "Indian Institute of Science Abu Dhabi campus, UAE",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bindian institute\\b",
+        "\\bindian institute of science\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0254,
+        "NOT_INDIAN": 0.9746
+      }
+    },
+    {
+      "state": "Kolkata, India",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bindia\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0336,
+        "NOT_INDIAN": 0.9664
+      }
+    },
+    {
+      "state": "Stanford University; India language project",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bindia\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0204,
+        "NOT_INDIAN": 0.9796
+      }
+    },
+    {
+      "state": "University of Toronto; moved from IIT Madras in 2020",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\biit\\b",
+        "\\bmadras\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0188,
+        "NOT_INDIAN": 0.9812
+      }
+    }
+  ],
+  "environment": {
+    "python": "3.14.4",
+    "platform": "Linux-7.0.0-27-generic-x86_64-with-glibc2.43"
+  }
+}

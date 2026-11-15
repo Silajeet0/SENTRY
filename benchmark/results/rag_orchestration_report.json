@@ -1,0 +1,935 @@
+{
+  "coverage": {
+    "status": "ready",
+    "storage": "SQLite property graph and dense-vector tables; exact cosine search",
+    "database": "/home/silajeet0/workspace/IKDD_Internship_IITB/SENTRY/data/rag/sentry.sqlite3",
+    "kg_version": 6044,
+    "nodes": {
+      "AUTHOR": 2531,
+      "CANDIDATE": 844,
+      "CITY": 25,
+      "CONFERENCE": 24,
+      "COUNTRY": 1,
+      "ORGANIZATION": 1279,
+      "PAPER": 480,
+      "REVIEW_RECORD": 6,
+      "STATE": 34,
+      "TOPIC": 14
+    },
+    "documents": 1759,
+    "vector_indexes": [
+      {
+        "model": "sentence-transformers:sentence-transformers/all-MiniLM-L6-v2@1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+        "vectors": 1759,
+        "fresh_vectors": 1759,
+        "missing_or_stale": 0
+      }
+    ],
+    "corpus_imports": [
+      {
+        "updated_at": "2026-10-28T17:44:50.430279+00:00",
+        "root": "/home/silajeet0/workspace/IKDD_Internship_IITB/SENTRY/data/final_output",
+        "source_files": 32,
+        "source_records": 485,
+        "abstract_cache_sources": [
+          {
+            "file": "data/final_output/ICML/2026/abstracts_cache.json",
+            "sha256": "3a1ba2a47c23309b63f8ae82a3ef987be626f60eb92e880f48c8905f79f1731d"
+          },
+          {
+            "file": "data/final_output/IEEE-ICCV/2025/abstracts_cache.json",
+            "sha256": "6c263660b623266c63deef8085783bdbbc710e9416982761ecdfea1c183afd95"
+          },
+          {
+            "file": "data/final_output/NeurIPS/2025/abstracts_cache.json",
+            "sha256": "f35563305b0a387e17878410ee4d8e0c31a65f5bbeea99d2635af65e7277ba05"
+          }
+        ],
+        "unique_source_urls": 481,
+        "ingested_unique_papers": 480,
+        "duplicate_records": 4,
+        "missing_abstracts": 393,
+        "errors": [
+          {
+            "paper_url": "https://ieeexplore.ieee.org/document/11369205",
+            "sources": [
+              {
+                "file": "data/final_output/IEEE-FOCS/2025/indian_papers_structured.json",
+                "row": 3,
+                "sha256": "4afcb3c66445086b13d61e8c40f4caa45e652797f9977d250d162a6e890046fa",
+                "conference": "IEEE-FOCS",
+                "year_label": "2025"
+              }
+            ],
+            "error": "Paper must have a title"
+          }
+        ],
+        "venue_conflicts": [
+          {
+            "paper_url": "https://dl.acm.org/doi/10.1145/3719027.3744876",
+            "conferences": [
+              "ACM_CCS",
+              "ACM_SIGCOMM"
+            ],
+            "policy": "Venue left unknown; source folders conflict."
+          },
+          {
+            "paper_url": "https://dl.acm.org/doi/10.1145/3719027.3765099",
+            "conferences": [
+              "ACM_CCS",
+              "ACM_SIGCOMM"
+            ],
+            "policy": "Venue left unknown; source folders conflict."
+          },
+          {
+            "paper_url": "https://dl.acm.org/doi/10.1145/3719027.3765188",
+            "conferences": [
+              "ACM_CCS",
+              "ACM_SIGCOMM"
+            ],
+            "policy": "Venue left unknown; source folders conflict."
+          },
+          {
+            "paper_url": "https://dl.acm.org/doi/10.1145/3719027.3765577",
+            "conferences": [
+              "ACM_CCS",
+              "ACM_SIGCOMM"
+            ],
+            "policy": "Venue left unknown; source folders conflict."
+          }
+        ],
+        "scope": "Saved SENTRY predicted-Indian outputs; not independently verified ground truth."
+      }
+    ],
+    "coverage_note": "Import reports describe the last sync. Run sync again after new extraction outputs."
+  },
+  "queries": [
+    {
+      "status": "ok",
+      "question": "Who are the authors that work on GNN in India?",
+      "semantic_query": "graph neural networks",
+      "mode": "hybrid",
+      "target": "authors",
+      "filters": {
+        "country": "India",
+        "india_evidence": "pipeline"
+      },
+      "kg_version": 6044,
+      "min_similarity": 0.25,
+      "answer": "Ronak Kalvani — Indian Institute of Technology, Delhi, India [P1]\nSayan Ranu — Indian Institute of Technology Delhi, India [P1]\nSamyak Jain — Indian Institute of Technology, Delhi, India [P1]\nSmily Bharadwaj — Indian Institute of Science Education and Research Bhopal, India [P2]\nAshim Dhor — Indian Institute of Science Education and Research Bhopal, India [P2]\nSrikanta Bedathur — Indian Institute of Technology, Delhi [P3]\nMohit Kataria — Indian Institute of Technology, Delhi [P4]\nSandeep Kumar — Indian Institute of Technology Delhi, India [P4]\nJayadeva Jayadeva — Indian Institute of Technology Delhi [P4]\nNikita Malik — Indian Institute of Technology, Delhi [P4]\nSanghamitra Bandyopadhyay — Indian Statistical Institute, India [P5]\nSayan Saha — Indian Statistical Institute, Kolkata, India [P5]",
+      "papers": [
+        {
+          "paper_id": "PAPER_03ec34e70bc5ab3af64985b8",
+          "title": "Is Graph Unlearning Ready for Practice? A Benchmark on Efficiency, Utility, and Forgetting",
+          "abstract": "",
+          "year": 2026,
+          "conference": "ICLR",
+          "citation": "P1",
+          "similarity": 0.5046244137214364
+        },
+        {
+          "paper_id": "PAPER_1fe1d381d4627a897fa4dcdd",
+          "title": "Topo-GraT: Learning to Grow with Causal Graph Transformers (Student Abstract)",
+          "abstract": "",
+          "year": 2026,
+          "conference": "AAAI",
+          "citation": "P2",
+          "similarity": 0.4707337089778832
+        },
+        {
+          "paper_id": "PAPER_2d1874dde61ae04eae21e844",
+          "title": "Kernelized Edge Attention: Addressing Semantic Attention Blurring in Temporal Graph Neural Networks",
+          "abstract": "",
+          "year": 2026,
+          "conference": "AAAI",
+          "citation": "P3",
+          "similarity": 0.4287036238376551
+        },
+        {
+          "paper_id": "PAPER_67db846fcd6e18f92cd4bc23",
+          "title": "GraphFLEx: Unsupervised Structure Learning $\\underline{\\text{F}}$ramework for $\\underline{\\text{L}}$arge $\\underline{\\text{Ex}}$panding $\\underline{\\text{Graph}}$s",
+          "abstract": "Graph structure learning is a core problem in graph-based machine learning, essential for uncovering latent relationships and ensuring model interpretability. However, most existing approaches are ill-suited for large-scale and dynamically evolving graphs, as they often require complete re-learning of the structure upon the arrival of new nodes and incur substantial computational and memory costs. In this work, we propose GraphFLEx—a unified and scalable framework for Graph Structure Learning in Large and Expanding Graphs. GraphFLEx mitigates the scalability bottlenecks by restricting edge formation to structurally relevant subsets of nodes identified through a combination of clustering and coarsening techniques. This dramatically reduces the search space and enables efficient, incremental",
+          "year": 2026,
+          "conference": "ICML",
+          "citation": "P4",
+          "similarity": 0.550031044623528
+        },
+        {
+          "paper_id": "PAPER_a82cbb78f160d0e4a20cc974",
+          "title": "Certified Evaluation of Model-Level Explanations for Graph Neural Networks",
+          "abstract": "",
+          "year": 2026,
+          "conference": "ICLR",
+          "citation": "P5",
+          "similarity": 0.6065056850779673
+        }
+      ],
+      "authors": [
+        {
+          "author_id": "AUTH_4f4ab88325ba7462c99488fc",
+          "name": "Ronak Kalvani",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Indian Institute of Technology, Delhi, India",
+              "organization_id": "CAND_5cba12edb0d81e5a3851a89e",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "sentry_pipeline_observation",
+          "citation": "P1",
+          "paper_id": "PAPER_03ec34e70bc5ab3af64985b8"
+        },
+        {
+          "author_id": "AUTH_a8e0089eeaf77a47c072ce4e",
+          "name": "Sayan Ranu",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Indian Institute of Technology Delhi, India",
+              "organization_id": "CAND_5cba12edb0d81e5a3851a89e",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "sentry_pipeline_observation",
+          "citation": "P1",
+          "paper_id": "PAPER_03ec34e70bc5ab3af64985b8"
+        },
+        {
+          "author_id": "AUTH_acf6cac32efc3784846c8467",
+          "name": "Samyak Jain",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Indian Institute of Technology, Delhi, India",
+              "organization_id": "CAND_5cba12edb0d81e5a3851a89e",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "sentry_pipeline_observation",
+          "citation": "P1",
+          "paper_id": "PAPER_03ec34e70bc5ab3af64985b8"
+        },
+        {
+          "author_id": "AUTH_4c059192dc147e2fe8804c37",
+          "name": "Smily Bharadwaj",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Indian Institute of Science Education and Research Bhopal, India",
+              "organization_id": "ORG_8b629bbfdaa1c9c8a220f860",
+              "trusted_organization": true,
+              "matches_filters": true
+            }
+          ],
+          "geographic_evidence": "trusted_organization",
+          "citation": "P2",
+          "paper_id": "PAPER_1fe1d381d4627a897fa4dcdd"
+        },
+        {
+          "author_id": "AUTH_991cc976d504666abfa5c654",
+          "name": "Ashim Dhor",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Indian Institute of Science Education and Research Bhopal, India",
+              "organization_id": "ORG_8b629bbfdaa1c9c8a220f860",
+              "trusted_organization": true,
+              "matches_filters": true
+            }
+          ],
+          "geographic_evidence": "trusted_organization",
+          "citation": "P2",
+          "paper_id": "PAPER_1fe1d381d4627a897fa4dcdd"
+        },
+        {
+          "author_id": "AUTH_d1752425291654fa464ed581",
+          "name": "Srikanta Bedathur",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Indian Institute of Technology, Delhi",
+              "organization_id": "CAND_a6896bc145e04f75927fe9a0",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "sentry_pipeline_observation",
+          "citation": "P3",
+          "paper_id": "PAPER_2d1874dde61ae04eae21e844"
+        },
+        {
+          "author_id": "AUTH_1591a3751eb65a8259c5d203",
+          "name": "Mohit Kataria",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Indian Institute of Technology, Delhi",
+              "organization_id": "CAND_a6896bc145e04f75927fe9a0",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "sentry_pipeline_observation",
+          "citation": "P4",
+          "paper_id": "PAPER_67db846fcd6e18f92cd4bc23"
+        },
+        {
+          "author_id": "AUTH_1631e551b26d82a7ef6d57c3",
+          "name": "Sandeep Kumar",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Indian Institute of Technology Delhi, India",
+              "organization_id": "CAND_5cba12edb0d81e5a3851a89e",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "sentry_pipeline_observation",
+          "citation": "P4",
+          "paper_id": "PAPER_67db846fcd6e18f92cd4bc23"
+        },
+        {
+          "author_id": "AUTH_ea14ed77e66e7961a23c117d",
+          "name": "Jayadeva Jayadeva",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Indian Institute of Technology Delhi",
+              "organization_id": "CAND_a6896bc145e04f75927fe9a0",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "sentry_pipeline_observation",
+          "citation": "P4",
+          "paper_id": "PAPER_67db846fcd6e18f92cd4bc23"
+        },
+        {
+          "author_id": "AUTH_f8e170107c09de49f3e26226",
+          "name": "Nikita Malik",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Indian Institute of Technology, Delhi",
+              "organization_id": "CAND_a6896bc145e04f75927fe9a0",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "sentry_pipeline_observation",
+          "citation": "P4",
+          "paper_id": "PAPER_67db846fcd6e18f92cd4bc23"
+        },
+        {
+          "author_id": "AUTH_7e03588074feef4a40ff7f01",
+          "name": "Sanghamitra Bandyopadhyay",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Indian Statistical Institute, India",
+              "organization_id": "CAND_b83894688870970eec34970b",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "sentry_pipeline_observation",
+          "citation": "P5",
+          "paper_id": "PAPER_a82cbb78f160d0e4a20cc974"
+        },
+        {
+          "author_id": "AUTH_8368e45cf6ae3e665579ff2a",
+          "name": "Sayan Saha",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Indian Statistical Institute, Kolkata, India",
+              "organization_id": "CAND_7f251d94b6c59ae090b93dbb",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "sentry_pipeline_observation",
+          "citation": "P5",
+          "paper_id": "PAPER_a82cbb78f160d0e4a20cc974"
+        }
+      ],
+      "authors_truncated": false,
+      "organizations": [
+        {
+          "organization_id": "ORG_8b629bbfdaa1c9c8a220f860",
+          "name": "Indian Institute of Science",
+          "citations": [
+            "P2",
+            "P2"
+          ]
+        }
+      ],
+      "citations": {
+        "P1": {
+          "paper_id": "PAPER_03ec34e70bc5ab3af64985b8",
+          "url": "https://openreview.net/forum?id=gSPkuTTWgU",
+          "title": "Is Graph Unlearning Ready for Practice? A Benchmark on Efficiency, Utility, and Forgetting"
+        },
+        "P2": {
+          "paper_id": "PAPER_1fe1d381d4627a897fa4dcdd",
+          "url": "https://ojs.aaai.org/index.php/AAAI/article/view/42210",
+          "title": "Topo-GraT: Learning to Grow with Causal Graph Transformers (Student Abstract)"
+        },
+        "P3": {
+          "paper_id": "PAPER_2d1874dde61ae04eae21e844",
+          "url": "https://ojs.aaai.org/index.php/AAAI/article/view/39810",
+          "title": "Kernelized Edge Attention: Addressing Semantic Attention Blurring in Temporal Graph Neural Networks"
+        },
+        "P4": {
+          "paper_id": "PAPER_67db846fcd6e18f92cd4bc23",
+          "url": "https://openreview.net/forum?id=fbFU9TCjra",
+          "title": "GraphFLEx: Unsupervised Structure Learning $\\underline{\\text{F}}$ramework for $\\underline{\\text{L}}$arge $\\underline{\\text{Ex}}$panding $\\underline{\\text{Graph}}$s"
+        },
+        "P5": {
+          "paper_id": "PAPER_a82cbb78f160d0e4a20cc974",
+          "url": "https://openreview.net/forum?id=h6VtqCN9m3",
+          "title": "Certified Evaluation of Model-Level Explanations for Graph Neural Networks"
+        }
+      },
+      "limitations": [
+        "Top-k related papers, not an exhaustive roster or proof of a current job or nationality.",
+        "Pipeline India labels are observations and can be wrong; use india_evidence=trusted for KG-confirmed institutions.",
+        "Same-name author occurrences are not merged without ORCID. Papers without abstracts are searched by title."
+      ]
+    },
+    {
+      "status": "ok",
+      "question": "Find papers about language model hallucination detection",
+      "semantic_query": "Find papers about language model hallucination detection",
+      "mode": "vector",
+      "target": "papers",
+      "filters": {},
+      "kg_version": 6044,
+      "min_similarity": 0.25,
+      "answer": "Detecting Citation Hallucinations in Large Language Model Outputs (Student Abstract) [P1]\nInnovation: An Almost Characterization of Hallucination [P2]\nETF: An Entity Tracing Framework for Hallucination Detection in Code Summaries [P3]",
+      "papers": [
+        {
+          "paper_id": "PAPER_2ede54afd274b0f2a9787dd8",
+          "title": "Detecting Citation Hallucinations in Large Language Model Outputs (Student Abstract)",
+          "abstract": "",
+          "year": 2026,
+          "conference": "AAAI",
+          "citation": "P1",
+          "similarity": 0.6605889365374101
+        },
+        {
+          "paper_id": "PAPER_427a6c8bc5135337187ba7d9",
+          "title": "Innovation: An Almost Characterization of Hallucination",
+          "abstract": "Hallucination is a central limitation of large language models (LLMs),\nand substantial effort has been devoted to understanding and mitigating\nit. Towards this, Kalai and Vempala (STOC 2024) introduced a\nprobabilistic framework formalizing calibration and hallucination, and\nshowed that, with high probability, calibrated LLMs hallucinate roughly\nat the rate of the \"missing mass\", a measure of how incomplete the\ntraining data is relative to its source. This raises two fundamental\nquestions: (i) what property of a calibrated LLM makes hallucinations\nunavoidable? and (ii) can hallucinations be avoided by giving up\ncalibration? We answer these questions by introducing a simpler property\nwe call *innovation* that measures the tendency of a model to produce\noutputs outside the training data. We s",
+          "year": 2026,
+          "conference": "ICML",
+          "citation": "P2",
+          "similarity": 0.6447544069816876
+        },
+        {
+          "paper_id": "PAPER_af414e9eb91cb3c008f090d6",
+          "title": "ETF: An Entity Tracing Framework for Hallucination Detection in Code Summaries",
+          "abstract": "",
+          "year": 2025,
+          "conference": "ACL",
+          "citation": "P3",
+          "similarity": 0.5405577995515
+        }
+      ],
+      "authors": [
+        {
+          "author_id": "AUTH_510d637a5d58783b62c5c900",
+          "name": "Nipun Misra",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Vellore Institute of Technology",
+              "organization_id": "ORG_07db81520ea3730c86e9e2f9",
+              "trusted_organization": true,
+              "matches_filters": true
+            }
+          ],
+          "geographic_evidence": "trusted_organization",
+          "citation": "P1",
+          "paper_id": "PAPER_2ede54afd274b0f2a9787dd8"
+        },
+        {
+          "author_id": "AUTH_b304b601de1bfbf9c65e6f71",
+          "name": "Vikranth Udandarao",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Indraprastha Institute of Information Technology Delhi",
+              "organization_id": "ORG_138787658d83f1d4be5a0542",
+              "trusted_organization": true,
+              "matches_filters": true
+            }
+          ],
+          "geographic_evidence": "trusted_organization",
+          "citation": "P1",
+          "paper_id": "PAPER_2ede54afd274b0f2a9787dd8"
+        },
+        {
+          "author_id": "AUTH_3af670fc48c9d70992b963b8",
+          "name": "Nishant P. Das",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Tata Institute of Fundamental Research, India",
+              "organization_id": "ORG_c4151d70e5268c08ac395cea",
+              "trusted_organization": true,
+              "matches_filters": true
+            }
+          ],
+          "geographic_evidence": "trusted_organization",
+          "citation": "P2",
+          "paper_id": "PAPER_427a6c8bc5135337187ba7d9"
+        },
+        {
+          "author_id": "AUTH_b6132cae41a88719d0a585fc",
+          "name": "Piyush Srivastava",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Tata Institute of Fundamental Research, India",
+              "organization_id": "ORG_c4151d70e5268c08ac395cea",
+              "trusted_organization": true,
+              "matches_filters": true
+            }
+          ],
+          "geographic_evidence": "trusted_organization",
+          "citation": "P2",
+          "paper_id": "PAPER_427a6c8bc5135337187ba7d9"
+        },
+        {
+          "author_id": "AUTH_35b7eaad45e5aa6602db7187",
+          "name": "Abhijit Mishra",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "University of Texas at Austin, Texas, United States",
+              "organization_id": "CAND_acca5da2c1cc772b9935e45c",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "not_filtered",
+          "citation": "P3",
+          "paper_id": "PAPER_af414e9eb91cb3c008f090d6"
+        },
+        {
+          "author_id": "AUTH_3ce800cdc3f284cf61f5dc5d",
+          "name": "Prince Kumar",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "IBM Research India",
+              "organization_id": "CAND_34cc03a240fe39f30c440d6c",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "not_filtered",
+          "citation": "P3",
+          "paper_id": "PAPER_af414e9eb91cb3c008f090d6"
+        },
+        {
+          "author_id": "AUTH_41bdd3024fb574a473cf9988",
+          "name": "Pushpak Bhattacharyya",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Indian Institute of Technology Bombay, Mumbai, India",
+              "organization_id": "CAND_a4c83a4edfe6d0ea92dc75f5",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "not_filtered",
+          "citation": "P3",
+          "paper_id": "PAPER_af414e9eb91cb3c008f090d6"
+        },
+        {
+          "author_id": "AUTH_7ce0498110547247864a2e46",
+          "name": "Srikanth G. Tamilselvam",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "IBM Research India",
+              "organization_id": "CAND_34cc03a240fe39f30c440d6c",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "not_filtered",
+          "citation": "P3",
+          "paper_id": "PAPER_af414e9eb91cb3c008f090d6"
+        },
+        {
+          "author_id": "AUTH_88d6966fa505f7f00e3ba78e",
+          "name": "Palani Kodeswaran",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "IBM Research India",
+              "organization_id": "CAND_34cc03a240fe39f30c440d6c",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "not_filtered",
+          "citation": "P3",
+          "paper_id": "PAPER_af414e9eb91cb3c008f090d6"
+        },
+        {
+          "author_id": "AUTH_c173f4706cfab1438bdaf90c",
+          "name": "Sayandeep Sen",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "IBM Research India",
+              "organization_id": "CAND_34cc03a240fe39f30c440d6c",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "not_filtered",
+          "citation": "P3",
+          "paper_id": "PAPER_af414e9eb91cb3c008f090d6"
+        },
+        {
+          "author_id": "AUTH_d6ae8f2e6d7468b95a173f41",
+          "name": "Kishan Maharaj",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "Indian Institute of Technology Bombay, Mumbai, India",
+              "organization_id": "CAND_a4c83a4edfe6d0ea92dc75f5",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "not_filtered",
+          "citation": "P3",
+          "paper_id": "PAPER_af414e9eb91cb3c008f090d6"
+        },
+        {
+          "author_id": "AUTH_db5b483c5245b473a81b70fb",
+          "name": "Vitobha Munigala",
+          "identity_scope": "PAPER",
+          "affiliations": [
+            {
+              "observed": "IBM Research India",
+              "organization_id": "CAND_34cc03a240fe39f30c440d6c",
+              "trusted_organization": false,
+              "matches_filters": false
+            }
+          ],
+          "geographic_evidence": "not_filtered",
+          "citation": "P3",
+          "paper_id": "PAPER_af414e9eb91cb3c008f090d6"
+        }
+      ],
+      "authors_truncated": false,
+      "organizations": [
+        {
+          "organization_id": "ORG_07db81520ea3730c86e9e2f9",
+          "name": "Vellore Institute of Technology",
+          "citations": [
+            "P1"
+          ]
+        },
+        {
+          "organization_id": "ORG_138787658d83f1d4be5a0542",
+          "name": "Indraprastha Institute of Information Technology",
+          "citations": [
+            "P1"
+          ]
+        },
+        {
+          "organization_id": "ORG_c4151d70e5268c08ac395cea",
+          "name": "Tata Institute of Fundamental Research",
+          "citations": [
+            "P2",
+            "P2"
+          ]
+        }
+      ],
+      "citations": {
+        "P1": {
+          "paper_id": "PAPER_2ede54afd274b0f2a9787dd8",
+          "url": "https://ojs.aaai.org/index.php/AAAI/article/view/42257",
+          "title": "Detecting Citation Hallucinations in Large Language Model Outputs (Student Abstract)"
+        },
+        "P2": {
+          "paper_id": "PAPER_427a6c8bc5135337187ba7d9",
+          "url": "https://openreview.net/forum?id=iSD2q5Tius",
+          "title": "Innovation: An Almost Characterization of Hallucination"
+        },
+        "P3": {
+          "paper_id": "PAPER_af414e9eb91cb3c008f090d6",
+          "url": "https://aclanthology.org/2025.acl-long.1480.pdf",
+          "title": "ETF: An Entity Tracing Framework for Hallucination Detection in Code Summaries"
+        }
+      },
+      "limitations": [
+        "Top-k related papers, not an exhaustive roster or proof of a current job or nationality.",
+        "Pipeline India labels are observations and can be wrong; use india_evidence=trusted for KG-confirmed institutions.",
+        "Same-name author occurrences are not merged without ORCID. Papers without abstracts are searched by title."
+      ]
+    },
+    {
+      "status": "ok",
+      "question": "Jadavpur University publications",
+      "semantic_query": "Jadavpur University publications",
+      "mode": "graph",
+      "target": "papers",
+      "filters": {},
+      "kg_version": 6044,
+      "min_similarity": 0.25,
+      "answer": "No matching evidence found in the indexed corpus under these filters.",
+      "papers": [],
+      "authors": [],
+      "authors_truncated": false,
+      "organizations": [],
+      "citations": {},
+      "limitations": [
+        "Top-k related papers, not an exhaustive roster or proof of a current job or nationality.",
+        "Pipeline India labels are observations and can be wrong; use india_evidence=trusted for KG-confirmed institutions.",
+        "Same-name author occurrences are not merged without ORCID. Papers without abstracts are searched by title."
+      ]
+    }
+  ],
+  "test_scope": "Real embeddings and saved corpus through FastAPI TestClient; authentication disabled only in this isolated test process. Chat tool loop tested separately with a mocked LLM.",
+  "additional_graph_service_check": {
+    "status": "ok",
+    "question": "Indian Institute of Science publications",
+    "semantic_query": "Indian Institute of Science publications",
+    "mode": "graph",
+    "target": "papers",
+    "filters": {
+      "country": "India",
+      "india_evidence": "pipeline"
+    },
+    "kg_version": 6044,
+    "min_similarity": 0.25,
+    "answer": "Learning Long Range Spatio-Temporal Representations over Continuous Time Dynamic Graphs with State Space Models [P1]\nTopo-GraT: Learning to Grow with Causal Graph Transformers (Student Abstract) [P2]\nWhy DPO is a Misspecified Estimator and How to Fix It [P3]",
+    "papers": [
+      {
+        "paper_id": "PAPER_181a9b4a36f3bfb0f2ca50bd",
+        "title": "Learning Long Range Spatio-Temporal Representations over Continuous Time Dynamic Graphs with State Space Models",
+        "abstract": "Continuous-time dynamic graphs (CTDGs) provide a richer framework to capture fine-grained temporal patterns in evolving relational data. Long-range information propagation is a key challenge while learning representations, wherein it is important to retain and update information over long temporal horizons. Existing approaches restrict models to capture one-hop or local temporal neighborhoods and fail to capture multi-hop or global structural patterns. To mitigate this, we derive a parameter-efficient state-space modeling framework for continuous-time dynamic graphs $\\texttt{(CTDG-SSM)}$ from first principles. We first introduce continuous-time Topology-Aware higher order polynomial projection operator ($\\texttt{CTT-HiPPO}$), a novel memory-based reformulation of  $\\texttt{HiPPO}$ to joint",
+        "year": 2026,
+        "conference": "ICML",
+        "citation": "P1",
+        "similarity": null
+      },
+      {
+        "paper_id": "PAPER_1fe1d381d4627a897fa4dcdd",
+        "title": "Topo-GraT: Learning to Grow with Causal Graph Transformers (Student Abstract)",
+        "abstract": "",
+        "year": 2026,
+        "conference": "AAAI",
+        "citation": "P2",
+        "similarity": null
+      },
+      {
+        "paper_id": "PAPER_28703e85c9fca8d74f229b4f",
+        "title": "Why DPO is a Misspecified Estimator and How to Fix It",
+        "abstract": "",
+        "year": 2026,
+        "conference": "ICLR",
+        "citation": "P3",
+        "similarity": null
+      }
+    ],
+    "authors": [
+      {
+        "author_id": "AUTH_3118b1dc7b233597488d288c",
+        "name": "Sundeep Prabhakar Chepuri",
+        "identity_scope": "PAPER",
+        "affiliations": [
+          {
+            "observed": "Indian Institute of Science",
+            "organization_id": "ORG_8b629bbfdaa1c9c8a220f860",
+            "trusted_organization": true,
+            "matches_filters": true
+          }
+        ],
+        "geographic_evidence": "trusted_organization",
+        "citation": "P1",
+        "paper_id": "PAPER_181a9b4a36f3bfb0f2ca50bd"
+      },
+      {
+        "author_id": "AUTH_593f53aa50c0270c4d625ef2",
+        "name": "Ayushman Raghuvanshi",
+        "identity_scope": "PAPER",
+        "affiliations": [
+          {
+            "observed": "Indian Institute of Science, Indian institute of science, Bangalore, India",
+            "organization_id": "ORG_8b629bbfdaa1c9c8a220f860",
+            "trusted_organization": true,
+            "matches_filters": true
+          }
+        ],
+        "geographic_evidence": "trusted_organization",
+        "citation": "P1",
+        "paper_id": "PAPER_181a9b4a36f3bfb0f2ca50bd"
+      },
+      {
+        "author_id": "AUTH_80b279976f15cd53ad5fc3d2",
+        "name": "Mahesh Chandran",
+        "identity_scope": "PAPER",
+        "affiliations": [
+          {
+            "observed": "Fujitsu Research and Development Center Co. Ltm., India",
+            "organization_id": "CAND_321b60eff9f36d6c7cef1490",
+            "trusted_organization": false,
+            "matches_filters": false
+          }
+        ],
+        "geographic_evidence": "sentry_pipeline_observation",
+        "citation": "P1",
+        "paper_id": "PAPER_181a9b4a36f3bfb0f2ca50bd"
+      },
+      {
+        "author_id": "AUTH_8d398f457ad28e73f64e0223",
+        "name": "Thummaluru Siddartha Reddy",
+        "identity_scope": "PAPER",
+        "affiliations": [
+          {
+            "observed": "Fujitsu Research India Private Limited, India",
+            "organization_id": "CAND_d2a26b75de054c99f5b673f5",
+            "trusted_organization": false,
+            "matches_filters": false
+          }
+        ],
+        "geographic_evidence": "sentry_pipeline_observation",
+        "citation": "P1",
+        "paper_id": "PAPER_181a9b4a36f3bfb0f2ca50bd"
+      },
+      {
+        "author_id": "AUTH_4c059192dc147e2fe8804c37",
+        "name": "Smily Bharadwaj",
+        "identity_scope": "PAPER",
+        "affiliations": [
+          {
+            "observed": "Indian Institute of Science Education and Research Bhopal, India",
+            "organization_id": "ORG_8b629bbfdaa1c9c8a220f860",
+            "trusted_organization": true,
+            "matches_filters": true
+          }
+        ],
+        "geographic_evidence": "trusted_organization",
+        "citation": "P2",
+        "paper_id": "PAPER_1fe1d381d4627a897fa4dcdd"
+      },
+      {
+        "author_id": "AUTH_991cc976d504666abfa5c654",
+        "name": "Ashim Dhor",
+        "identity_scope": "PAPER",
+        "affiliations": [
+          {
+            "observed": "Indian Institute of Science Education and Research Bhopal, India",
+            "organization_id": "ORG_8b629bbfdaa1c9c8a220f860",
+            "trusted_organization": true,
+            "matches_filters": true
+          }
+        ],
+        "geographic_evidence": "trusted_organization",
+        "citation": "P2",
+        "paper_id": "PAPER_1fe1d381d4627a897fa4dcdd"
+      },
+      {
+        "author_id": "AUTH_1fdd42dbeb0188dc3f832f30",
+        "name": "Debangshu Banerjee",
+        "identity_scope": "PAPER",
+        "affiliations": [
+          {
+            "observed": "Indian Institute of Science, India",
+            "organization_id": "ORG_8b629bbfdaa1c9c8a220f860",
+            "trusted_organization": true,
+            "matches_filters": true
+          }
+        ],
+        "geographic_evidence": "trusted_organization",
+        "citation": "P3",
+        "paper_id": "PAPER_28703e85c9fca8d74f229b4f"
+      },
+      {
+        "author_id": "AUTH_500125197287e896fc5591f8",
+        "name": "Aditya Gopalan",
+        "identity_scope": "PAPER",
+        "affiliations": [
+          {
+            "observed": "Indian Institute of Science, India",
+            "organization_id": "ORG_8b629bbfdaa1c9c8a220f860",
+            "trusted_organization": true,
+            "matches_filters": true
+          }
+        ],
+        "geographic_evidence": "trusted_organization",
+        "citation": "P3",
+        "paper_id": "PAPER_28703e85c9fca8d74f229b4f"
+      },
+      {
+        "author_id": "AUTH_508ed1402b31891188e9dca7",
+        "name": "Sayak Ray Chowdhury",
+        "identity_scope": "PAPER",
+        "affiliations": [
+          {
+            "observed": "Indian Institute of Technology, Kanpur, India",
+            "organization_id": "CAND_b12fc421ff4b4a2380d74a0d",
+            "trusted_organization": false,
+            "matches_filters": false
+          }
+        ],
+        "geographic_evidence": "sentry_pipeline_observation",
+        "citation": "P3",
+        "paper_id": "PAPER_28703e85c9fca8d74f229b4f"
+      }
+    ],
+    "authors_truncated": false,
+    "organizations": [
+      {
+        "organization_id": "ORG_8b629bbfdaa1c9c8a220f860",
+        "name": "Indian Institute of Science",
+        "citations": [
+          "P1",
+          "P1",
+          "P2",
+          "P2",
+          "P3",
+          "P3"
+        ]
+      }
+    ],
+    "citations": {
+      "P1": {
+        "paper_id": "PAPER_181a9b4a36f3bfb0f2ca50bd",
+        "url": "https://openreview.net/forum?id=S2jfT6EMqr",
+        "title": "Learning Long Range Spatio-Temporal Representations over Continuous Time Dynamic Graphs with State Space Models"
+      },
+      "P2": {
+        "paper_id": "PAPER_1fe1d381d4627a897fa4dcdd",
+        "url": "https://ojs.aaai.org/index.php/AAAI/article/view/42210",
+        "title": "Topo-GraT: Learning to Grow with Causal Graph Transformers (Student Abstract)"
+      },
+      "P3": {
+        "paper_id": "PAPER_28703e85c9fca8d74f229b4f",
+        "url": "https://openreview.net/forum?id=btEiAfnLsX",
+        "title": "Why DPO is a Misspecified Estimator and How to Fix It"
+      }
+    },
+    "limitations": [
+      "Top-k related papers, not an exhaustive roster or proof of a current job or nationality.",
+      "Pipeline India labels are observations and can be wrong; use india_evidence=trusted for KG-confirmed institutions.",
+      "Same-name author occurrences are not merged without ORCID. Papers without abstracts are searched by title."
+    ]
+  }
+}

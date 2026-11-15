@@ -1,0 +1,5041 @@
+{
+  "created_at": "2026-11-15T18:02:39.751720+00:00",
+  "input": "/home/silajeet0/workspace/IKDD_Internship_IITB/SENTRY/benchmark/benchmark_data.json",
+  "input_sha256": "7cf8df81efa1d76f094b55ae98fa6043178244d0e74a404bade6089f8f095e33",
+  "parsed_output": "/home/silajeet0/workspace/IKDD_Internship_IITB/SENTRY/benchmark/results/benchmark_data_laya.jsonl",
+  "parsed_output_sha256": "d2c5422857e1e8e46d648f940d554d559e11e53ace8f02513ca5081468b3d6ed",
+  "source_dataset_version": "2026-10-24.1",
+  "split": "all",
+  "n": 121,
+  "source_label_counts": {
+    "positive": 40,
+    "negative": 40,
+    "ambiguous": 41
+  },
+  "binary_expected_counts": {
+    "INDIAN": 40,
+    "NOT_INDIAN": 81
+  },
+  "source_to_binary": {
+    "positive": "INDIAN",
+    "negative": "NOT_INDIAN",
+    "ambiguous": "NOT_INDIAN"
+  },
+  "model": {
+    "model": "/home/silajeet0/workspace/IKDD_Internship_IITB/SENTRY/laya_finetuning/laya_finetuned_SENTRY",
+    "device": "cpu",
+    "threads": 2,
+    "config_sha256": "1b1278cb95be14078873edac850c0d92d32379da29d1d032427e51cd40a510f0",
+    "versions": {
+      "laya": "0.4.33",
+      "torch": "2.14.1+cpu",
+      "transformers": "5.20.2",
+      "huggingface-hub": "2.3.0"
+    }
+  },
+  "model_load_seconds": 14.723834436000288,
+  "results": {
+    "rules": {
+      "metrics": {
+        "n": 121,
+        "accuracy": 0.9090909090909091,
+        "macro_f1": 0.9012977382276603,
+        "balanced_accuracy": 0.9194444444444444,
+        "per_class": {
+          "INDIAN": {
+            "precision": 0.8085106382978723,
+            "recall": 0.95,
+            "f1": 0.8735632183908046,
+            "support": 40
+          },
+          "NOT_INDIAN": {
+            "precision": 0.972972972972973,
+            "recall": 0.8888888888888888,
+            "f1": 0.9290322580645162,
+            "support": 81
+          }
+        },
+        "confusion_matrix": {
+          "INDIAN": {
+            "INDIAN": 38,
+            "NOT_INDIAN": 2
+          },
+          "NOT_INDIAN": {
+            "INDIAN": 9,
+            "NOT_INDIAN": 72
+          }
+        }
+      },
+      "latency": {
+        "mean_ms": 0.3222126611599228,
+        "p50_ms": 0.12002599942206871,
+        "p95_ms": 0.22234700008993968
+      },
+      "predictions": [
+        {
+          "id": "P001",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindian institute\\b"
+          ],
+          "state": "Indian Institute of Technology Bombay"
+        },
+        {
+          "id": "P002",
+          "category": "qualified_acronym",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bbombay\\b",
+            "\\bmumbai\\b"
+          ],
+          "state": "IIT Bombay, Mumbai"
+        },
+        {
+          "id": "P003",
+          "category": "qualified_acronym",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bdelhi\\b"
+          ],
+          "state": "IIT Delhi"
+        },
+        {
+          "id": "P004",
+          "category": "qualified_acronym",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bmadras\\b",
+            "\\bchennai\\b"
+          ],
+          "state": "IIT Madras, Chennai"
+        },
+        {
+          "id": "P005",
+          "category": "qualified_acronym",
+          "split": "validation",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bkanpur\\b"
+          ],
+          "state": "IIT Kanpur"
+        },
+        {
+          "id": "P006",
+          "category": "qualified_acronym",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bkharagpur\\b"
+          ],
+          "state": "IIT Kharagpur"
+        },
+        {
+          "id": "P007",
+          "category": "qualified_acronym",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bvaranasi\\b"
+          ],
+          "state": "IIT (BHU), Varanasi"
+        },
+        {
+          "id": "P008",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindian institute\\b"
+          ],
+          "state": "Indian Institute of Technology (ISM), Dhanbad"
+        },
+        {
+          "id": "P009",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindian institute\\b",
+            "\\bindian institute of science\\b"
+          ],
+          "state": "Indian Institute of Science, Bengaluru"
+        },
+        {
+          "id": "P010",
+          "category": "qualified_acronym",
+          "split": "validation",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biisc\\b"
+          ],
+          "state": "IISc Bangalore"
+        },
+        {
+          "id": "P011",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindian statistical institute\\b"
+          ],
+          "state": "Indian Statistical Institute, Kolkata"
+        },
+        {
+          "id": "P012",
+          "category": "qualified_acronym",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bisi\\b",
+            "\\bkolkata\\b"
+          ],
+          "state": "ISI Kolkata"
+        },
+        {
+          "id": "P013",
+          "category": "qualified_acronym",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bisi\\b",
+            "\\bbangalore\\b"
+          ],
+          "state": "ISI Bangalore"
+        },
+        {
+          "id": "P014",
+          "category": "explicit_country",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "National Institute of Technology, Tiruchirappalli, India"
+        },
+        {
+          "id": "P015",
+          "category": "qualified_acronym",
+          "split": "validation",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bnit\\b",
+            "\\bsurathkal\\b"
+          ],
+          "state": "NIT Surathkal"
+        },
+        {
+          "id": "P016",
+          "category": "explicit_country",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "IIIT Hyderabad, India"
+        },
+        {
+          "id": "P017",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bhyderabad\\b"
+          ],
+          "state": "International Institute of Information Technology Hyderabad"
+        },
+        {
+          "id": "P018",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bjadavpur university\\b"
+          ],
+          "state": "Jadavpur University, Kolkata"
+        },
+        {
+          "id": "P019",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\banna university\\b"
+          ],
+          "state": "Anna University, Chennai"
+        },
+        {
+          "id": "P020",
+          "category": "full_name",
+          "split": "validation",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Banaras Hindu University, Varanasi"
+        },
+        {
+          "id": "P021",
+          "category": "explicit_country",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "University of Delhi, India"
+        },
+        {
+          "id": "P022",
+          "category": "explicit_country",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "University of Hyderabad, Telangana, India"
+        },
+        {
+          "id": "P023",
+          "category": "explicit_country",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "Birla Institute of Technology and Science, Pilani, India"
+        },
+        {
+          "id": "P024",
+          "category": "qualified_acronym",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bbits pilani\\b"
+          ],
+          "state": "BITS Pilani, Rajasthan"
+        },
+        {
+          "id": "P025",
+          "category": "explicit_country",
+          "split": "validation",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "Manipal Academy of Higher Education, Manipal, India"
+        },
+        {
+          "id": "P026",
+          "category": "explicit_country",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "Shiv Nadar University, Greater Noida, India"
+        },
+        {
+          "id": "P027",
+          "category": "explicit_country",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "O. P. Jindal Global University, Sonipat, India"
+        },
+        {
+          "id": "P028",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\btata institute of fundamental research\\b"
+          ],
+          "state": "Tata Institute of Fundamental Research, Mumbai"
+        },
+        {
+          "id": "P029",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindian institute\\b",
+            "\\bindian institute of science\\b"
+          ],
+          "state": "Indian Institute of Science Education and Research, Pune"
+        },
+        {
+          "id": "P030",
+          "category": "explicit_country",
+          "split": "validation",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "CSIR-National Physical Laboratory, New Delhi, India"
+        },
+        {
+          "id": "P031",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "Microsoft Research India, Bengaluru"
+        },
+        {
+          "id": "P032",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "Google Research, Bengaluru, India"
+        },
+        {
+          "id": "P033",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "IBM Research India, New Delhi"
+        },
+        {
+          "id": "P034",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "Adobe Research, Bangalore, India"
+        },
+        {
+          "id": "P035",
+          "category": "corporate_location",
+          "split": "validation",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "Samsung R&D Institute India, Bangalore"
+        },
+        {
+          "id": "P036",
+          "category": "department_noise",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b",
+            "\\bindian institute\\b"
+          ],
+          "state": "Dept. of CSE, Indian Institute of Technology, Bombay, India"
+        },
+        {
+          "id": "P037",
+          "category": "explicit_country",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "Department of Statistics, University of Calcutta, India"
+        },
+        {
+          "id": "P038",
+          "category": "formatting",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "  IIT   Bombay , Mumbai , INDIA  "
+        },
+        {
+          "id": "P039",
+          "category": "email_noise",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biisc\\b"
+          ],
+          "state": "IISc, Bengaluru; contact: scientist@example.org"
+        },
+        {
+          "id": "P040",
+          "category": "multiple_affiliations",
+          "split": "validation",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindian institute\\b"
+          ],
+          "state": "Indian Institute of Technology Bombay; Stanford University, USA"
+        },
+        {
+          "id": "N001",
+          "category": "foreign_institution",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Stanford University, California, USA"
+        },
+        {
+          "id": "N002",
+          "category": "foreign_institution",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Massachusetts Institute of Technology, Cambridge, USA"
+        },
+        {
+          "id": "N003",
+          "category": "foreign_institution",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "University of Cambridge, United Kingdom"
+        },
+        {
+          "id": "N004",
+          "category": "foreign_institution",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "University of Oxford, United Kingdom"
+        },
+        {
+          "id": "N005",
+          "category": "foreign_institution",
+          "split": "validation",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "ETH Zurich, Switzerland"
+        },
+        {
+          "id": "N006",
+          "category": "foreign_institution",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "National University of Singapore, Singapore"
+        },
+        {
+          "id": "N007",
+          "category": "foreign_institution",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Tsinghua University, Beijing, China"
+        },
+        {
+          "id": "N008",
+          "category": "foreign_institution",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "University of Tokyo, Japan"
+        },
+        {
+          "id": "N009",
+          "category": "foreign_institution",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "University of Toronto, Canada"
+        },
+        {
+          "id": "N010",
+          "category": "foreign_institution",
+          "split": "validation",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "University of Melbourne, Australia"
+        },
+        {
+          "id": "N011",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Illinois Institute of Technology, Chicago, USA"
+        },
+        {
+          "id": "N012",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\biit\\b"
+          ],
+          "state": "IIT, Chicago, USA"
+        },
+        {
+          "id": "N013",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Istituto Italiano di Tecnologia, Genova, Italy"
+        },
+        {
+          "id": "N014",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\biit\\b"
+          ],
+          "state": "IIT Genova, Italy"
+        },
+        {
+          "id": "N015",
+          "category": "acronym_collision",
+          "split": "validation",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Institute of Informatics and Telecommunications, NCSR Demokritos, Greece"
+        },
+        {
+          "id": "N016",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bisi\\b"
+          ],
+          "state": "ISI, University of Southern California, USA"
+        },
+        {
+          "id": "N017",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Information Sciences Institute, USC, USA"
+        },
+        {
+          "id": "N018",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Istituto Superiore di Sanita, Rome, Italy"
+        },
+        {
+          "id": "N019",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bisi\\b"
+          ],
+          "state": "ISI, Rome, Italy"
+        },
+        {
+          "id": "N020",
+          "category": "acronym_collision",
+          "split": "validation",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Nagoya Institute of Technology, Japan"
+        },
+        {
+          "id": "N021",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bnit\\b"
+          ],
+          "state": "NIT, Nagoya, Japan"
+        },
+        {
+          "id": "N022",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Victorian Institute of Technology, Melbourne, Australia"
+        },
+        {
+          "id": "N023",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bvit\\b"
+          ],
+          "state": "VIT, Melbourne, Australia"
+        },
+        {
+          "id": "N024",
+          "category": "overseas_campus",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindian institute\\b"
+          ],
+          "state": "Indian Institute of Technology Madras, Zanzibar, Tanzania"
+        },
+        {
+          "id": "N025",
+          "category": "overseas_campus",
+          "split": "validation",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bdelhi\\b"
+          ],
+          "state": "IIT Delhi Abu Dhabi, United Arab Emirates"
+        },
+        {
+          "id": "N026",
+          "category": "overseas_campus",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bbits pilani\\b"
+          ],
+          "state": "BITS Pilani, Dubai Campus, UAE"
+        },
+        {
+          "id": "N027",
+          "category": "overseas_campus",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bmanipal\\b"
+          ],
+          "state": "Manipal International University, Malaysia"
+        },
+        {
+          "id": "N028",
+          "category": "overseas_campus",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Amity University Dubai, United Arab Emirates"
+        },
+        {
+          "id": "N029",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Microsoft Research, Redmond, USA"
+        },
+        {
+          "id": "N030",
+          "category": "corporate_location",
+          "split": "validation",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Google Research, Zurich, Switzerland"
+        },
+        {
+          "id": "N031",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "IBM Research, Almaden, USA"
+        },
+        {
+          "id": "N032",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\binfosys\\b"
+          ],
+          "state": "Infosys, London, United Kingdom"
+        },
+        {
+          "id": "N033",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\btata\\b"
+          ],
+          "state": "Tata Consultancy Services, Toronto, Canada"
+        },
+        {
+          "id": "N034",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bwipro\\b"
+          ],
+          "state": "Wipro, Sydney, Australia"
+        },
+        {
+          "id": "N035",
+          "category": "substring_trap",
+          "split": "validation",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Indiana University, Bloomington, USA"
+        },
+        {
+          "id": "N036",
+          "category": "substring_trap",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Indiana Institute of Technology, Fort Wayne, USA"
+        },
+        {
+          "id": "N037",
+          "category": "substring_trap",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "University of Indianapolis, USA"
+        },
+        {
+          "id": "N038",
+          "category": "email_trap",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "University of Oxford, UK; email: researcher@iitb.ac.in"
+        },
+        {
+          "id": "N039",
+          "category": "department_trap",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "Department of India Studies, University of Tokyo, Japan"
+        },
+        {
+          "id": "N040",
+          "category": "historical_affiliation",
+          "split": "validation",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\bindia\\b"
+          ],
+          "state": "Stanford University, USA; formerly IIT Bombay, India"
+        },
+        {
+          "id": "A001",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\biit\\b"
+          ],
+          "state": "IIT"
+        },
+        {
+          "id": "A002",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bnit\\b"
+          ],
+          "state": "NIT"
+        },
+        {
+          "id": "A003",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bisi\\b"
+          ],
+          "state": "ISI"
+        },
+        {
+          "id": "A004",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bvit\\b"
+          ],
+          "state": "VIT"
+        },
+        {
+          "id": "A005",
+          "category": "bare_acronym",
+          "split": "validation",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "MIT"
+        },
+        {
+          "id": "A006",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "JU"
+        },
+        {
+          "id": "A007",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biiit\\b"
+          ],
+          "state": "IIIT"
+        },
+        {
+          "id": "A008",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biim\\b"
+          ],
+          "state": "IIM"
+        },
+        {
+          "id": "A009",
+          "category": "missing_location",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Microsoft Research"
+        },
+        {
+          "id": "A010",
+          "category": "missing_location",
+          "split": "validation",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Google Research"
+        },
+        {
+          "id": "A011",
+          "category": "missing_location",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "IBM Research"
+        },
+        {
+          "id": "A012",
+          "category": "missing_location",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Amazon Science"
+        },
+        {
+          "id": "A013",
+          "category": "missing_location",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Adobe Research"
+        },
+        {
+          "id": "A014",
+          "category": "missing_location",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Samsung Research"
+        },
+        {
+          "id": "A015",
+          "category": "missing_location",
+          "split": "validation",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\binfosys\\b"
+          ],
+          "state": "Infosys"
+        },
+        {
+          "id": "A016",
+          "category": "missing_location",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\btata\\b"
+          ],
+          "state": "Tata Consultancy Services"
+        },
+        {
+          "id": "A017",
+          "category": "missing_location",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bwipro\\b"
+          ],
+          "state": "Wipro"
+        },
+        {
+          "id": "A018",
+          "category": "missing_location",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Intel Labs"
+        },
+        {
+          "id": "A019",
+          "category": "missing_affiliation",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Unknown"
+        },
+        {
+          "id": "A020",
+          "category": "missing_affiliation",
+          "split": "validation",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "N/A"
+        },
+        {
+          "id": "A021",
+          "category": "missing_affiliation",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Not provided"
+        },
+        {
+          "id": "A022",
+          "category": "missing_affiliation",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Independent researcher"
+        },
+        {
+          "id": "A023",
+          "category": "missing_institution",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Department of Computer Science"
+        },
+        {
+          "id": "A024",
+          "category": "missing_institution",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "School of Engineering"
+        },
+        {
+          "id": "A025",
+          "category": "missing_institution",
+          "split": "validation",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Center for Artificial Intelligence"
+        },
+        {
+          "id": "A026",
+          "category": "missing_institution",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "National Research Laboratory"
+        },
+        {
+          "id": "A027",
+          "category": "missing_institution",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "University Research Centre"
+        },
+        {
+          "id": "A028",
+          "category": "city_only",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bbangalore\\b"
+          ],
+          "state": "Bangalore"
+        },
+        {
+          "id": "A029",
+          "category": "city_only",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bmumbai\\b"
+          ],
+          "state": "Mumbai"
+        },
+        {
+          "id": "A030",
+          "category": "city_only",
+          "split": "validation",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bdelhi\\b"
+          ],
+          "state": "Delhi"
+        },
+        {
+          "id": "A031",
+          "category": "city_only",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bhyderabad\\b"
+          ],
+          "state": "Hyderabad"
+        },
+        {
+          "id": "A032",
+          "category": "email_only",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "researcher@iitb.ac.in"
+        },
+        {
+          "id": "A033",
+          "category": "email_only",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biisc\\b"
+          ],
+          "state": "researcher@iisc.ac.in"
+        },
+        {
+          "id": "A034",
+          "category": "email_only",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "user.iitd@gmail.com"
+        },
+        {
+          "id": "A035",
+          "category": "nationality_trap",
+          "split": "validation",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Indian researcher"
+        },
+        {
+          "id": "A036",
+          "category": "missing_affiliation",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Visiting scholar, institution not specified"
+        },
+        {
+          "id": "A037",
+          "category": "historical_affiliation",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "positive",
+          "predicted": "INDIAN",
+          "matches": [
+            "\\biit\\b",
+            "\\bbombay\\b"
+          ],
+          "state": "Formerly IIT Bombay; current affiliation unknown"
+        },
+        {
+          "id": "A038",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\biit\\b"
+          ],
+          "state": "IIT, Department of Computing"
+        },
+        {
+          "id": "A039",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "ambiguous",
+          "predicted": "NOT_INDIAN",
+          "matches": [
+            "\\bisi\\b"
+          ],
+          "state": "ISI, Statistical Learning Group"
+        },
+        {
+          "id": "A040",
+          "category": "multiple_affiliations",
+          "split": "validation",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": "Microsoft Research; Google Research"
+        },
+        {
+          "id": "A041",
+          "category": "missing_affiliation",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "raw_prediction": "negative",
+          "predicted": "NOT_INDIAN",
+          "matches": [],
+          "state": ""
+        }
+      ],
+      "by_source_label": {
+        "ambiguous": {
+          "n": 41,
+          "accuracy": 0.9024390243902439,
+          "macro_f1": 0.4743589743589744,
+          "balanced_accuracy": 0.45121951219512196,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 0.9024390243902439,
+              "f1": 0.9487179487179488,
+              "support": 41
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 4,
+              "NOT_INDIAN": 37
+            }
+          }
+        },
+        "negative": {
+          "n": 40,
+          "accuracy": 0.875,
+          "macro_f1": 0.4666666666666667,
+          "balanced_accuracy": 0.4375,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 0.875,
+              "f1": 0.9333333333333333,
+              "support": 40
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 5,
+              "NOT_INDIAN": 35
+            }
+          }
+        },
+        "positive": {
+          "n": 40,
+          "accuracy": 0.95,
+          "macro_f1": 0.48717948717948717,
+          "balanced_accuracy": 0.475,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 0.95,
+              "f1": 0.9743589743589743,
+              "support": 40
+            },
+            "NOT_INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 38,
+              "NOT_INDIAN": 2
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            }
+          }
+        }
+      },
+      "by_category": {
+        "acronym_collision": {
+          "n": 13,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 13
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 13
+            }
+          }
+        },
+        "bare_acronym": {
+          "n": 10,
+          "accuracy": 0.8,
+          "macro_f1": 0.4444444444444445,
+          "balanced_accuracy": 0.4,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 0.8,
+              "f1": 0.888888888888889,
+              "support": 10
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 2,
+              "NOT_INDIAN": 8
+            }
+          }
+        },
+        "city_only": {
+          "n": 4,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 4
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 4
+            }
+          }
+        },
+        "corporate_location": {
+          "n": 11,
+          "accuracy": 1.0,
+          "macro_f1": 1.0,
+          "balanced_accuracy": 1.0,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 5
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 6
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 5,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 6
+            }
+          }
+        },
+        "department_noise": {
+          "n": 1,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1
+            },
+            "NOT_INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 1,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            }
+          }
+        },
+        "department_trap": {
+          "n": 1,
+          "accuracy": 0.0,
+          "macro_f1": 0.0,
+          "balanced_accuracy": 0.0,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 1
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 1,
+              "NOT_INDIAN": 0
+            }
+          }
+        },
+        "email_noise": {
+          "n": 1,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1
+            },
+            "NOT_INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 1,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            }
+          }
+        },
+        "email_only": {
+          "n": 3,
+          "accuracy": 0.6666666666666666,
+          "macro_f1": 0.4,
+          "balanced_accuracy": 0.3333333333333333,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 0.6666666666666666,
+              "f1": 0.8,
+              "support": 3
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 1,
+              "NOT_INDIAN": 2
+            }
+          }
+        },
+        "email_trap": {
+          "n": 1,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 1
+            }
+          }
+        },
+        "explicit_country": {
+          "n": 10,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 10
+            },
+            "NOT_INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 10,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            }
+          }
+        },
+        "foreign_institution": {
+          "n": 10,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 10
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 10
+            }
+          }
+        },
+        "formatting": {
+          "n": 1,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1
+            },
+            "NOT_INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 1,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            }
+          }
+        },
+        "full_name": {
+          "n": 10,
+          "accuracy": 0.8,
+          "macro_f1": 0.4444444444444445,
+          "balanced_accuracy": 0.4,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 0.8,
+              "f1": 0.888888888888889,
+              "support": 10
+            },
+            "NOT_INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 8,
+              "NOT_INDIAN": 2
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            }
+          }
+        },
+        "historical_affiliation": {
+          "n": 2,
+          "accuracy": 0.0,
+          "macro_f1": 0.0,
+          "balanced_accuracy": 0.0,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 2
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 2,
+              "NOT_INDIAN": 0
+            }
+          }
+        },
+        "missing_affiliation": {
+          "n": 6,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 6
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 6
+            }
+          }
+        },
+        "missing_institution": {
+          "n": 5,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 5
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 5
+            }
+          }
+        },
+        "missing_location": {
+          "n": 10,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 10
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 10
+            }
+          }
+        },
+        "multiple_affiliations": {
+          "n": 2,
+          "accuracy": 1.0,
+          "macro_f1": 1.0,
+          "balanced_accuracy": 1.0,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 1,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 1
+            }
+          }
+        },
+        "nationality_trap": {
+          "n": 1,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 1
+            }
+          }
+        },
+        "overseas_campus": {
+          "n": 5,
+          "accuracy": 0.4,
+          "macro_f1": 0.28571428571428575,
+          "balanced_accuracy": 0.2,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 0.4,
+              "f1": 0.5714285714285715,
+              "support": 5
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 3,
+              "NOT_INDIAN": 2
+            }
+          }
+        },
+        "qualified_acronym": {
+          "n": 11,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 11
+            },
+            "NOT_INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 11,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            }
+          }
+        },
+        "substring_trap": {
+          "n": 3,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 3
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 3
+            }
+          }
+        }
+      }
+    },
+    "laya": {
+      "metrics": {
+        "n": 121,
+        "accuracy": 0.9834710743801653,
+        "macro_f1": 0.9815548780487805,
+        "balanced_accuracy": 0.9876543209876543,
+        "per_class": {
+          "INDIAN": {
+            "precision": 0.9523809523809523,
+            "recall": 1.0,
+            "f1": 0.975609756097561,
+            "support": 40
+          },
+          "NOT_INDIAN": {
+            "precision": 1.0,
+            "recall": 0.9753086419753086,
+            "f1": 0.9875,
+            "support": 81
+          }
+        },
+        "confusion_matrix": {
+          "INDIAN": {
+            "INDIAN": 40,
+            "NOT_INDIAN": 0
+          },
+          "NOT_INDIAN": {
+            "INDIAN": 2,
+            "NOT_INDIAN": 79
+          }
+        }
+      },
+      "latency": {
+        "mean_ms": 1573.894085462861,
+        "p50_ms": 1494.432997000331,
+        "p95_ms": 2034.3252110005778
+      },
+      "predictions": [
+        {
+          "id": "P001",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9799,
+            "NOT_INDIAN": 0.0201
+          },
+          "confidence": 0.858,
+          "state": "Indian Institute of Technology Bombay"
+        },
+        {
+          "id": "P002",
+          "category": "qualified_acronym",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9794,
+            "NOT_INDIAN": 0.0206
+          },
+          "confidence": 0.8555,
+          "state": "IIT Bombay, Mumbai"
+        },
+        {
+          "id": "P003",
+          "category": "qualified_acronym",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9793,
+            "NOT_INDIAN": 0.0207
+          },
+          "confidence": 0.8544,
+          "state": "IIT Delhi"
+        },
+        {
+          "id": "P004",
+          "category": "qualified_acronym",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.979,
+            "NOT_INDIAN": 0.021
+          },
+          "confidence": 0.8532,
+          "state": "IIT Madras, Chennai"
+        },
+        {
+          "id": "P005",
+          "category": "qualified_acronym",
+          "split": "validation",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9798,
+            "NOT_INDIAN": 0.0202
+          },
+          "confidence": 0.8573,
+          "state": "IIT Kanpur"
+        },
+        {
+          "id": "P006",
+          "category": "qualified_acronym",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9785,
+            "NOT_INDIAN": 0.0215
+          },
+          "confidence": 0.8504,
+          "state": "IIT Kharagpur"
+        },
+        {
+          "id": "P007",
+          "category": "qualified_acronym",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9791,
+            "NOT_INDIAN": 0.0209
+          },
+          "confidence": 0.8536,
+          "state": "IIT (BHU), Varanasi"
+        },
+        {
+          "id": "P008",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9808,
+            "NOT_INDIAN": 0.0192
+          },
+          "confidence": 0.8629,
+          "state": "Indian Institute of Technology (ISM), Dhanbad"
+        },
+        {
+          "id": "P009",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9811,
+            "NOT_INDIAN": 0.0189
+          },
+          "confidence": 0.8646,
+          "state": "Indian Institute of Science, Bengaluru"
+        },
+        {
+          "id": "P010",
+          "category": "qualified_acronym",
+          "split": "validation",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9799,
+            "NOT_INDIAN": 0.0201
+          },
+          "confidence": 0.8577,
+          "state": "IISc Bangalore"
+        },
+        {
+          "id": "P011",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9803,
+            "NOT_INDIAN": 0.0197
+          },
+          "confidence": 0.8605,
+          "state": "Indian Statistical Institute, Kolkata"
+        },
+        {
+          "id": "P012",
+          "category": "qualified_acronym",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9801,
+            "NOT_INDIAN": 0.0199
+          },
+          "confidence": 0.8589,
+          "state": "ISI Kolkata"
+        },
+        {
+          "id": "P013",
+          "category": "qualified_acronym",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9803,
+            "NOT_INDIAN": 0.0197
+          },
+          "confidence": 0.8601,
+          "state": "ISI Bangalore"
+        },
+        {
+          "id": "P014",
+          "category": "explicit_country",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9808,
+            "NOT_INDIAN": 0.0192
+          },
+          "confidence": 0.8633,
+          "state": "National Institute of Technology, Tiruchirappalli, India"
+        },
+        {
+          "id": "P015",
+          "category": "qualified_acronym",
+          "split": "validation",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9805,
+            "NOT_INDIAN": 0.0195
+          },
+          "confidence": 0.8615,
+          "state": "NIT Surathkal"
+        },
+        {
+          "id": "P016",
+          "category": "explicit_country",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9799,
+            "NOT_INDIAN": 0.0201
+          },
+          "confidence": 0.8582,
+          "state": "IIIT Hyderabad, India"
+        },
+        {
+          "id": "P017",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9796,
+            "NOT_INDIAN": 0.0204
+          },
+          "confidence": 0.8563,
+          "state": "International Institute of Information Technology Hyderabad"
+        },
+        {
+          "id": "P018",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9798,
+            "NOT_INDIAN": 0.0202
+          },
+          "confidence": 0.8572,
+          "state": "Jadavpur University, Kolkata"
+        },
+        {
+          "id": "P019",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9797,
+            "NOT_INDIAN": 0.0203
+          },
+          "confidence": 0.8566,
+          "state": "Anna University, Chennai"
+        },
+        {
+          "id": "P020",
+          "category": "full_name",
+          "split": "validation",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9796,
+            "NOT_INDIAN": 0.0204
+          },
+          "confidence": 0.8561,
+          "state": "Banaras Hindu University, Varanasi"
+        },
+        {
+          "id": "P021",
+          "category": "explicit_country",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9796,
+            "NOT_INDIAN": 0.0204
+          },
+          "confidence": 0.8564,
+          "state": "University of Delhi, India"
+        },
+        {
+          "id": "P022",
+          "category": "explicit_country",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9805,
+            "NOT_INDIAN": 0.0195
+          },
+          "confidence": 0.8612,
+          "state": "University of Hyderabad, Telangana, India"
+        },
+        {
+          "id": "P023",
+          "category": "explicit_country",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9794,
+            "NOT_INDIAN": 0.0206
+          },
+          "confidence": 0.8553,
+          "state": "Birla Institute of Technology and Science, Pilani, India"
+        },
+        {
+          "id": "P024",
+          "category": "qualified_acronym",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9789,
+            "NOT_INDIAN": 0.0211
+          },
+          "confidence": 0.8527,
+          "state": "BITS Pilani, Rajasthan"
+        },
+        {
+          "id": "P025",
+          "category": "explicit_country",
+          "split": "validation",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9817,
+            "NOT_INDIAN": 0.0183
+          },
+          "confidence": 0.8683,
+          "state": "Manipal Academy of Higher Education, Manipal, India"
+        },
+        {
+          "id": "P026",
+          "category": "explicit_country",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9805,
+            "NOT_INDIAN": 0.0195
+          },
+          "confidence": 0.8611,
+          "state": "Shiv Nadar University, Greater Noida, India"
+        },
+        {
+          "id": "P027",
+          "category": "explicit_country",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9813,
+            "NOT_INDIAN": 0.0187
+          },
+          "confidence": 0.8658,
+          "state": "O. P. Jindal Global University, Sonipat, India"
+        },
+        {
+          "id": "P028",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9813,
+            "NOT_INDIAN": 0.0187
+          },
+          "confidence": 0.8661,
+          "state": "Tata Institute of Fundamental Research, Mumbai"
+        },
+        {
+          "id": "P029",
+          "category": "full_name",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9805,
+            "NOT_INDIAN": 0.0195
+          },
+          "confidence": 0.8616,
+          "state": "Indian Institute of Science Education and Research, Pune"
+        },
+        {
+          "id": "P030",
+          "category": "explicit_country",
+          "split": "validation",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9703,
+            "NOT_INDIAN": 0.0297
+          },
+          "confidence": 0.8073,
+          "state": "CSIR-National Physical Laboratory, New Delhi, India"
+        },
+        {
+          "id": "P031",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9807,
+            "NOT_INDIAN": 0.0193
+          },
+          "confidence": 0.8627,
+          "state": "Microsoft Research India, Bengaluru"
+        },
+        {
+          "id": "P032",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9297,
+            "NOT_INDIAN": 0.0703
+          },
+          "confidence": 0.6331,
+          "state": "Google Research, Bengaluru, India"
+        },
+        {
+          "id": "P033",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9812,
+            "NOT_INDIAN": 0.0188
+          },
+          "confidence": 0.8656,
+          "state": "IBM Research India, New Delhi"
+        },
+        {
+          "id": "P034",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9798,
+            "NOT_INDIAN": 0.0202
+          },
+          "confidence": 0.8574,
+          "state": "Adobe Research, Bangalore, India"
+        },
+        {
+          "id": "P035",
+          "category": "corporate_location",
+          "split": "validation",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9816,
+            "NOT_INDIAN": 0.0184
+          },
+          "confidence": 0.8678,
+          "state": "Samsung R&D Institute India, Bangalore"
+        },
+        {
+          "id": "P036",
+          "category": "department_noise",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9813,
+            "NOT_INDIAN": 0.0187
+          },
+          "confidence": 0.8658,
+          "state": "Dept. of CSE, Indian Institute of Technology, Bombay, India"
+        },
+        {
+          "id": "P037",
+          "category": "explicit_country",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9809,
+            "NOT_INDIAN": 0.0191
+          },
+          "confidence": 0.8634,
+          "state": "Department of Statistics, University of Calcutta, India"
+        },
+        {
+          "id": "P038",
+          "category": "formatting",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9823,
+            "NOT_INDIAN": 0.0177
+          },
+          "confidence": 0.8715,
+          "state": "  IIT   Bombay , Mumbai , INDIA  "
+        },
+        {
+          "id": "P039",
+          "category": "email_noise",
+          "split": "test",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9183,
+            "NOT_INDIAN": 0.0817
+          },
+          "confidence": 0.5918,
+          "state": "IISc, Bengaluru; contact: scientist@example.org"
+        },
+        {
+          "id": "P040",
+          "category": "multiple_affiliations",
+          "split": "validation",
+          "source_label": "positive",
+          "expected": "INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.9805,
+            "NOT_INDIAN": 0.0195
+          },
+          "confidence": 0.8615,
+          "state": "Indian Institute of Technology Bombay; Stanford University, USA"
+        },
+        {
+          "id": "N001",
+          "category": "foreign_institution",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0187,
+            "NOT_INDIAN": 0.9813
+          },
+          "confidence": 0.8657,
+          "state": "Stanford University, California, USA"
+        },
+        {
+          "id": "N002",
+          "category": "foreign_institution",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0201,
+            "NOT_INDIAN": 0.9799
+          },
+          "confidence": 0.8578,
+          "state": "Massachusetts Institute of Technology, Cambridge, USA"
+        },
+        {
+          "id": "N003",
+          "category": "foreign_institution",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0186,
+            "NOT_INDIAN": 0.9814
+          },
+          "confidence": 0.8664,
+          "state": "University of Cambridge, United Kingdom"
+        },
+        {
+          "id": "N004",
+          "category": "foreign_institution",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0194,
+            "NOT_INDIAN": 0.9806
+          },
+          "confidence": 0.8617,
+          "state": "University of Oxford, United Kingdom"
+        },
+        {
+          "id": "N005",
+          "category": "foreign_institution",
+          "split": "validation",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0191,
+            "NOT_INDIAN": 0.9809
+          },
+          "confidence": 0.8637,
+          "state": "ETH Zurich, Switzerland"
+        },
+        {
+          "id": "N006",
+          "category": "foreign_institution",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0223,
+            "NOT_INDIAN": 0.9777
+          },
+          "confidence": 0.8459,
+          "state": "National University of Singapore, Singapore"
+        },
+        {
+          "id": "N007",
+          "category": "foreign_institution",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0566,
+            "NOT_INDIAN": 0.9434
+          },
+          "confidence": 0.686,
+          "state": "Tsinghua University, Beijing, China"
+        },
+        {
+          "id": "N008",
+          "category": "foreign_institution",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0195,
+            "NOT_INDIAN": 0.9805
+          },
+          "confidence": 0.8613,
+          "state": "University of Tokyo, Japan"
+        },
+        {
+          "id": "N009",
+          "category": "foreign_institution",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0182,
+            "NOT_INDIAN": 0.9818
+          },
+          "confidence": 0.8686,
+          "state": "University of Toronto, Canada"
+        },
+        {
+          "id": "N010",
+          "category": "foreign_institution",
+          "split": "validation",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0195,
+            "NOT_INDIAN": 0.9805
+          },
+          "confidence": 0.8613,
+          "state": "University of Melbourne, Australia"
+        },
+        {
+          "id": "N011",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0202,
+            "NOT_INDIAN": 0.9798
+          },
+          "confidence": 0.8572,
+          "state": "Illinois Institute of Technology, Chicago, USA"
+        },
+        {
+          "id": "N012",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0187,
+            "NOT_INDIAN": 0.9813
+          },
+          "confidence": 0.8662,
+          "state": "IIT, Chicago, USA"
+        },
+        {
+          "id": "N013",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0226,
+            "NOT_INDIAN": 0.9774
+          },
+          "confidence": 0.8439,
+          "state": "Istituto Italiano di Tecnologia, Genova, Italy"
+        },
+        {
+          "id": "N014",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.018,
+            "NOT_INDIAN": 0.982
+          },
+          "confidence": 0.8697,
+          "state": "IIT Genova, Italy"
+        },
+        {
+          "id": "N015",
+          "category": "acronym_collision",
+          "split": "validation",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0213,
+            "NOT_INDIAN": 0.9787
+          },
+          "confidence": 0.8513,
+          "state": "Institute of Informatics and Telecommunications, NCSR Demokritos, Greece"
+        },
+        {
+          "id": "N016",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0209,
+            "NOT_INDIAN": 0.9791
+          },
+          "confidence": 0.8538,
+          "state": "ISI, University of Southern California, USA"
+        },
+        {
+          "id": "N017",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.019,
+            "NOT_INDIAN": 0.981
+          },
+          "confidence": 0.8644,
+          "state": "Information Sciences Institute, USC, USA"
+        },
+        {
+          "id": "N018",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0214,
+            "NOT_INDIAN": 0.9786
+          },
+          "confidence": 0.8507,
+          "state": "Istituto Superiore di Sanita, Rome, Italy"
+        },
+        {
+          "id": "N019",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0189,
+            "NOT_INDIAN": 0.9811
+          },
+          "confidence": 0.8649,
+          "state": "ISI, Rome, Italy"
+        },
+        {
+          "id": "N020",
+          "category": "acronym_collision",
+          "split": "validation",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0189,
+            "NOT_INDIAN": 0.9811
+          },
+          "confidence": 0.8645,
+          "state": "Nagoya Institute of Technology, Japan"
+        },
+        {
+          "id": "N021",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0191,
+            "NOT_INDIAN": 0.9809
+          },
+          "confidence": 0.8639,
+          "state": "NIT, Nagoya, Japan"
+        },
+        {
+          "id": "N022",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0237,
+            "NOT_INDIAN": 0.9763
+          },
+          "confidence": 0.8382,
+          "state": "Victorian Institute of Technology, Melbourne, Australia"
+        },
+        {
+          "id": "N023",
+          "category": "acronym_collision",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0184,
+            "NOT_INDIAN": 0.9816
+          },
+          "confidence": 0.8676,
+          "state": "VIT, Melbourne, Australia"
+        },
+        {
+          "id": "N024",
+          "category": "overseas_campus",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0186,
+            "NOT_INDIAN": 0.9814
+          },
+          "confidence": 0.8667,
+          "state": "Indian Institute of Technology Madras, Zanzibar, Tanzania"
+        },
+        {
+          "id": "N025",
+          "category": "overseas_campus",
+          "split": "validation",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0201,
+            "NOT_INDIAN": 0.9799
+          },
+          "confidence": 0.8579,
+          "state": "IIT Delhi Abu Dhabi, United Arab Emirates"
+        },
+        {
+          "id": "N026",
+          "category": "overseas_campus",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0184,
+            "NOT_INDIAN": 0.9816
+          },
+          "confidence": 0.8676,
+          "state": "BITS Pilani, Dubai Campus, UAE"
+        },
+        {
+          "id": "N027",
+          "category": "overseas_campus",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0195,
+            "NOT_INDIAN": 0.9805
+          },
+          "confidence": 0.8615,
+          "state": "Manipal International University, Malaysia"
+        },
+        {
+          "id": "N028",
+          "category": "overseas_campus",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0193,
+            "NOT_INDIAN": 0.9807
+          },
+          "confidence": 0.8625,
+          "state": "Amity University Dubai, United Arab Emirates"
+        },
+        {
+          "id": "N029",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0192,
+            "NOT_INDIAN": 0.9808
+          },
+          "confidence": 0.863,
+          "state": "Microsoft Research, Redmond, USA"
+        },
+        {
+          "id": "N030",
+          "category": "corporate_location",
+          "split": "validation",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0183,
+            "NOT_INDIAN": 0.9817
+          },
+          "confidence": 0.8685,
+          "state": "Google Research, Zurich, Switzerland"
+        },
+        {
+          "id": "N031",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0228,
+            "NOT_INDIAN": 0.9772
+          },
+          "confidence": 0.8433,
+          "state": "IBM Research, Almaden, USA"
+        },
+        {
+          "id": "N032",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0186,
+            "NOT_INDIAN": 0.9814
+          },
+          "confidence": 0.8664,
+          "state": "Infosys, London, United Kingdom"
+        },
+        {
+          "id": "N033",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0214,
+            "NOT_INDIAN": 0.9786
+          },
+          "confidence": 0.8505,
+          "state": "Tata Consultancy Services, Toronto, Canada"
+        },
+        {
+          "id": "N034",
+          "category": "corporate_location",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0178,
+            "NOT_INDIAN": 0.9822
+          },
+          "confidence": 0.8708,
+          "state": "Wipro, Sydney, Australia"
+        },
+        {
+          "id": "N035",
+          "category": "substring_trap",
+          "split": "validation",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0225,
+            "NOT_INDIAN": 0.9775
+          },
+          "confidence": 0.8449,
+          "state": "Indiana University, Bloomington, USA"
+        },
+        {
+          "id": "N036",
+          "category": "substring_trap",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.559,
+            "NOT_INDIAN": 0.441
+          },
+          "confidence": 0.0101,
+          "state": "Indiana Institute of Technology, Fort Wayne, USA"
+        },
+        {
+          "id": "N037",
+          "category": "substring_trap",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0209,
+            "NOT_INDIAN": 0.9791
+          },
+          "confidence": 0.8538,
+          "state": "University of Indianapolis, USA"
+        },
+        {
+          "id": "N038",
+          "category": "email_trap",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0208,
+            "NOT_INDIAN": 0.9792
+          },
+          "confidence": 0.8543,
+          "state": "University of Oxford, UK; email: researcher@iitb.ac.in"
+        },
+        {
+          "id": "N039",
+          "category": "department_trap",
+          "split": "test",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0185,
+            "NOT_INDIAN": 0.9815
+          },
+          "confidence": 0.8672,
+          "state": "Department of India Studies, University of Tokyo, Japan"
+        },
+        {
+          "id": "N040",
+          "category": "historical_affiliation",
+          "split": "validation",
+          "source_label": "negative",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0202,
+            "NOT_INDIAN": 0.9798
+          },
+          "confidence": 0.8575,
+          "state": "Stanford University, USA; formerly IIT Bombay, India"
+        },
+        {
+          "id": "A001",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0201,
+            "NOT_INDIAN": 0.9799
+          },
+          "confidence": 0.8581,
+          "state": "IIT"
+        },
+        {
+          "id": "A002",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.019,
+            "NOT_INDIAN": 0.981
+          },
+          "confidence": 0.864,
+          "state": "NIT"
+        },
+        {
+          "id": "A003",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0205,
+            "NOT_INDIAN": 0.9795
+          },
+          "confidence": 0.8559,
+          "state": "ISI"
+        },
+        {
+          "id": "A004",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0198,
+            "NOT_INDIAN": 0.9802
+          },
+          "confidence": 0.8596,
+          "state": "VIT"
+        },
+        {
+          "id": "A005",
+          "category": "bare_acronym",
+          "split": "validation",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0199,
+            "NOT_INDIAN": 0.9801
+          },
+          "confidence": 0.8594,
+          "state": "MIT"
+        },
+        {
+          "id": "A006",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0194,
+            "NOT_INDIAN": 0.9806
+          },
+          "confidence": 0.8617,
+          "state": "JU"
+        },
+        {
+          "id": "A007",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0203,
+            "NOT_INDIAN": 0.9797
+          },
+          "confidence": 0.8569,
+          "state": "IIIT"
+        },
+        {
+          "id": "A008",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.02,
+            "NOT_INDIAN": 0.98
+          },
+          "confidence": 0.8583,
+          "state": "IIM"
+        },
+        {
+          "id": "A009",
+          "category": "missing_location",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0201,
+            "NOT_INDIAN": 0.9799
+          },
+          "confidence": 0.8581,
+          "state": "Microsoft Research"
+        },
+        {
+          "id": "A010",
+          "category": "missing_location",
+          "split": "validation",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0195,
+            "NOT_INDIAN": 0.9805
+          },
+          "confidence": 0.8611,
+          "state": "Google Research"
+        },
+        {
+          "id": "A011",
+          "category": "missing_location",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0198,
+            "NOT_INDIAN": 0.9802
+          },
+          "confidence": 0.8596,
+          "state": "IBM Research"
+        },
+        {
+          "id": "A012",
+          "category": "missing_location",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0193,
+            "NOT_INDIAN": 0.9807
+          },
+          "confidence": 0.8626,
+          "state": "Amazon Science"
+        },
+        {
+          "id": "A013",
+          "category": "missing_location",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0197,
+            "NOT_INDIAN": 0.9803
+          },
+          "confidence": 0.8603,
+          "state": "Adobe Research"
+        },
+        {
+          "id": "A014",
+          "category": "missing_location",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0201,
+            "NOT_INDIAN": 0.9799
+          },
+          "confidence": 0.858,
+          "state": "Samsung Research"
+        },
+        {
+          "id": "A015",
+          "category": "missing_location",
+          "split": "validation",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0197,
+            "NOT_INDIAN": 0.9803
+          },
+          "confidence": 0.8601,
+          "state": "Infosys"
+        },
+        {
+          "id": "A016",
+          "category": "missing_location",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "INDIAN",
+          "probabilities": {
+            "INDIAN": 0.6212,
+            "NOT_INDIAN": 0.3788
+          },
+          "confidence": 0.0428,
+          "state": "Tata Consultancy Services"
+        },
+        {
+          "id": "A017",
+          "category": "missing_location",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0196,
+            "NOT_INDIAN": 0.9804
+          },
+          "confidence": 0.8606,
+          "state": "Wipro"
+        },
+        {
+          "id": "A018",
+          "category": "missing_location",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0201,
+            "NOT_INDIAN": 0.9799
+          },
+          "confidence": 0.8582,
+          "state": "Intel Labs"
+        },
+        {
+          "id": "A019",
+          "category": "missing_affiliation",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0202,
+            "NOT_INDIAN": 0.9798
+          },
+          "confidence": 0.8572,
+          "state": "Unknown"
+        },
+        {
+          "id": "A020",
+          "category": "missing_affiliation",
+          "split": "validation",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0199,
+            "NOT_INDIAN": 0.9801
+          },
+          "confidence": 0.8589,
+          "state": "N/A"
+        },
+        {
+          "id": "A021",
+          "category": "missing_affiliation",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0198,
+            "NOT_INDIAN": 0.9802
+          },
+          "confidence": 0.8596,
+          "state": "Not provided"
+        },
+        {
+          "id": "A022",
+          "category": "missing_affiliation",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0192,
+            "NOT_INDIAN": 0.9808
+          },
+          "confidence": 0.8629,
+          "state": "Independent researcher"
+        },
+        {
+          "id": "A023",
+          "category": "missing_institution",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0197,
+            "NOT_INDIAN": 0.9803
+          },
+          "confidence": 0.8601,
+          "state": "Department of Computer Science"
+        },
+        {
+          "id": "A024",
+          "category": "missing_institution",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0185,
+            "NOT_INDIAN": 0.9815
+          },
+          "confidence": 0.867,
+          "state": "School of Engineering"
+        },
+        {
+          "id": "A025",
+          "category": "missing_institution",
+          "split": "validation",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0188,
+            "NOT_INDIAN": 0.9812
+          },
+          "confidence": 0.8655,
+          "state": "Center for Artificial Intelligence"
+        },
+        {
+          "id": "A026",
+          "category": "missing_institution",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0194,
+            "NOT_INDIAN": 0.9806
+          },
+          "confidence": 0.862,
+          "state": "National Research Laboratory"
+        },
+        {
+          "id": "A027",
+          "category": "missing_institution",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0193,
+            "NOT_INDIAN": 0.9807
+          },
+          "confidence": 0.8622,
+          "state": "University Research Centre"
+        },
+        {
+          "id": "A028",
+          "category": "city_only",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0272,
+            "NOT_INDIAN": 0.9728
+          },
+          "confidence": 0.82,
+          "state": "Bangalore"
+        },
+        {
+          "id": "A029",
+          "category": "city_only",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0203,
+            "NOT_INDIAN": 0.9797
+          },
+          "confidence": 0.8571,
+          "state": "Mumbai"
+        },
+        {
+          "id": "A030",
+          "category": "city_only",
+          "split": "validation",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0233,
+            "NOT_INDIAN": 0.9767
+          },
+          "confidence": 0.8404,
+          "state": "Delhi"
+        },
+        {
+          "id": "A031",
+          "category": "city_only",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0224,
+            "NOT_INDIAN": 0.9776
+          },
+          "confidence": 0.8453,
+          "state": "Hyderabad"
+        },
+        {
+          "id": "A032",
+          "category": "email_only",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0205,
+            "NOT_INDIAN": 0.9795
+          },
+          "confidence": 0.8558,
+          "state": "researcher@iitb.ac.in"
+        },
+        {
+          "id": "A033",
+          "category": "email_only",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0201,
+            "NOT_INDIAN": 0.9799
+          },
+          "confidence": 0.8581,
+          "state": "researcher@iisc.ac.in"
+        },
+        {
+          "id": "A034",
+          "category": "email_only",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.02,
+            "NOT_INDIAN": 0.98
+          },
+          "confidence": 0.8585,
+          "state": "user.iitd@gmail.com"
+        },
+        {
+          "id": "A035",
+          "category": "nationality_trap",
+          "split": "validation",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.2348,
+            "NOT_INDIAN": 0.7652
+          },
+          "confidence": 0.2137,
+          "state": "Indian researcher"
+        },
+        {
+          "id": "A036",
+          "category": "missing_affiliation",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0196,
+            "NOT_INDIAN": 0.9804
+          },
+          "confidence": 0.8608,
+          "state": "Visiting scholar, institution not specified"
+        },
+        {
+          "id": "A037",
+          "category": "historical_affiliation",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0276,
+            "NOT_INDIAN": 0.9724
+          },
+          "confidence": 0.8179,
+          "state": "Formerly IIT Bombay; current affiliation unknown"
+        },
+        {
+          "id": "A038",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0205,
+            "NOT_INDIAN": 0.9795
+          },
+          "confidence": 0.8555,
+          "state": "IIT, Department of Computing"
+        },
+        {
+          "id": "A039",
+          "category": "bare_acronym",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0208,
+            "NOT_INDIAN": 0.9792
+          },
+          "confidence": 0.8539,
+          "state": "ISI, Statistical Learning Group"
+        },
+        {
+          "id": "A040",
+          "category": "multiple_affiliations",
+          "split": "validation",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0202,
+            "NOT_INDIAN": 0.9798
+          },
+          "confidence": 0.8573,
+          "state": "Microsoft Research; Google Research"
+        },
+        {
+          "id": "A041",
+          "category": "missing_affiliation",
+          "split": "test",
+          "source_label": "ambiguous",
+          "expected": "NOT_INDIAN",
+          "predicted": "NOT_INDIAN",
+          "probabilities": {
+            "INDIAN": 0.0203,
+            "NOT_INDIAN": 0.9797
+          },
+          "confidence": 0.857,
+          "state": ""
+        }
+      ],
+      "by_source_label": {
+        "ambiguous": {
+          "n": 41,
+          "accuracy": 0.975609756097561,
+          "macro_f1": 0.49382716049382713,
+          "balanced_accuracy": 0.4878048780487805,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 0.975609756097561,
+              "f1": 0.9876543209876543,
+              "support": 41
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 1,
+              "NOT_INDIAN": 40
+            }
+          }
+        },
+        "negative": {
+          "n": 40,
+          "accuracy": 0.975,
+          "macro_f1": 0.49367088607594933,
+          "balanced_accuracy": 0.4875,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 0.975,
+              "f1": 0.9873417721518987,
+              "support": 40
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 1,
+              "NOT_INDIAN": 39
+            }
+          }
+        },
+        "positive": {
+          "n": 40,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 40
+            },
+            "NOT_INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 40,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            }
+          }
+        }
+      },
+      "by_category": {
+        "acronym_collision": {
+          "n": 13,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 13
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 13
+            }
+          }
+        },
+        "bare_acronym": {
+          "n": 10,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 10
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 10
+            }
+          }
+        },
+        "city_only": {
+          "n": 4,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 4
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 4
+            }
+          }
+        },
+        "corporate_location": {
+          "n": 11,
+          "accuracy": 1.0,
+          "macro_f1": 1.0,
+          "balanced_accuracy": 1.0,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 5
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 6
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 5,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 6
+            }
+          }
+        },
+        "department_noise": {
+          "n": 1,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1
+            },
+            "NOT_INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 1,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            }
+          }
+        },
+        "department_trap": {
+          "n": 1,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 1
+            }
+          }
+        },
+        "email_noise": {
+          "n": 1,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1
+            },
+            "NOT_INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 1,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            }
+          }
+        },
+        "email_only": {
+          "n": 3,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 3
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 3
+            }
+          }
+        },
+        "email_trap": {
+          "n": 1,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 1
+            }
+          }
+        },
+        "explicit_country": {
+          "n": 10,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 10
+            },
+            "NOT_INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 10,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            }
+          }
+        },
+        "foreign_institution": {
+          "n": 10,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 10
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 10
+            }
+          }
+        },
+        "formatting": {
+          "n": 1,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1
+            },
+            "NOT_INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 1,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            }
+          }
+        },
+        "full_name": {
+          "n": 10,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 10
+            },
+            "NOT_INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 10,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            }
+          }
+        },
+        "historical_affiliation": {
+          "n": 2,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 2
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 2
+            }
+          }
+        },
+        "missing_affiliation": {
+          "n": 6,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 6
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 6
+            }
+          }
+        },
+        "missing_institution": {
+          "n": 5,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 5
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 5
+            }
+          }
+        },
+        "missing_location": {
+          "n": 10,
+          "accuracy": 0.9,
+          "macro_f1": 0.4736842105263158,
+          "balanced_accuracy": 0.45,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 0.9,
+              "f1": 0.9473684210526316,
+              "support": 10
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 1,
+              "NOT_INDIAN": 9
+            }
+          }
+        },
+        "multiple_affiliations": {
+          "n": 2,
+          "accuracy": 1.0,
+          "macro_f1": 1.0,
+          "balanced_accuracy": 1.0,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 1,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 1
+            }
+          }
+        },
+        "nationality_trap": {
+          "n": 1,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 1
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 1
+            }
+          }
+        },
+        "overseas_campus": {
+          "n": 5,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 5
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 5
+            }
+          }
+        },
+        "qualified_acronym": {
+          "n": 11,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
+          "per_class": {
+            "INDIAN": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "support": 11
+            },
+            "NOT_INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 11,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            }
+          }
+        },
+        "substring_trap": {
+          "n": 3,
+          "accuracy": 0.6666666666666666,
+          "macro_f1": 0.4,
+          "balanced_accuracy": 0.3333333333333333,
+          "per_class": {
+            "INDIAN": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "support": 0
+            },
+            "NOT_INDIAN": {
+              "precision": 1.0,
+              "recall": 0.6666666666666666,
+              "f1": 0.8,
+              "support": 3
+            }
+          },
+          "confusion_matrix": {
+            "INDIAN": {
+              "INDIAN": 0,
+              "NOT_INDIAN": 0
+            },
+            "NOT_INDIAN": {
+              "INDIAN": 1,
+              "NOT_INDIAN": 2
+            }
+          }
+        }
+      }
+    }
+  },
+  "disagreements": [
+    {
+      "id": "P017",
+      "state": "International Institute of Information Technology Hyderabad",
+      "category": "full_name",
+      "source_label": "positive",
+      "expected": "INDIAN",
+      "rule_prediction": "NOT_INDIAN",
+      "rule_raw_prediction": "ambiguous",
+      "rule_matches": [
+        "\\bhyderabad\\b"
+      ],
+      "laya_prediction": "INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.9796,
+        "NOT_INDIAN": 0.0204
+      }
+    },
+    {
+      "id": "P020",
+      "state": "Banaras Hindu University, Varanasi",
+      "category": "full_name",
+      "source_label": "positive",
+      "expected": "INDIAN",
+      "rule_prediction": "NOT_INDIAN",
+      "rule_raw_prediction": "negative",
+      "rule_matches": [],
+      "laya_prediction": "INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.9796,
+        "NOT_INDIAN": 0.0204
+      }
+    },
+    {
+      "id": "N024",
+      "state": "Indian Institute of Technology Madras, Zanzibar, Tanzania",
+      "category": "overseas_campus",
+      "source_label": "negative",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bindian institute\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0186,
+        "NOT_INDIAN": 0.9814
+      }
+    },
+    {
+      "id": "N026",
+      "state": "BITS Pilani, Dubai Campus, UAE",
+      "category": "overseas_campus",
+      "source_label": "negative",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bbits pilani\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0184,
+        "NOT_INDIAN": 0.9816
+      }
+    },
+    {
+      "id": "N027",
+      "state": "Manipal International University, Malaysia",
+      "category": "overseas_campus",
+      "source_label": "negative",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bmanipal\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0195,
+        "NOT_INDIAN": 0.9805
+      }
+    },
+    {
+      "id": "N036",
+      "state": "Indiana Institute of Technology, Fort Wayne, USA",
+      "category": "substring_trap",
+      "source_label": "negative",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "NOT_INDIAN",
+      "rule_raw_prediction": "negative",
+      "rule_matches": [],
+      "laya_prediction": "INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.559,
+        "NOT_INDIAN": 0.441
+      }
+    },
+    {
+      "id": "N039",
+      "state": "Department of India Studies, University of Tokyo, Japan",
+      "category": "department_trap",
+      "source_label": "negative",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bindia\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0185,
+        "NOT_INDIAN": 0.9815
+      }
+    },
+    {
+      "id": "N040",
+      "state": "Stanford University, USA; formerly IIT Bombay, India",
+      "category": "historical_affiliation",
+      "source_label": "negative",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bindia\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0202,
+        "NOT_INDIAN": 0.9798
+      }
+    },
+    {
+      "id": "A007",
+      "state": "IIIT",
+      "category": "bare_acronym",
+      "source_label": "ambiguous",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\biiit\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0203,
+        "NOT_INDIAN": 0.9797
+      }
+    },
+    {
+      "id": "A008",
+      "state": "IIM",
+      "category": "bare_acronym",
+      "source_label": "ambiguous",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\biim\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.02,
+        "NOT_INDIAN": 0.98
+      }
+    },
+    {
+      "id": "A016",
+      "state": "Tata Consultancy Services",
+      "category": "missing_location",
+      "source_label": "ambiguous",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "NOT_INDIAN",
+      "rule_raw_prediction": "ambiguous",
+      "rule_matches": [
+        "\\btata\\b"
+      ],
+      "laya_prediction": "INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.6212,
+        "NOT_INDIAN": 0.3788
+      }
+    },
+    {
+      "id": "A033",
+      "state": "researcher@iisc.ac.in",
+      "category": "email_only",
+      "source_label": "ambiguous",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\biisc\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0201,
+        "NOT_INDIAN": 0.9799
+      }
+    },
+    {
+      "id": "A037",
+      "state": "Formerly IIT Bombay; current affiliation unknown",
+      "category": "historical_affiliation",
+      "source_label": "ambiguous",
+      "expected": "NOT_INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\biit\\b",
+        "\\bbombay\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.0276,
+        "NOT_INDIAN": 0.9724
+      }
+    }
+  ],
+  "environment": {
+    "python": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+    "binary_labels": [
+      "INDIAN",
+      "NOT_INDIAN"
+    ]
+  },
+  "plots": [
+    "benchmark/results/independent_all_overall_metrics.png",
+    "benchmark/results/independent_all_per_class_metrics.png",
+    "benchmark/results/independent_all_confusion_matrices.png",
+    "benchmark/results/independent_all_category_accuracy.png"
+  ]
+}

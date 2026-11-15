@@ -1,0 +1,197 @@
+{
+  "corpus": "Synthetic fixture; not a retrieval quality benchmark",
+  "embedding": "sentence-transformers:sentence-transformers/all-MiniLM-L6-v2@1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+  "indexed_documents": 5,
+  "checks": {
+    "semantic_paraphrase": true,
+    "hybrid_excludes_unverified_organizations": true,
+    "graph_collaboration": true,
+    "citations": true,
+    "incremental_index_noop": true
+  },
+  "answer": {
+    "query": "Fixture A video",
+    "kg_version": 20,
+    "citations": {
+      "P1": {
+        "paper_id": "PAPER_b97a6fd2681d087f12fb82ed",
+        "url": "https://example.org/fixture/video",
+        "title": "Temporal language grounding"
+      }
+    },
+    "evidence": [
+      {
+        "citation": "P1",
+        "title": "Temporal language grounding",
+        "abstract": "Locate the start and end of an event described by a sentence in an untrimmed video.",
+        "year": 2026,
+        "url": "https://example.org/fixture/video",
+        "retrieved_text": "Temporal language grounding\nLocate the start and end of an event described by a sentence in an untrimmed video.",
+        "document_id": "DOC_f28f46ace5e9cc85cd21f5b6",
+        "nodes": [
+          {
+            "id": "AUTH_a1714ad1249751f6e498ee73",
+            "kind": "AUTHOR",
+            "identity_scope": "PAPER",
+            "name": "Synthetic Author video 1",
+            "orcid": ""
+          },
+          {
+            "id": "AUTH_acac2bf7431c4141dece09bd",
+            "kind": "AUTHOR",
+            "identity_scope": "PAPER",
+            "name": "Synthetic Author video 0",
+            "orcid": ""
+          },
+          {
+            "id": "CONF_52f8ee4882b14c0b03d9c369",
+            "kind": "CONFERENCE",
+            "name": "SYNTHETIC",
+            "year": 2026
+          },
+          {
+            "id": "ORG_A",
+            "kind": "ORGANIZATION",
+            "address": "",
+            "aliases": [
+              "Fixture A"
+            ],
+            "canonical_name": "Fixture University A",
+            "city": "",
+            "country": "India",
+            "entity_type": "UNIVERSITY",
+            "normalized_name": "fixture university a",
+            "notes": "",
+            "sources": [
+              {
+                "file": "organizations.csv",
+                "retrieved_at": "",
+                "row": 2,
+                "sha256": "820dec9c55a2cee077c4129b01156e6399189e6e4882515cbc35d9eb1ff74e58",
+                "source_type": "OFFICIAL_WEBSITE",
+                "source_url": "",
+                "verification_status": "TRUSTED"
+              }
+            ],
+            "state": "West Bengal",
+            "verification_status": "TRUSTED",
+            "website": ""
+          },
+          {
+            "id": "ORG_B",
+            "kind": "ORGANIZATION",
+            "address": "",
+            "aliases": [
+              "Fixture B"
+            ],
+            "canonical_name": "Fixture University B",
+            "city": "",
+            "country": "India",
+            "entity_type": "UNIVERSITY",
+            "normalized_name": "fixture university b",
+            "notes": "",
+            "sources": [
+              {
+                "file": "organizations.csv",
+                "retrieved_at": "",
+                "row": 3,
+                "sha256": "820dec9c55a2cee077c4129b01156e6399189e6e4882515cbc35d9eb1ff74e58",
+                "source_type": "OFFICIAL_WEBSITE",
+                "source_url": "",
+                "verification_status": "TRUSTED"
+              }
+            ],
+            "state": "Maharashtra",
+            "verification_status": "TRUSTED",
+            "website": ""
+          },
+          {
+            "id": "TOPIC_5944ae849448011ca08c3785",
+            "kind": "TOPIC",
+            "name": "Vision"
+          }
+        ],
+        "relationships": [
+          {
+            "id": "EDGE_13bf7d8ddd115f45c158d988",
+            "src": "AUTH_a1714ad1249751f6e498ee73",
+            "relation": "AFFILIATED_WITH",
+            "dst": "ORG_B",
+            "evidence_id": "PAPER_b97a6fd2681d087f12fb82ed",
+            "data": {
+              "observed_affiliation": "Fixture B",
+              "observed_year": 2026,
+              "resolution_method": "ALIAS",
+              "status": "OBSERVED"
+            }
+          },
+          {
+            "id": "EDGE_570781f94f83bd28cf2c14fc",
+            "src": "AUTH_a1714ad1249751f6e498ee73",
+            "relation": "AUTHORED",
+            "dst": "PAPER_b97a6fd2681d087f12fb82ed",
+            "evidence_id": "PAPER_b97a6fd2681d087f12fb82ed",
+            "data": {
+              "status": "OBSERVED"
+            }
+          },
+          {
+            "id": "EDGE_5ed295b3681de1fa36a8dba1",
+            "src": "AUTH_acac2bf7431c4141dece09bd",
+            "relation": "AUTHORED",
+            "dst": "PAPER_b97a6fd2681d087f12fb82ed",
+            "evidence_id": "PAPER_b97a6fd2681d087f12fb82ed",
+            "data": {
+              "status": "OBSERVED"
+            }
+          },
+          {
+            "id": "EDGE_aeae1380a5eb198dbcb02093",
+            "src": "PAPER_b97a6fd2681d087f12fb82ed",
+            "relation": "PUBLISHED_AT",
+            "dst": "CONF_52f8ee4882b14c0b03d9c369",
+            "evidence_id": "PAPER_b97a6fd2681d087f12fb82ed",
+            "data": {
+              "status": "OBSERVED"
+            }
+          },
+          {
+            "id": "EDGE_b4e3c9ca2c444b0184cefd14",
+            "src": "AUTH_acac2bf7431c4141dece09bd",
+            "relation": "AFFILIATED_WITH",
+            "dst": "ORG_A",
+            "evidence_id": "PAPER_b97a6fd2681d087f12fb82ed",
+            "data": {
+              "observed_affiliation": "Fixture A",
+              "observed_year": 2026,
+              "resolution_method": "ALIAS",
+              "status": "OBSERVED"
+            }
+          },
+          {
+            "id": "EDGE_f861a789772b1889ee862132",
+            "src": "PAPER_b97a6fd2681d087f12fb82ed",
+            "relation": "HAS_TOPIC",
+            "dst": "TOPIC_5944ae849448011ca08c3785",
+            "evidence_id": "PAPER_b97a6fd2681d087f12fb82ed",
+            "data": {
+              "status": "OBSERVED"
+            }
+          }
+        ]
+      }
+    ],
+    "answer": "[P1] Temporal language grounding \u2014 https://example.org/fixture/video",
+    "generation": "extractive"
+  },
+  "vector_ranking": [
+    {
+      "paper_id": "PAPER_b97a6fd2681d087f12fb82ed",
+      "score": 0.42370231568790534
+    },
+    {
+      "paper_id": "PAPER_115c8c452c4d1f4e5395d060",
+      "score": -0.028409649989131338
+    }
+  ]
+}
