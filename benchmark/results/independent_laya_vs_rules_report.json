@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-11-15T18:02:39.751720+00:00",
+  "created_at": "2026-11-16T16:01:03.461677+00:00",
   "input": "/home/silajeet0/workspace/IKDD_Internship_IITB/SENTRY/benchmark/benchmark_data.json",
   "input_sha256": "7cf8df81efa1d76f094b55ae98fa6043178244d0e74a404bade6089f8f095e33",
   "parsed_output": "/home/silajeet0/workspace/IKDD_Internship_IITB/SENTRY/benchmark/results/benchmark_data_laya.jsonl",
@@ -25,6 +25,7 @@
     "model": "/home/silajeet0/workspace/IKDD_Internship_IITB/SENTRY/laya_finetuning/laya_finetuned_SENTRY",
     "device": "cpu",
     "threads": 2,
+    "threshold": 0.9781,
     "config_sha256": "1b1278cb95be14078873edac850c0d92d32379da29d1d032427e51cd40a510f0",
     "versions": {
       "laya": "0.4.33",
@@ -33,7 +34,7 @@
       "huggingface-hub": "2.3.0"
     }
   },
-  "model_load_seconds": 14.723834436000288,
+  "model_load_seconds": 14.90279654599999,
   "results": {
     "rules": {
       "metrics": {
@@ -67,9 +68,9 @@
         }
       },
       "latency": {
-        "mean_ms": 0.3222126611599228,
-        "p50_ms": 0.12002599942206871,
-        "p95_ms": 0.22234700008993968
+        "mean_ms": 0.3610943884283669,
+        "p50_ms": 0.12373600020509912,
+        "p95_ms": 0.27750900017053937
       },
       "predictions": [
         {
@@ -2320,38 +2321,38 @@
     "laya": {
       "metrics": {
         "n": 121,
-        "accuracy": 0.9834710743801653,
-        "macro_f1": 0.9815548780487805,
-        "balanced_accuracy": 0.9876543209876543,
+        "accuracy": 0.9752066115702479,
+        "macro_f1": 0.9714285714285714,
+        "balanced_accuracy": 0.9625,
         "per_class": {
           "INDIAN": {
-            "precision": 0.9523809523809523,
-            "recall": 1.0,
-            "f1": 0.975609756097561,
+            "precision": 1.0,
+            "recall": 0.925,
+            "f1": 0.961038961038961,
             "support": 40
           },
           "NOT_INDIAN": {
-            "precision": 1.0,
-            "recall": 0.9753086419753086,
-            "f1": 0.9875,
+            "precision": 0.9642857142857143,
+            "recall": 1.0,
+            "f1": 0.9818181818181818,
             "support": 81
           }
         },
         "confusion_matrix": {
           "INDIAN": {
-            "INDIAN": 40,
-            "NOT_INDIAN": 0
+            "INDIAN": 37,
+            "NOT_INDIAN": 3
           },
           "NOT_INDIAN": {
-            "INDIAN": 2,
-            "NOT_INDIAN": 79
+            "INDIAN": 0,
+            "NOT_INDIAN": 81
           }
         }
       },
       "latency": {
-        "mean_ms": 1573.894085462861,
-        "p50_ms": 1494.432997000331,
-        "p95_ms": 2034.3252110005778
+        "mean_ms": 1628.2493394380351,
+        "p50_ms": 1530.8954809997886,
+        "p95_ms": 1877.31863099998
       },
       "predictions": [
         {
@@ -2766,7 +2767,7 @@
           "split": "validation",
           "source_label": "positive",
           "expected": "INDIAN",
-          "predicted": "INDIAN",
+          "predicted": "NOT_INDIAN",
           "probabilities": {
             "INDIAN": 0.9703,
             "NOT_INDIAN": 0.0297
@@ -2794,7 +2795,7 @@
           "split": "test",
           "source_label": "positive",
           "expected": "INDIAN",
-          "predicted": "INDIAN",
+          "predicted": "NOT_INDIAN",
           "probabilities": {
             "INDIAN": 0.9297,
             "NOT_INDIAN": 0.0703
@@ -2892,7 +2893,7 @@
           "split": "test",
           "source_label": "positive",
           "expected": "INDIAN",
-          "predicted": "INDIAN",
+          "predicted": "NOT_INDIAN",
           "probabilities": {
             "INDIAN": 0.9183,
             "NOT_INDIAN": 0.0817
@@ -3410,7 +3411,7 @@
           "split": "test",
           "source_label": "negative",
           "expected": "NOT_INDIAN",
-          "predicted": "INDIAN",
+          "predicted": "NOT_INDIAN",
           "probabilities": {
             "INDIAN": 0.559,
             "NOT_INDIAN": 0.441
@@ -3690,7 +3691,7 @@
           "split": "test",
           "source_label": "ambiguous",
           "expected": "NOT_INDIAN",
-          "predicted": "INDIAN",
+          "predicted": "NOT_INDIAN",
           "probabilities": {
             "INDIAN": 0.6212,
             "NOT_INDIAN": 0.3788
@@ -4052,9 +4053,9 @@
       "by_source_label": {
         "ambiguous": {
           "n": 41,
-          "accuracy": 0.975609756097561,
-          "macro_f1": 0.49382716049382713,
-          "balanced_accuracy": 0.4878048780487805,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
           "per_class": {
             "INDIAN": {
               "precision": 0.0,
@@ -4064,8 +4065,8 @@
             },
             "NOT_INDIAN": {
               "precision": 1.0,
-              "recall": 0.975609756097561,
-              "f1": 0.9876543209876543,
+              "recall": 1.0,
+              "f1": 1.0,
               "support": 41
             }
           },
@@ -4075,16 +4076,16 @@
               "NOT_INDIAN": 0
             },
             "NOT_INDIAN": {
-              "INDIAN": 1,
-              "NOT_INDIAN": 40
+              "INDIAN": 0,
+              "NOT_INDIAN": 41
             }
           }
         },
         "negative": {
           "n": 40,
-          "accuracy": 0.975,
-          "macro_f1": 0.49367088607594933,
-          "balanced_accuracy": 0.4875,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
           "per_class": {
             "INDIAN": {
               "precision": 0.0,
@@ -4094,8 +4095,8 @@
             },
             "NOT_INDIAN": {
               "precision": 1.0,
-              "recall": 0.975,
-              "f1": 0.9873417721518987,
+              "recall": 1.0,
+              "f1": 1.0,
               "support": 40
             }
           },
@@ -4105,21 +4106,21 @@
               "NOT_INDIAN": 0
             },
             "NOT_INDIAN": {
-              "INDIAN": 1,
-              "NOT_INDIAN": 39
+              "INDIAN": 0,
+              "NOT_INDIAN": 40
             }
           }
         },
         "positive": {
           "n": 40,
-          "accuracy": 1.0,
-          "macro_f1": 0.5,
-          "balanced_accuracy": 0.5,
+          "accuracy": 0.925,
+          "macro_f1": 0.4805194805194805,
+          "balanced_accuracy": 0.4625,
           "per_class": {
             "INDIAN": {
               "precision": 1.0,
-              "recall": 1.0,
-              "f1": 1.0,
+              "recall": 0.925,
+              "f1": 0.961038961038961,
               "support": 40
             },
             "NOT_INDIAN": {
@@ -4131,8 +4132,8 @@
           },
           "confusion_matrix": {
             "INDIAN": {
-              "INDIAN": 40,
-              "NOT_INDIAN": 0
+              "INDIAN": 37,
+              "NOT_INDIAN": 3
             },
             "NOT_INDIAN": {
               "INDIAN": 0,
@@ -4234,27 +4235,27 @@
         },
         "corporate_location": {
           "n": 11,
-          "accuracy": 1.0,
-          "macro_f1": 1.0,
-          "balanced_accuracy": 1.0,
+          "accuracy": 0.9090909090909091,
+          "macro_f1": 0.905982905982906,
+          "balanced_accuracy": 0.9,
           "per_class": {
             "INDIAN": {
               "precision": 1.0,
-              "recall": 1.0,
-              "f1": 1.0,
+              "recall": 0.8,
+              "f1": 0.888888888888889,
               "support": 5
             },
             "NOT_INDIAN": {
-              "precision": 1.0,
+              "precision": 0.8571428571428571,
               "recall": 1.0,
-              "f1": 1.0,
+              "f1": 0.923076923076923,
               "support": 6
             }
           },
           "confusion_matrix": {
             "INDIAN": {
-              "INDIAN": 5,
-              "NOT_INDIAN": 0
+              "INDIAN": 4,
+              "NOT_INDIAN": 1
             },
             "NOT_INDIAN": {
               "INDIAN": 0,
@@ -4324,14 +4325,14 @@
         },
         "email_noise": {
           "n": 1,
-          "accuracy": 1.0,
-          "macro_f1": 0.5,
-          "balanced_accuracy": 0.5,
+          "accuracy": 0.0,
+          "macro_f1": 0.0,
+          "balanced_accuracy": 0.0,
           "per_class": {
             "INDIAN": {
-              "precision": 1.0,
-              "recall": 1.0,
-              "f1": 1.0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
               "support": 1
             },
             "NOT_INDIAN": {
@@ -4343,8 +4344,8 @@
           },
           "confusion_matrix": {
             "INDIAN": {
-              "INDIAN": 1,
-              "NOT_INDIAN": 0
+              "INDIAN": 0,
+              "NOT_INDIAN": 1
             },
             "NOT_INDIAN": {
               "INDIAN": 0,
@@ -4414,14 +4415,14 @@
         },
         "explicit_country": {
           "n": 10,
-          "accuracy": 1.0,
-          "macro_f1": 0.5,
-          "balanced_accuracy": 0.5,
+          "accuracy": 0.9,
+          "macro_f1": 0.4736842105263158,
+          "balanced_accuracy": 0.45,
           "per_class": {
             "INDIAN": {
               "precision": 1.0,
-              "recall": 1.0,
-              "f1": 1.0,
+              "recall": 0.9,
+              "f1": 0.9473684210526316,
               "support": 10
             },
             "NOT_INDIAN": {
@@ -4433,8 +4434,8 @@
           },
           "confusion_matrix": {
             "INDIAN": {
-              "INDIAN": 10,
-              "NOT_INDIAN": 0
+              "INDIAN": 9,
+              "NOT_INDIAN": 1
             },
             "NOT_INDIAN": {
               "INDIAN": 0,
@@ -4624,9 +4625,9 @@
         },
         "missing_location": {
           "n": 10,
-          "accuracy": 0.9,
-          "macro_f1": 0.4736842105263158,
-          "balanced_accuracy": 0.45,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
           "per_class": {
             "INDIAN": {
               "precision": 0.0,
@@ -4636,8 +4637,8 @@
             },
             "NOT_INDIAN": {
               "precision": 1.0,
-              "recall": 0.9,
-              "f1": 0.9473684210526316,
+              "recall": 1.0,
+              "f1": 1.0,
               "support": 10
             }
           },
@@ -4647,8 +4648,8 @@
               "NOT_INDIAN": 0
             },
             "NOT_INDIAN": {
-              "INDIAN": 1,
-              "NOT_INDIAN": 9
+              "INDIAN": 0,
+              "NOT_INDIAN": 10
             }
           }
         },
@@ -4774,9 +4775,9 @@
         },
         "substring_trap": {
           "n": 3,
-          "accuracy": 0.6666666666666666,
-          "macro_f1": 0.4,
-          "balanced_accuracy": 0.3333333333333333,
+          "accuracy": 1.0,
+          "macro_f1": 0.5,
+          "balanced_accuracy": 0.5,
           "per_class": {
             "INDIAN": {
               "precision": 0.0,
@@ -4786,8 +4787,8 @@
             },
             "NOT_INDIAN": {
               "precision": 1.0,
-              "recall": 0.6666666666666666,
-              "f1": 0.8,
+              "recall": 1.0,
+              "f1": 1.0,
               "support": 3
             }
           },
@@ -4797,8 +4798,8 @@
               "NOT_INDIAN": 0
             },
             "NOT_INDIAN": {
-              "INDIAN": 1,
-              "NOT_INDIAN": 2
+              "INDIAN": 0,
+              "NOT_INDIAN": 3
             }
           }
         }
@@ -4836,6 +4837,57 @@
       "laya_probabilities": {
         "INDIAN": 0.9796,
         "NOT_INDIAN": 0.0204
+      }
+    },
+    {
+      "id": "P030",
+      "state": "CSIR-National Physical Laboratory, New Delhi, India",
+      "category": "explicit_country",
+      "source_label": "positive",
+      "expected": "INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bindia\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.9703,
+        "NOT_INDIAN": 0.0297
+      }
+    },
+    {
+      "id": "P032",
+      "state": "Google Research, Bengaluru, India",
+      "category": "corporate_location",
+      "source_label": "positive",
+      "expected": "INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\bindia\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.9297,
+        "NOT_INDIAN": 0.0703
+      }
+    },
+    {
+      "id": "P039",
+      "state": "IISc, Bengaluru; contact: scientist@example.org",
+      "category": "email_noise",
+      "source_label": "positive",
+      "expected": "INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\biisc\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
+      "laya_probabilities": {
+        "INDIAN": 0.9183,
+        "NOT_INDIAN": 0.0817
       }
     },
     {
@@ -4887,21 +4939,6 @@
       "laya_probabilities": {
         "INDIAN": 0.0195,
         "NOT_INDIAN": 0.9805
-      }
-    },
-    {
-      "id": "N036",
-      "state": "Indiana Institute of Technology, Fort Wayne, USA",
-      "category": "substring_trap",
-      "source_label": "negative",
-      "expected": "NOT_INDIAN",
-      "rule_prediction": "NOT_INDIAN",
-      "rule_raw_prediction": "negative",
-      "rule_matches": [],
-      "laya_prediction": "INDIAN",
-      "laya_probabilities": {
-        "INDIAN": 0.559,
-        "NOT_INDIAN": 0.441
       }
     },
     {
@@ -4970,23 +5007,6 @@
       "laya_probabilities": {
         "INDIAN": 0.02,
         "NOT_INDIAN": 0.98
-      }
-    },
-    {
-      "id": "A016",
-      "state": "Tata Consultancy Services",
-      "category": "missing_location",
-      "source_label": "ambiguous",
-      "expected": "NOT_INDIAN",
-      "rule_prediction": "NOT_INDIAN",
-      "rule_raw_prediction": "ambiguous",
-      "rule_matches": [
-        "\\btata\\b"
-      ],
-      "laya_prediction": "INDIAN",
-      "laya_probabilities": {
-        "INDIAN": 0.6212,
-        "NOT_INDIAN": 0.3788
       }
     },
     {

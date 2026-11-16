@@ -4,6 +4,13 @@ Tier 1: Direct HTML scraper using requests + BeautifulSoup.
 import requests
 from bs4 import BeautifulSoup
 from .base import BaseScraper, ScrapeResult
+from .challenge import looks_like_challenge
+
+
+# AAAI's OJS host increasingly serves a JavaScript bot check to direct HTTP
+# clients. Force those URLs to the visible browser tier instead of handing the
+# interstitial to the extraction LLM.
+BROWSER_REQUIRED_DOMAINS = ("ojs.aaai.org",)
 
 # Sites known to work with direct HTML scraping.
 HTML_FRIENDLY_DOMAINS = [
@@ -35,6 +42,12 @@ class HTMLScraper(BaseScraper):
 
     def scrape(self, url: str) -> ScrapeResult:
         try:
+            if any(domain in url.lower() for domain in BROWSER_REQUIRED_DOMAINS):
+                return ScrapeResult(
+                    content="", source="html", url=url, success=False,
+                    error="Browser rendering required for this site",
+                )
+
             resp = requests.get(url, headers=HEADERS, timeout=20)
             resp.raise_for_status()
 
@@ -56,15 +69,8 @@ class HTMLScraper(BaseScraper):
 
             # some bot-challenge pages (Cloudflare-style)
     
-            challenge_signals = [
-                "checking your browser",
-                "just a moment",
-                "verify you are human",
-                "challenge required",
-                "ddos protection by",
-            ]
             text_lower = text.lower()
-            if any(signal in text_lower for signal in challenge_signals):
+            if looks_like_challenge(text_lower, soup.title.get_text(" ", strip=True) if soup.title else ""):
                 return ScrapeResult(
                     content="", source="html", url=final_url,
                     success=False, error="Bot challenge page detected — not real content"

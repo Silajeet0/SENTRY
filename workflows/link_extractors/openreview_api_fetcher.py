@@ -158,7 +158,7 @@ def build_paper_record(note, profiles_by_id: dict[str, dict]) -> dict:
     Assemble the plain-dict view of one paper used by openreview_pipeline.py:
     title, abstract, forum URL, and a zipped authors list where each entry
     has name + affiliation string ("Institution, Country") ready to feed
-    straight into evaluation.india_rules.classify_affiliation.
+    into the production Laya classifier.
     """
     content = note.content
     authors = content.get("authors", {}).get("value", [])

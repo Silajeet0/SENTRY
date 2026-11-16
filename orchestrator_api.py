@@ -33,7 +33,8 @@ load_dotenv()
 import os
 
 from fastapi import Depends, FastAPI, Header, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, ConfigDict
+from typing import Literal
 
 from orchestrator.agent import Orchestrator
 
@@ -77,6 +78,35 @@ class ChatCompletionRequest(BaseModel):
     model: str = "sentry-orchestrator"
     messages: List[ChatMessage]
     stream: bool = False
+
+
+class RAGQueryRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    question: str = Field(min_length=1, max_length=2000)
+    mode: Literal["vector", "graph", "hybrid"] = "hybrid"
+    target: Literal["auto", "authors", "papers", "organizations"] = "auto"
+    filters: dict = Field(default_factory=dict)
+    k: int = Field(default=5, ge=1, le=20)
+    semantic_query: Optional[str] = Field(default=None, min_length=1, max_length=2000)
+    min_similarity: float = Field(default=0.25, ge=0, le=1)
+
+
+@app.get("/v1/rag/status")
+def rag_status(_: None = Depends(require_api_key)):
+    from rag.service import knowledge_status
+    return knowledge_status()
+
+
+@app.post("/v1/rag/query")
+def rag_query(req: RAGQueryRequest, _: None = Depends(require_api_key)):
+    """Cited retrieval without a second generative model; same service as chat tools."""
+    from rag.service import query_knowledge
+    try:
+        return query_knowledge(**req.model_dump())
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409 if "stale" in str(exc) else 422, detail=str(exc)) from exc
 
 
 @app.get("/v1/version")

@@ -14,8 +14,9 @@ from scrapers.browser_scraper import BrowserScraper
 from scrapers.pdf_scraper import PDFScraper
 from scrapers.api_scraper import APIScraper
 from extractors.llm_extractor import LLMExtractor, PaperInfo
-from evaluation.india_rules import classify_affiliation, combine_author_decisions
+from evaluation.laya_classifier import classify_affiliation, combine_author_decisions
 from workflows.link_extractors.openreview_api_fetcher import fetch_openreview_papers
+from rag.pipeline_hook import enabled as rag_enabled, ingest as ingest_rag
 
 logging.basicConfig(
     level=logging.INFO,
@@ -31,11 +32,6 @@ TIERS = [
     PDFScraper(),
     APIScraper(),       # always last — API fallback works for any URL
 ]
-
-PDF_PREFILTER_DOMAINS = {
-    "papers.nips.cc",
-    "aclanthology.org",
-}
 
 EXTRACTOR = LLMExtractor()
 
@@ -117,51 +113,10 @@ def process_paper(url: str) -> PaperInfo:
             raw_content_source="none"
         )
 
-    if _should_skip_llm_by_prefilter(url, content, content_source):
-        return PaperInfo(paper_url=url, raw_content_source=content_source, source=content_source)
-
     # Single LLM extraction call
     info = EXTRACTOR.extract(content, url, content_source)
     info.source = content_source
     return info
-
-
-def _should_skip_llm_by_prefilter(url, content, content_source) -> bool:
-    '''skip llm calls for pdf's that  definitely aren't Indian, saves compute and time'''
-    if content_source != "pdf":
-        return False
-
-    domain = urlparse(url).netloc
-
-    if domain not in PDF_PREFILTER_DOMAINS:
-        return False
-
-    return not _has_positive_pdf_affiliation_evidence(content)
-
-
-def _has_positive_pdf_affiliation_evidence(content: str) -> bool:
-    """
-    PDF text is a page-level blob, not a single affiliation. Checking the
-    whole blob can accidentally veto valid local evidence such as "IIT
-    Kanpur" because another author on the same first page has "Singapore" in
-    their affiliation. Prefer local lines/windows, with the original whole-
-    content check kept as a fast positive path.
-    """
-    if classify_affiliation(content).label == "positive":
-        return True
-
-    lines = [line.strip() for line in content.splitlines() if line.strip()]
-    for line in lines:
-        if classify_affiliation(line).label == "positive":
-            return True
-
-    for window_size in (2, 3):
-        for start in range(len(lines) - window_size + 1):
-            window = " ".join(lines[start:start + window_size])
-            if classify_affiliation(window).label == "positive":
-                return True
-
-    return False
 
 
 # OpenReview API path (no scraping tiers — data already structured)
@@ -179,11 +134,25 @@ def _build_openreview_llm_content(paper: dict) -> str:
     return "\n".join(lines)
 
 
-def process_openreview_paper(paper: dict) -> PaperInfo:
-    decisions = [classify_affiliation(a["affiliation"]) for a in paper["authors"]]
-    overall_label = combine_author_decisions(decisions)
+def process_openreview_paper(paper: dict, force_full: bool = False) -> PaperInfo:
+    """Process one structured OpenReview paper.
 
-    if overall_label in ("negative", "ambiguous"):
+    Conference runs may skip a paper whose profile affiliations are all
+    ``NOT_INDIAN`` when RAG is disabled. Single-paper inspection passes
+    ``force_full=True`` so it always returns extracted metadata as well.
+    """
+    try:
+        decisions = [classify_affiliation(a["affiliation"]) for a in paper["authors"]]
+        overall_label = combine_author_decisions(decisions)
+    except Exception as exc:
+        return PaperInfo(
+            paper_url=paper["paper_url"],
+            raw_content_source="openreview_api",
+            source="openreview_api",
+            error=f"Laya affiliation classification failed: {exc}",
+        )
+
+    if not force_full and not rag_enabled() and overall_label == "NOT_INDIAN":
         return PaperInfo(
             paper_url=paper["paper_url"],
             raw_content_source="openreview_api",
@@ -199,16 +168,17 @@ def process_openreview_paper(paper: dict) -> PaperInfo:
 
     info.total_authors = len(paper["authors"])
     info.all_authors = paper["authors"]
+    info.abstract = paper.get("abstract", "")
     if not info.paper_title:
         info.paper_title = paper["title"]
 
     positive_authors = [
         a["name"] for a, d in zip(paper["authors"], decisions)
-        if d.label == "positive"
+        if d.label == "INDIAN"
     ]
     positive_institutions = [
         a["affiliation"] for a, d in zip(paper["authors"], decisions)
-        if d.label == "positive"
+        if d.label == "INDIAN"
     ]
 
     info.authors_with_indian_affiliations = sorted(set(positive_authors))
@@ -297,6 +267,7 @@ def run_pipeline(
         log.info(f"[{i}/{resume_from + len(work_items)}] {url}")
 
         info = processor(item)
+        ingest_rag(info, conference, year)
         domain = urlparse(url).netloc
 
         if info.error:
@@ -335,6 +306,7 @@ def run_pipeline(
                 "paper_number": i,
                 "paper_url": info.paper_url,
                 "paper_title": info.paper_title,
+                "abstract": info.abstract,
                 "area_of_research": info.area_of_research,
                 "area_of_research_other": info.area_of_research_other,
                 "total_authors": info.total_authors,

@@ -1,0 +1,122 @@
+row,state,actual,p_indian
+1,Indian Institute of Technology Bombay,INDIAN,0.98
+2,"IIT Bombay, Mumbai",INDIAN,0.9796
+3,IIT Delhi,INDIAN,0.9795
+4,"IIT Madras, Chennai",INDIAN,0.9801
+5,IIT Kanpur,INDIAN,0.9811
+6,IIT Kharagpur,INDIAN,0.98
+7,"IIT (BHU), Varanasi",INDIAN,0.98
+8,"Indian Institute of Technology (ISM), Dhanbad",INDIAN,0.9814
+9,"Indian Institute of Science, Bengaluru",INDIAN,0.981
+10,IISc Bangalore,INDIAN,0.9803
+11,"Indian Statistical Institute, Kolkata",INDIAN,0.9803
+12,ISI Kolkata,INDIAN,0.9802
+13,ISI Bangalore,INDIAN,0.9796
+14,"National Institute of Technology, Tiruchirappalli, India",INDIAN,0.9794
+15,NIT Surathkal,INDIAN,0.9816
+16,"IIIT Hyderabad, India",INDIAN,0.9802
+17,International Institute of Information Technology Hyderabad,INDIAN,0.9798
+18,"Jadavpur University, Kolkata",INDIAN,0.9781
+19,"Anna University, Chennai",INDIAN,0.98
+20,"Banaras Hindu University, Varanasi",INDIAN,0.9788
+21,"University of Delhi, India",INDIAN,0.9802
+22,"University of Hyderabad, Telangana, India",INDIAN,0.9805
+23,"Birla Institute of Technology and Science, Pilani, India",INDIAN,0.98
+24,"BITS Pilani, Rajasthan",INDIAN,0.9781
+25,"Manipal Academy of Higher Education, Manipal, India",INDIAN,0.9801
+26,"Shiv Nadar University, Greater Noida, India",INDIAN,0.9815
+27,"O. P. Jindal Global University, Sonipat, India",INDIAN,0.9809
+28,"Tata Institute of Fundamental Research, Mumbai",INDIAN,0.9794
+29,"Indian Institute of Science Education and Research, Pune",INDIAN,0.9815
+30,"CSIR-National Physical Laboratory, New Delhi, India",INDIAN,0.3843
+31,"Microsoft Research India, Bengaluru",INDIAN,0.9809
+32,"Google Research, Bengaluru, India",INDIAN,0.9784
+33,"IBM Research India, New Delhi",INDIAN,0.9818
+34,"Adobe Research, Bangalore, India",INDIAN,0.9806
+35,"Samsung R&D Institute India, Bangalore",INDIAN,0.9811
+36,"Dept. of CSE, Indian Institute of Technology, Bombay, India",INDIAN,0.9824
+37,"Department of Statistics, University of Calcutta, India",INDIAN,0.9814
+38,"  IIT   Bombay , Mumbai , INDIA  ",INDIAN,0.9823
+39,"IISc, Bengaluru; contact: scientist@example.org",INDIAN,0.9806
+40,"Indian Institute of Technology Bombay; Stanford University, USA",INDIAN,0.9815
+41,"Stanford University, California, USA",NOT_INDIAN,0.0191
+42,"Massachusetts Institute of Technology, Cambridge, USA",NOT_INDIAN,0.0196
+43,"University of Cambridge, United Kingdom",NOT_INDIAN,0.0191
+44,"University of Oxford, United Kingdom",NOT_INDIAN,0.0191
+45,"ETH Zurich, Switzerland",NOT_INDIAN,0.0186
+46,"National University of Singapore, Singapore",NOT_INDIAN,0.0196
+47,"Tsinghua University, Beijing, China",NOT_INDIAN,0.8651
+48,"University of Tokyo, Japan",NOT_INDIAN,0.0181
+49,"University of Toronto, Canada",NOT_INDIAN,0.0178
+50,"University of Melbourne, Australia",NOT_INDIAN,0.0187
+51,"Illinois Institute of Technology, Chicago, USA",NOT_INDIAN,0.0207
+52,"IIT, Chicago, USA",NOT_INDIAN,0.0193
+53,"Istituto Italiano di Tecnologia, Genova, Italy",NOT_INDIAN,0.1681
+54,"IIT Genova, Italy",NOT_INDIAN,0.0186
+55,"Institute of Informatics and Telecommunications, NCSR Demokritos, Greece",NOT_INDIAN,0.0184
+56,"ISI, University of Southern California, USA",NOT_INDIAN,0.019
+57,"Information Sciences Institute, USC, USA",NOT_INDIAN,0.0204
+58,"Istituto Superiore di Sanita, Rome, Italy",NOT_INDIAN,0.0206
+59,"ISI, Rome, Italy",NOT_INDIAN,0.02
+60,"Nagoya Institute of Technology, Japan",NOT_INDIAN,0.0185
+61,"NIT, Nagoya, Japan",NOT_INDIAN,0.0181
+62,"Victorian Institute of Technology, Melbourne, Australia",NOT_INDIAN,0.0474
+63,"VIT, Melbourne, Australia",NOT_INDIAN,0.0182
+64,"Indian Institute of Technology Madras, Zanzibar, Tanzania",NOT_INDIAN,0.0187
+65,"IIT Delhi Abu Dhabi, United Arab Emirates",NOT_INDIAN,0.0198
+66,"BITS Pilani, Dubai Campus, UAE",NOT_INDIAN,0.0197
+67,"Manipal International University, Malaysia",NOT_INDIAN,0.0187
+68,"Amity University Dubai, United Arab Emirates",NOT_INDIAN,0.0185
+69,"Microsoft Research, Redmond, USA",NOT_INDIAN,0.02
+70,"Google Research, Zurich, Switzerland",NOT_INDIAN,0.0187
+71,"IBM Research, Almaden, USA",NOT_INDIAN,0.0264
+72,"Infosys, London, United Kingdom",NOT_INDIAN,0.0188
+73,"Tata Consultancy Services, Toronto, Canada",NOT_INDIAN,0.0192
+74,"Wipro, Sydney, Australia",NOT_INDIAN,0.0179
+75,"Indiana University, Bloomington, USA",NOT_INDIAN,0.0214
+76,"Indiana Institute of Technology, Fort Wayne, USA",NOT_INDIAN,0.5746
+77,"University of Indianapolis, USA",NOT_INDIAN,0.0197
+78,"University of Oxford, UK; email: researcher@iitb.ac.in",NOT_INDIAN,0.0214
+79,"Department of India Studies, University of Tokyo, Japan",NOT_INDIAN,0.0193
+80,"Stanford University, USA; formerly IIT Bombay, India",NOT_INDIAN,0.0188
+81,IIT,NOT_INDIAN,0.0202
+82,NIT,NOT_INDIAN,0.0197
+83,ISI,NOT_INDIAN,0.0199
+84,VIT,NOT_INDIAN,0.0205
+85,MIT,NOT_INDIAN,0.0198
+86,JU,NOT_INDIAN,0.02
+87,IIIT,NOT_INDIAN,0.02
+88,IIM,NOT_INDIAN,0.0198
+89,Microsoft Research,NOT_INDIAN,0.0199
+90,Google Research,NOT_INDIAN,0.0196
+91,IBM Research,NOT_INDIAN,0.0204
+92,Amazon Science,NOT_INDIAN,0.0191
+93,Adobe Research,NOT_INDIAN,0.0192
+94,Samsung Research,NOT_INDIAN,0.0199
+95,Infosys,NOT_INDIAN,0.0196
+96,Tata Consultancy Services,NOT_INDIAN,0.9799
+97,Wipro,NOT_INDIAN,0.0204
+98,Intel Labs,NOT_INDIAN,0.0195
+99,Unknown,NOT_INDIAN,0.0199
+100,N/A,NOT_INDIAN,0.02
+101,Not provided,NOT_INDIAN,0.0199
+102,Independent researcher,NOT_INDIAN,0.0201
+103,Department of Computer Science,NOT_INDIAN,0.0196
+104,School of Engineering,NOT_INDIAN,0.0184
+105,Center for Artificial Intelligence,NOT_INDIAN,0.0188
+106,National Research Laboratory,NOT_INDIAN,0.019
+107,University Research Centre,NOT_INDIAN,0.0194
+108,Bangalore,NOT_INDIAN,0.0209
+109,Mumbai,NOT_INDIAN,0.0194
+110,Delhi,NOT_INDIAN,0.0205
+111,Hyderabad,NOT_INDIAN,0.0203
+112,researcher@iitb.ac.in,NOT_INDIAN,0.0204
+113,researcher@iisc.ac.in,NOT_INDIAN,0.0206
+114,user.iitd@gmail.com,NOT_INDIAN,0.0197
+115,Indian researcher,NOT_INDIAN,0.9702
+116,"Visiting scholar, institution not specified",NOT_INDIAN,0.0199
+117,Formerly IIT Bombay; current affiliation unknown,NOT_INDIAN,0.0455
+118,"IIT, Department of Computing",NOT_INDIAN,0.0194
+119,"ISI, Statistical Learning Group",NOT_INDIAN,0.0217
+120,Microsoft Research; Google Research,NOT_INDIAN,0.0207
+121,,NOT_INDIAN,0.0201

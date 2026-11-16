@@ -1,9 +1,9 @@
 """
-AEGIS orchestrator — the agentic layer on top of the deterministic pipeline.
+AEGIS orchestrator — the agentic layer on top of SENTRY's extraction and Laya pipeline.
 
-Nothing in AEGIS's actual scraping/extraction code changed philosophy: the
-four-tier scraper cascade and the single-LLM-call-per-paper extractor are
-still fully deterministic. This package adds one new thing on top of that —
+The four-tier scraper cascade and the single-LLM-call-per-paper extractor are
+kept separate from the fine-tuned Laya affiliation decision. This package adds
+one new thing on top of that —
 an LLM-driven tool-calling loop that decides *which* conferences to run,
 *in what order*, with *what track filters*, and *when to retry failures* —
 by calling the same main_driver / pipeline functions a human would call by

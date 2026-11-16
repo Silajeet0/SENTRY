@@ -2,15 +2,18 @@
 Tier 2: Playwright browser scraper.
 Handles JS-rendered pages that Tier 1 cannot.
 
-Works for: IEEE Xplore, ACM DL
+Works for: IEEE Xplore, ACM DL, AAAI OJS and other JS-rendered pages
 """
 import re
 import json
 import logging
+import os
 import threading
+import time
 from pathlib import Path
 from urllib.parse import urlparse
 from .base import BaseScraper, ScrapeResult
+from .challenge import looks_like_challenge
 from utils.ieee_author_parser import (
     extract_author_section,
     extract_document_id,
@@ -28,6 +31,7 @@ BROWSER_DOMAINS = [
     "dl.acm.org",
     "link.springer.com",
     "nature.com",
+    "ojs.aaai.org",
 ]
 
 # Per-domain interaction rules before reading the DOM
@@ -65,9 +69,46 @@ class BrowserScraper(BaseScraper):
         return any(domain in url for domain in BROWSER_DOMAINS)
     
     @staticmethod
-    def _is_challenge_title(title: str) -> bool:
-        t = title.lower()
-        return "just a moment" in t or "challenge" in t
+    def _is_challenge_page(page) -> bool:
+        """Inspect title, visible text, and challenge markup."""
+        try:
+            title = page.title()
+        except Exception:
+            title = ""
+        try:
+            body = page.locator("body").inner_text(timeout=2000)
+        except Exception:
+            body = ""
+        # Use visible text rather than all HTML: challenge scripts often stay
+        # mounted after a successful verification and would otherwise keep the
+        # page classified as blocked forever.
+        return looks_like_challenge(body, title)
+
+    def _wait_for_challenge_clear(self, page, url: str) -> bool:
+        """Wait for a visible browser challenge to clear or be solved."""
+        try:
+            timeout_seconds = float(os.getenv("SENTRY_BROWSER_CHALLENGE_TIMEOUT_SECONDS", "120"))
+        except ValueError:
+            timeout_seconds = 120.0
+        timeout_seconds = max(1.0, timeout_seconds)
+        deadline = time.monotonic() + timeout_seconds
+        logged_wait = False
+        while self._is_challenge_page(page):
+            if not logged_wait:
+                log.info(
+                    "Bot challenge detected for %s. Waiting up to %.0f seconds "
+                    "for the visible browser session to clear; solve any prompt "
+                    "in that window if required.",
+                    url,
+                    timeout_seconds,
+                )
+                logged_wait = True
+            if time.monotonic() >= deadline:
+                return False
+            page.wait_for_timeout(1000)
+        if logged_wait:
+            log.info("Browser challenge cleared for %s", url)
+        return True
 
     @staticmethod
     def _acm_proceedings_url(paper_url: str) -> str | None:
@@ -178,11 +219,10 @@ class BrowserScraper(BaseScraper):
                 page.goto(url, wait_until="domcontentloaded", timeout=30000)
                 page.wait_for_timeout(5000)
 
-                title = page.title()
-                log.debug(f"Page title: {title}")
-
-                # Detect bot challenge
-                if self._is_challenge_title(title):
+                # AAAI and similar sites may require a real visible browser
+                # session. Wait for their interstitial to disappear rather
+                # than sending challenge text to the extraction LLM.
+                if not self._wait_for_challenge_clear(page, url):
                     if is_acm and not _retry:
                         log.warning(
                             f"ACM bot challenge detected (title: {title!r}) — "
@@ -220,9 +260,8 @@ class BrowserScraper(BaseScraper):
                         content="", source="browser", url=url,
                         success=False,
                         error=(
-                            "Bot challenge detected even after a session refresh"
-                            if _retry else
-                            "Bot challenge detected — session cookies stale or missing"
+                            "Bot challenge did not clear within "
+                            f"{os.getenv('SENTRY_BROWSER_CHALLENGE_TIMEOUT_SECONDS', '120')} seconds"
                         ),
                     )
 

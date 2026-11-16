@@ -1,14 +1,10 @@
-"""
-Audit already-extracted indian_papers_structured.json files against the
-hardened india_rules.py, WITHOUT re-scraping or re-calling the LLM.
-
-"""
+"""Audit extracted paper claims against the production Laya checkpoint."""
 import json
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from evaluation.india_rules import classify_affiliation
+from evaluation.laya_classifier import classify_affiliation
 
 FINAL_OUTPUT_DIR = Path("data/final_output")
 
@@ -33,7 +29,7 @@ def audit():
             for name in paper.get("authors_with_indian_affiliations", []):
                 aff = aff_by_name.get(name, "")
                 decision = classify_affiliation(aff)
-                if decision.label != "positive":
+                if decision.label != "INDIAN":
                     suspects.append((paper.get("paper_number"), paper.get("paper_title", "")[:60], name, aff, decision.label))
 
         if suspects:

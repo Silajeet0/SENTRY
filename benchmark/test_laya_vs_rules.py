@@ -29,6 +29,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from evaluation.india_rules import classify_affiliation
+from evaluation.laya_classifier import DEFAULT_LAYA_THRESHOLD
 
 QUESTION_ID = "affiliation_geography"
 LABELS = ("INDIAN", "NOT_INDIAN")
@@ -135,7 +136,13 @@ def _latency_metrics(values: list[float]) -> dict[str, float]:
 
 
 class FineTunedLaya:
-    def __init__(self, model_path: Path, device: str, threads: int) -> None:
+    def __init__(
+        self,
+        model_path: Path,
+        device: str,
+        threads: int,
+        threshold: float = DEFAULT_LAYA_THRESHOLD,
+    ) -> None:
         os.environ.setdefault("HF_HOME", str(ROOT / "data" / "model_cache"))
         os.environ.setdefault("USE_TF", "0")
         import torch
@@ -146,11 +153,13 @@ class FineTunedLaya:
         self.model_path = model_path
         self.device = device
         self.threads = threads
+        self.threshold = threshold
         self.agent = laya.load(str(model_path), device=device)
         self.metadata = {
             "model": str(model_path),
             "device": device,
             "threads": threads,
+            "threshold": threshold,
             "config_sha256": _sha256(model_path / "rl_agent_config.json")
             if (model_path / "rl_agent_config.json").exists()
             else None,
@@ -177,7 +186,10 @@ class FineTunedLaya:
         total = sum(probabilities.values())
         if not math.isclose(total, 1.0, abs_tol=0.002):
             raise ValueError(f"Laya probabilities do not sum to one: {probabilities!r}")
-        return choice, {label: probabilities[label] / total for label in LABELS}, response
+        normalized = {label: probabilities[label] / total for label in LABELS}
+        raw_label = max(LABELS, key=normalized.__getitem__)
+        predicted = "INDIAN" if normalized["INDIAN"] >= self.threshold else "NOT_INDIAN"
+        return predicted, normalized, response
 
 
 def evaluate_rules(rows: list[dict[str, Any]]) -> dict[str, Any]:

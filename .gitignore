@@ -7,3 +7,6 @@ data/
 debug.py
 test_aaai_extractor_offline.py
 diagnose_playwright_thread.py
+laya_repo
+laya_finetuning/laya_finetuned_SENTRY/
+.vscode

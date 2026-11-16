@@ -327,7 +327,21 @@ def verify_indian_affiliations(conference: str, year: str) -> dict:
 # ---------------------------------------------------------------------------
 # Dispatch table + OpenAI-style function-calling schemas
 # ---------------------------------------------------------------------------
+def query_scholarly_knowledge(question: str, mode: str = "hybrid", target: str = "auto",
+                              filters: dict = None, k: int = 5, semantic_query: str = None,
+                              min_similarity: float = 0.25) -> dict:
+    from rag.service import query_knowledge
+    return query_knowledge(question, mode, target, filters, k, semantic_query, min_similarity)
+
+
+def get_knowledge_status() -> dict:
+    from rag.service import knowledge_status
+    return knowledge_status()
+
+
 TOOL_FUNCTIONS = {
+    "query_scholarly_knowledge": query_scholarly_knowledge,
+    "get_knowledge_status": get_knowledge_status,
     "resolve_conference_url": resolve_conference_url,
     "validate_url": validate_url,
     "detect_structure": detect_structure,
@@ -348,6 +362,43 @@ TOOL_FUNCTIONS = {
 }
 
 TOOL_SCHEMAS = [
+    {
+        "type": "function",
+        "function": {
+            "name": "query_scholarly_knowledge",
+            "description": "Search already-indexed SENTRY papers, authors, institutions and collaborations using vector, graph or hybrid RAG. Use for questions like who works on GNN in India; do not start extraction. Results carry paper citations and observed affiliations. Not exhaustive counts or proof of current employment.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "question": {"type": "string", "description": "The user's complete research question."},
+                    "semantic_query": {"type": "string", "description": "Topic words for semantic search, e.g. graph neural networks. Omit for graph-only entity questions."},
+                    "mode": {"type": "string", "enum": ["vector", "graph", "hybrid"]},
+                    "target": {"type": "string", "enum": ["auto", "authors", "papers", "organizations"]},
+                    "k": {"type": "integer", "minimum": 1, "maximum": 20},
+                    "min_similarity": {"type": "number", "minimum": 0, "maximum": 1},
+                    "filters": {
+                        "type": "object", "additionalProperties": False,
+                        "properties": {
+                            "country": {"type": "string"}, "state": {"type": "string"},
+                            "conference": {"type": "string"}, "year": {"type": "integer"},
+                            "year_min": {"type": "integer"}, "year_max": {"type": "integer"},
+                            "organization_id": {"type": "string"}, "organization_type": {"type": "string"},
+                            "author_id": {"type": "string"}, "topic": {"type": "string", "description": "Exact KG area only; use semantic_query for topics such as GNN."},
+                            "india_evidence": {"type": "string", "enum": ["pipeline", "trusted"], "description": "Requires country India. pipeline includes SENTRY's prior author-specific decisions; trusted requires resolved approved institutions."}
+                        }
+                    }
+                },
+                "required": ["question"], "additionalProperties": False
+            }
+        }
+    },
+    {
+        "type": "function", "function": {
+            "name": "get_knowledge_status",
+            "description": "Inspect indexed corpus coverage, graph node counts, vector freshness, incomplete records and source conflicts. Does not load models or start extraction.",
+            "parameters": {"type": "object", "properties": {}, "additionalProperties": False}
+        }
+    },
     {
         "type": "function",
         "function": {
@@ -856,16 +907,16 @@ TOOL_SCHEMAS = [
         "function": {
             "name": "verify_indian_affiliations",
             "description": (
-                "Deterministic, regex-only, NO-LLM re-check of every paper's "
+                "Fine-tuned Laya re-check of every paper's "
                 "'has Indian-affiliated authors' claim for a conference/year "
                 "— e.g. 'check ICML 2025 for false positives before we "
                 "submit'. Requires run_pipeline to have already completed "
                 "(reads indian_papers_structured.json); returns "
                 "status='no_extracted_data' if it hasn't. Re-classifies each "
                 "claimed author's own affiliation string independently "
-                "against evaluation.india_rules — any paper where a claimed "
-                "author's affiliation doesn't independently re-confirm as "
-                "Indian gets written to need_human_review.json with the "
+                "against the production affiliation checkpoint — any paper "
+                "where a claimed author's affiliation doesn't independently "
+                "re-confirm as Indian gets written to need_human_review.json with the "
                 "specific reason, and is NOT auto-submitted. "
                 "initiate_form_filler already runs this gate internally "
                 "before it ever opens a browser — call this tool separately "

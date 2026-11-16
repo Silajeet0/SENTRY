@@ -1,16 +1,11 @@
-"""
-Generate deterministic ground-truth labels from IEEE Xplore authors pages (tailored for IEEE only).
-
-It reads /document/<id>/authors#authors, extracts
-author-affiliation pairs, and applies factual affiliation rules.
-"""
+"""Generate Laya affiliation labels from IEEE Xplore authors pages."""
 import argparse
 import json
 import time
 from datetime import datetime
 from pathlib import Path
 
-from evaluation.india_rules import classify_affiliation, combine_author_decisions
+from evaluation.laya_classifier import classify_affiliation, combine_author_decisions
 from utils.ieee_author_parser import (
     extract_author_affiliation_pairs,
     extract_author_section,
@@ -24,28 +19,21 @@ def label_paper(url: str, page_text: str) -> dict:
     authors = []
     for author in extract_author_affiliation_pairs(section):
         decision = classify_affiliation(author["affiliation"])
-        authors.append({
-            **author,
-            "label": decision.label,
-            "matched_rules": decision.matches,
-        })
+        authors.append({**author, "label": decision.label})
     decisions = [classify_affiliation(author["affiliation"]) for author in authors]
     label = combine_author_decisions(decisions) if decisions else "unknown"
 
-    indian_authors = [
-        author["name"] for author in authors
-        if author["label"] == "positive"
-    ]
+    indian_authors = [author["name"] for author in authors if author["label"] == "INDIAN"]
     indian_institutions = sorted({
         author["affiliation"] for author in authors
-        if author["label"] == "positive"
+        if author["label"] == "INDIAN"
     })
 
     return {
         "paper_url": normalize_ieee_url(url),
         "document_id": extract_document_id(url),
         "label": label,
-        "is_indian_affiliated": label == "positive",
+        "is_indian_affiliated": label == "INDIAN",
         "authors": authors,
         "indian_authors": indian_authors,
         "indian_institutions": indian_institutions,
@@ -82,7 +70,7 @@ def save_outputs(records: list[dict], output_dir: Path) -> None:
         encoding="utf-8",
     )
 
-    for label in ["positive", "negative", "ambiguous", "unknown"]:
+    for label in ["INDIAN", "NOT_INDIAN", "unknown"]:
         subset = [record for record in records if record["label"] == label]
         (output_dir / f"{label}.json").write_text(
             json.dumps(subset, indent=2, ensure_ascii=False),
@@ -91,9 +79,8 @@ def save_outputs(records: list[dict], output_dir: Path) -> None:
 
     summary = {
         "total": len(records),
-        "positive": sum(1 for r in records if r["label"] == "positive"),
-        "negative": sum(1 for r in records if r["label"] == "negative"),
-        "ambiguous": sum(1 for r in records if r["label"] == "ambiguous"),
+        "INDIAN": sum(1 for r in records if r["label"] == "INDIAN"),
+        "NOT_INDIAN": sum(1 for r in records if r["label"] == "NOT_INDIAN"),
         "unknown": sum(1 for r in records if r["label"] == "unknown"),
         "generated_at": datetime.now().isoformat(),
     }
@@ -101,7 +88,7 @@ def save_outputs(records: list[dict], output_dir: Path) -> None:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate deterministic IEEE ground-truth labels.")
+    parser = argparse.ArgumentParser(description="Generate Laya IEEE affiliation labels.")
     parser.add_argument("--links", required=True, help="Path to links.json.")
     parser.add_argument("--conference", default="IEEE-ICDM")
     parser.add_argument("--year", required=True)

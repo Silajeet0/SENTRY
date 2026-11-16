@@ -1,6 +1,6 @@
 # SENTRY — Structured Extraction, Normalization, and Tiered Retrieval System for Scholarly Affiliation Tracking
 
-A multi-tier, deterministic pipeline for identifying Indian-affiliated authors across A/A\*-ranked CS conference proceedings. SENTRY scrapes, extracts, and classifies paper metadata using a four-tier scraping architecture followed by a single LLM call per paper — no agent loops, no planning steps.
+A multi-tier pipeline for identifying Indian-affiliated authors across A/A\*-ranked CS conference proceedings. SENTRY scrapes and extracts paper metadata with a four-tier architecture and one LLM call per paper, then sends every extracted official affiliation to the fine-tuned Laya checkpoint for the binary `INDIAN`/`NOT_INDIAN` decision.
 
 ---
 
@@ -29,7 +29,13 @@ A multi-tier, deterministic pipeline for identifying Indian-affiliated authors a
 ┌─────────────────────────────────────────┐
 │       Stage 3: LLM Extraction           │
 │  LLMExtractor → structured JSON         │
-│  + post-hoc India keyword verifier      │
+│  paper metadata + official affiliations  │
+└───────────────────┬─────────────────────┘
+                    │
+                    ▼
+┌─────────────────────────────────────────┐
+│       Stage 4: Laya Classification      │
+│  laya_finetuned_SENTRY → binary label   │
 └───────────────────┬─────────────────────┘
                     │
                     ▼
@@ -82,6 +88,22 @@ SUMMARY_LLM_REASONING_EFFORT=              # needs to be set accordingly if usin
 ```
 
 Any OpenAI-compatible endpoint works. The pipeline uses the `openai` Python SDK universally.
+
+Production affiliation classification uses the local checkpoint at
+`laya_finetuning/laya_finetuned_SENTRY`. Override it with
+`SENTRY_LAYA_MODEL`, or set `SENTRY_LAYA_DEVICE` (`cpu`, `cuda`, or `auto`) and
+`SENTRY_LAYA_THREADS` when needed. The extraction LLM returns paper metadata and
+official affiliation strings; Laya receives each affiliation using the exact
+`affiliation_geography` question used during fine-tuning.
+Production retains Laya's probability argmax for diagnostics, then accepts
+`INDIAN` only when `P(INDIAN) >= 0.9781`. Lower scores are conservatively mapped
+to `NOT_INDIAN`; no deterministic fallback is used. The applied threshold and
+raw argmax are retained on the validated decision for diagnostics.
+
+AAAI OJS pages (`ojs.aaai.org`) are routed to the visible Playwright browser
+tier because direct HTTP requests can return a bot challenge instead of paper
+content. The browser waits up to 120 seconds for verification to clear; adjust
+that limit with `SENTRY_BROWSER_CHALLENGE_TIMEOUT_SECONDS`.
 
 ### 3. Run the pipeline
 
@@ -153,12 +175,12 @@ python run_single_paper.py --synthetic-indian
 
 ## Agentic Orchestrator
 
-On top of the deterministic pipeline above, `orchestrator/` adds an LLM-driven
+On top of the extraction and Laya classification pipeline, `orchestrator/` adds an LLM-driven
 tool-calling layer that decides *which* conferences to run, *in what order*,
 with *what track filters*, and *when to retry failures* — by calling the
-same `main_driver` / `pipeline` functions you'd call by hand. Nothing about
-the scraping/extraction pipeline itself became less deterministic: the agent
-only ever chooses which deterministic tool to call next.
+same `main_driver` / `pipeline` functions you'd call by hand. The agent only
+chooses which conference tools to call; affiliation geography is always decided
+by the fine-tuned Laya checkpoint in the pipeline.
 
 ```bash
 python orchestrator_cli.py
@@ -417,3 +439,14 @@ you> how's the submission going?
 Ground truth data for IEEE-ICDM 2025 is included under `data/ground_truth/`. The `data/eval_inputs/` directory contains link subsets used during development benchmarking.
 
 ---
+
+## RAG and Laya evaluation extension
+
+RAG queries are available through SENTRY chat and `/v1/rag/query`.
+See [the question/testing guide](rag/QUERYING.md) for examples, corpus synchronization,
+and the distinction between prior SENTRY affiliation decisions and trusted KG evidence.
+
+See [rag/README.md](rag/README.md) for KG bootstrap, vector/graph/hybrid queries,
+and opt-in pipeline ingestion; [benchmark/README.md](benchmark/README.md) for the
+standalone Laya benchmark and measured results; and [KG_Data/README.md](KG_Data/README.md)
+for the supplementary institute CSV awaiting review.

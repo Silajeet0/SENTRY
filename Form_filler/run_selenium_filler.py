@@ -119,6 +119,28 @@ def run_form_filler(
             "total_candidates": 0, "duplicates_skipped": 0,
             "submitted": 0, "failed": 0,
             "duplicate_details": [], "details": [],
+            "flagged_for_human_review": 0,
+            "need_human_review_path": "",
+        }
+
+    # Re-verify the extracted positive claims with the same fine-tuned Laya
+    # checkpoint used by the extraction pipeline before opening a browser.
+    from evaluation.affiliation_gate import verify_papers
+    gate = verify_papers(papers_data, conference, year)
+    papers_data = gate["verified_papers"]
+    if gate["flagged_count"]:
+        print(
+            f" Laya review gate flagged {gate['flagged_count']} paper(s); "
+            f"details: {gate['need_human_review_path']}"
+        )
+    if not papers_data:
+        return {
+            "conference": conference, "year": year,
+            "total_candidates": gate["total_papers"], "duplicates_skipped": 0,
+            "submitted": 0, "failed": 0,
+            "duplicate_details": [], "details": [],
+            "flagged_for_human_review": gate["flagged_count"],
+            "need_human_review_path": gate["need_human_review_path"],
         }
 
     # 2. Dedup step — check candidates against IKDD's (or any other suitable venue's) New + Approved lists
@@ -158,6 +180,8 @@ def run_form_filler(
             "duplicates_skipped": len(duplicates),
             "submitted": 0, "failed": 0,
             "duplicate_details": duplicate_details, "details": [],
+            "flagged_for_human_review": gate["flagged_count"],
+            "need_human_review_path": gate["need_human_review_path"],
         }
 
     # 3. Fill and submit only the genuinely new papers.
@@ -184,6 +208,8 @@ def run_form_filler(
         "duplicates_skipped": len(duplicates),
         "submitted": submitted, "failed": failed,
         "duplicate_details": duplicate_details, "details": details,
+        "flagged_for_human_review": gate["flagged_count"],
+        "need_human_review_path": gate["need_human_review_path"],
     }
 
 

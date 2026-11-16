@@ -1,0 +1,15 @@
+{
+  "selection_rule": "maximize recall subject to precision/FPR constraints",
+  "min_precision": 0.99,
+  "max_fpr": null,
+  "threshold": 0.98,
+  "tp": 29,
+  "fp": 0,
+  "fn": 11,
+  "tn": 81,
+  "precision": 1.0,
+  "recall": 0.725,
+  "fpr": 0.0,
+  "f1": 0.8405797101449275,
+  "accuracy": 0.9090909090909091
+}

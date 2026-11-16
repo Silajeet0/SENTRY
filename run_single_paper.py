@@ -48,7 +48,10 @@ def main():
 
         if "openreview.net" in args.url:
             paper = fetch_single_openreview_paper(args.url)
-            info = process_openreview_paper(paper)
+            # A single-paper diagnostic should return the paper metadata even
+            # when the OpenReview profile precheck finds no Indian affiliation.
+            # Conference runs retain their inexpensive negative precheck.
+            info = process_openreview_paper(paper, force_full=True)
 
         else:
     

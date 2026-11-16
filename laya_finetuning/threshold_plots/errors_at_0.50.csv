@@ -1,0 +1,6 @@
+row,state,actual,p_indian,predicted
+30,"CSIR-National Physical Laboratory, New Delhi, India",INDIAN,0.3843,NOT_INDIAN
+47,"Tsinghua University, Beijing, China",NOT_INDIAN,0.8651,INDIAN
+76,"Indiana Institute of Technology, Fort Wayne, USA",NOT_INDIAN,0.5746,INDIAN
+96,Tata Consultancy Services,NOT_INDIAN,0.9799,INDIAN
+115,Indian researcher,NOT_INDIAN,0.9702,INDIAN

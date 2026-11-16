@@ -1,11 +1,12 @@
 {
-  "created_at": "2026-11-15T16:54:55.024304+00:00",
+  "created_at": "2026-11-16T15:49:44.266298+00:00",
   "data": "/home/silajeet0/workspace/IKDD_Internship_IITB/SENTRY/laya_finetuning/finetuning_data/test.jsonl",
   "data_sha256": "8d94815a303def43825b8500e78834ee65297720b3fdfaab7659f8b40ad5db91",
   "model": {
     "model": "/home/silajeet0/workspace/IKDD_Internship_IITB/SENTRY/laya_finetuning/laya_finetuned_SENTRY",
     "device": "cpu",
     "threads": 2,
+    "threshold": 0.9781,
     "config_sha256": "1b1278cb95be14078873edac850c0d92d32379da29d1d032427e51cd40a510f0",
     "versions": {
       "laya": "0.4.33",
@@ -14,7 +15,7 @@
       "huggingface-hub": "2.3.0"
     }
   },
-  "model_load_seconds": 16.357850402999702,
+  "model_load_seconds": 14.61480192199997,
   "n": 120,
   "label_counts": {
     "INDIAN": 40,
@@ -58,9 +59,9 @@
         }
       },
       "latency": {
-        "mean_ms": 0.29463070834860144,
-        "p50_ms": 0.10920950012405228,
-        "p95_ms": 0.2499980000720825
+        "mean_ms": 0.31808853333738324,
+        "p50_ms": 0.12495700002546073,
+        "p95_ms": 0.2714749998631305
       },
       "predictions": [
         {
@@ -1077,27 +1078,27 @@
     "laya": {
       "metrics": {
         "n": 120,
-        "accuracy": 0.9916666666666667,
-        "macro_f1": 0.9906825064057768,
-        "balanced_accuracy": 0.99375,
+        "accuracy": 0.95,
+        "macro_f1": 0.9422336328626444,
+        "balanced_accuracy": 0.93125,
         "per_class": {
           "INDIAN": {
-            "precision": 0.975609756097561,
-            "recall": 1.0,
-            "f1": 0.9876543209876543,
+            "precision": 0.9722222222222222,
+            "recall": 0.875,
+            "f1": 0.9210526315789473,
             "support": 40
           },
           "NOT_INDIAN": {
-            "precision": 1.0,
+            "precision": 0.9404761904761905,
             "recall": 0.9875,
-            "f1": 0.9937106918238994,
+            "f1": 0.9634146341463415,
             "support": 80
           }
         },
         "confusion_matrix": {
           "INDIAN": {
-            "INDIAN": 40,
-            "NOT_INDIAN": 0
+            "INDIAN": 35,
+            "NOT_INDIAN": 5
           },
           "NOT_INDIAN": {
             "INDIAN": 1,
@@ -1106,9 +1107,9 @@
         }
       },
       "latency": {
-        "mean_ms": 1423.9975639750317,
-        "p50_ms": 1392.8650804998597,
-        "p95_ms": 1529.4236899999305
+        "mean_ms": 1809.6147339000065,
+        "p50_ms": 1673.2389889998558,
+        "p95_ms": 2496.202056999664
       },
       "predictions": [
         {
@@ -1134,7 +1135,7 @@
         {
           "state": "Affiliations: TIFR Mumbai; CERN Switzerland",
           "expected": "INDIAN",
-          "predicted": "INDIAN",
+          "predicted": "NOT_INDIAN",
           "probabilities": {
             "INDIAN": 0.9733,
             "NOT_INDIAN": 0.0267
@@ -1164,7 +1165,7 @@
         {
           "state": "Defence Research and Development Organisation",
           "expected": "INDIAN",
-          "predicted": "INDIAN",
+          "predicted": "NOT_INDIAN",
           "probabilities": {
             "INDIAN": 0.8874,
             "NOT_INDIAN": 0.1126
@@ -1254,7 +1255,7 @@
         {
           "state": "IIT Bombay, research group",
           "expected": "INDIAN",
-          "predicted": "INDIAN",
+          "predicted": "NOT_INDIAN",
           "probabilities": {
             "INDIAN": 0.9537,
             "NOT_INDIAN": 0.0463
@@ -1264,7 +1265,7 @@
         {
           "state": "IIT Bombay; author affiliation",
           "expected": "INDIAN",
-          "predicted": "INDIAN",
+          "predicted": "NOT_INDIAN",
           "probabilities": {
             "INDIAN": 0.9389,
             "NOT_INDIAN": 0.0611
@@ -1484,7 +1485,7 @@
         {
           "state": "TIFR Mumbai; CERN Switzerland; author has multiple current affiliations",
           "expected": "INDIAN",
-          "predicted": "INDIAN",
+          "predicted": "NOT_INDIAN",
           "probabilities": {
             "INDIAN": 0.9699,
             "NOT_INDIAN": 0.0301
@@ -2316,27 +2317,33 @@
   },
   "disagreements": [
     {
-      "state": "Affiliations: TIFR Mumbai; CERN Switzerland",
+      "state": "IIT Bombay, research group",
       "expected": "INDIAN",
-      "rule_prediction": "NOT_INDIAN",
-      "rule_raw_prediction": "negative",
-      "rule_matches": [],
-      "laya_prediction": "INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\biit\\b",
+        "\\bbombay\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
       "laya_probabilities": {
-        "INDIAN": 0.9733,
-        "NOT_INDIAN": 0.0267
+        "INDIAN": 0.9537,
+        "NOT_INDIAN": 0.0463
       }
     },
     {
-      "state": "Defence Research and Development Organisation",
+      "state": "IIT Bombay; author affiliation",
       "expected": "INDIAN",
-      "rule_prediction": "NOT_INDIAN",
-      "rule_raw_prediction": "negative",
-      "rule_matches": [],
-      "laya_prediction": "INDIAN",
+      "rule_prediction": "INDIAN",
+      "rule_raw_prediction": "positive",
+      "rule_matches": [
+        "\\biit\\b",
+        "\\bbombay\\b"
+      ],
+      "laya_prediction": "NOT_INDIAN",
       "laya_probabilities": {
-        "INDIAN": 0.8874,
-        "NOT_INDIAN": 0.1126
+        "INDIAN": 0.9389,
+        "NOT_INDIAN": 0.0611
       }
     },
     {
@@ -2366,18 +2373,6 @@
       "laya_probabilities": {
         "INDIAN": 0.9792,
         "NOT_INDIAN": 0.0208
-      }
-    },
-    {
-      "state": "TIFR Mumbai; CERN Switzerland; author has multiple current affiliations",
-      "expected": "INDIAN",
-      "rule_prediction": "NOT_INDIAN",
-      "rule_raw_prediction": "negative",
-      "rule_matches": [],
-      "laya_prediction": "INDIAN",
-      "laya_probabilities": {
-        "INDIAN": 0.9699,
-        "NOT_INDIAN": 0.0301
       }
     },
     {

@@ -1,2 +1,4 @@
-# Standalone evaluation only; production affiliation classification is unchanged.
+# Fine-tuned affiliation classifier used by the production pipeline and benchmarks.
 laya==0.4.14
+# Static metric plots produced by benchmark/test_independent_laya_vs_rules.py.
+matplotlib>=3.8
