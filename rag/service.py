@@ -112,14 +112,24 @@ def query_knowledge(question, mode="hybrid", target="auto", filters=None, k=5, s
     if filters is not None and not isinstance(filters, dict):
         raise ValueError("filters must be an object")
     filters = dict(filters or {})
-    if re.search(r"\b(in india|indian|india.affiliated)\b", question, re.I):
+    # Keep the geographic constraint deterministic even when the chat model
+    # omits an explicit filters object. Explicit filters still take priority.
+    if re.search(
+        r"\b(?:in|from|within|based in|located in)\s+india\b"
+        r"|\bindian(?:[-\s]affiliated)?\b",
+        question,
+        re.I,
+    ):
         filters.setdefault("country", "India")
     if normalize(filters.get("country", "")) == "india":
         filters["country"] = "India"
         filters.setdefault("india_evidence", "pipeline")
     if target == "auto":
         target = "authors" if re.search(r"\b(who|authors?|researchers?)\b", question, re.I) else "papers"
-    query = re.sub(r"\bGNNs?\b", "graph neural networks", semantic_query or question, flags=re.I)
+    query = semantic_query or question
+    query = re.sub(r"\bGNNs?\b", "graph neural networks", query, flags=re.I)
+    query = re.sub(r"\bRL\b", "reinforcement learning", query, flags=re.I)
+    query = re.sub(r"\bNNs?\b", "neural networks", query, flags=re.I)
     graph = _open_graph()
     try:
         engine = RAGEngine(graph, get_embedder() if mode != "graph" else None)

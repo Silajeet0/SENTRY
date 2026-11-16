@@ -47,6 +47,16 @@ class RAGServiceTests(unittest.TestCase):
         strict = query_knowledge("Who works on GNN in India?", filters={"india_evidence":"trusted"}, min_similarity=0)
         self.assertEqual(strict["authors"], [])
 
+    def test_from_india_phrase_applies_pipeline_geography_filter(self):
+        result = query_knowledge(
+            "Which authors from India work on reinforcement learning?",
+            semantic_query="RL",
+            min_similarity=0,
+        )
+        self.assertEqual(result["filters"], {"country": "India", "india_evidence": "pipeline"})
+        self.assertEqual([a["name"] for a in result["authors"]], ["India Author"])
+        self.assertEqual(result["semantic_query"], "reinforcement learning")
+
     def test_similarity_threshold_does_not_admit_graph_only_papers(self):
         result = query_knowledge("Who works on quantum fermentation in India?", min_similarity=1)
         self.assertEqual(result["papers"], [])

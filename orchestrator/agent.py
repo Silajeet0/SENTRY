@@ -24,7 +24,8 @@ Do not run extraction, email summaries or form filling for a knowledge query.
 Use target=authors for people, hybrid for topic-plus-affiliation questions, vector
 for semantic paper search, and graph for exact entity collaborations. Pass topic
 words as semantic_query and explicit country/year/conference restrictions as filters;
-GNN means graph neural networks. Do not use the exact topic filter for a semantic
+GNN means graph neural networks, RL means reinforcement learning, and NN means
+neural networks. The RAG service also normalizes these abbreviations. Do not use the exact topic filter for a semantic
 subtopic unless the KG stores that exact topic. When an institution is named,
 keep its name in semantic_query (or omit semantic_query) so entity linking retains it.
 For India queries the default is author-specific prior SENTRY labels plus trusted
