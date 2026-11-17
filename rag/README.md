@@ -99,7 +99,7 @@ subset, so they do not support whole-conference coverage claims.
   and vector rankings. These are initial ranking defaults, not tuned evaluation
   weights. Arbitrary natural-language filters are not inferred; supply `--filters`.
 - Supported filters: `country`, `state`, `organization_id`, `organization_type`,
-  `author_id`, `topic`, `conference`, `year`, `year_min`, `year_max`. Organization
+  `author_id`, `author_name`, `topic`, `conference`, `year`, `year_min`, `year_max`. Organization
   predicates must match the same trusted organization. Geography comes from
   resolved institutions, not author names or emails. Aggregation counts distinct
   papers per institution across the filtered graph, not just retrieval top-k.

@@ -383,7 +383,7 @@ TOOL_SCHEMAS = [
                             "conference": {"type": "string"}, "year": {"type": "integer"},
                             "year_min": {"type": "integer"}, "year_max": {"type": "integer"},
                             "organization_id": {"type": "string"}, "organization_type": {"type": "string"},
-                            "author_id": {"type": "string"}, "topic": {"type": "string", "description": "Exact KG area only; use semantic_query for topics such as GNN."},
+                            "author_id": {"type": "string"}, "author_name": {"type": "string", "description": "Exact normalized author name; use this when the user names an author. It returns papers containing that author and their observed coauthors."}, "topic": {"type": "string", "description": "Exact KG area only; use semantic_query for topics such as GNN."},
                             "india_evidence": {"type": "string", "enum": ["pipeline", "trusted"], "description": "Requires country India. pipeline includes SENTRY's prior author-specific decisions; trusted requires resolved approved institutions."}
                         }
                     }

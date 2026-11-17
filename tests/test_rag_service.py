@@ -57,6 +57,33 @@ class RAGServiceTests(unittest.TestCase):
         self.assertEqual([a["name"] for a in result["authors"]], ["India Author"])
         self.assertEqual(result["semantic_query"], "reinforcement learning")
 
+    def test_author_name_filter_returns_papers_and_observed_coauthors(self):
+        self.kg.ingest_paper({
+            **self.paper,
+            "paper_url": "https://example.org/rl",
+            "paper_title": "Reinforcement learning",
+            "abstract": "Reinforcement learning methods.",
+            "all_authors": [
+                {"name": "Washim Uddin Mondal", "affiliation": "IIT Kanpur, India"},
+                {"name": "Coauthor One", "affiliation": "Stanford University, USA"},
+            ],
+            "authors_with_indian_affiliations": ["Washim Uddin Mondal"],
+        })
+        RAGEngine(self.kg, HashEmbedder()).index()
+        result = query_knowledge(
+            "List the papers authored by Washim Uddin Mondal and his coauthors",
+            semantic_query="reinforcement learning",
+            target="papers",
+            filters={"author_name": "Washim Uddin Mondal"},
+            mode="hybrid",
+            min_similarity=0,
+        )
+        self.assertEqual([p["title"] for p in result["papers"]], ["Reinforcement learning"])
+        self.assertEqual(
+            {a["name"] for a in result["authors"]},
+            {"Washim Uddin Mondal", "Coauthor One"},
+        )
+
     def test_similarity_threshold_does_not_admit_graph_only_papers(self):
         result = query_knowledge("Who works on quantum fermentation in India?", min_similarity=1)
         self.assertEqual(result["papers"], [])

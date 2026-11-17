@@ -28,6 +28,9 @@ GNN means graph neural networks, RL means reinforcement learning, and NN means
 neural networks. The RAG service also normalizes these abbreviations. Do not use the exact topic filter for a semantic
 subtopic unless the KG stores that exact topic. When an institution is named,
 keep its name in semantic_query (or omit semantic_query) so entity linking retains it.
+When a specific author is named, use target=papers and pass that exact name as
+filters.author_name; do not invent an author_id. The returned authors list contains
+the paper's observed coauthors.
 For India queries the default is author-specific prior SENTRY labels plus trusted
 KG evidence. These are observations, not nationality or current employment.
 Report which evidence supports affiliation; pending institution records are not

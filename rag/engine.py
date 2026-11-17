@@ -7,7 +7,7 @@ from kg.store import normalize
 
 
 class RAGEngine:
-    FILTERS = {"year", "year_min", "year_max", "conference", "country", "state", "organization_id", "organization_type", "topic", "author_id", "india_evidence"}
+    FILTERS = {"year", "year_min", "year_max", "conference", "country", "state", "organization_id", "organization_type", "topic", "author_id", "author_name", "india_evidence"}
 
     def __init__(self, graph, embedder=None):
         self.graph = graph
@@ -57,6 +57,13 @@ class RAGEngine:
             return False
         if "author_id" in filters and not any(n["id"] == filters["author_id"] for n in evidence["nodes"]):
             return False
+        if "author_name" in filters:
+            requested = normalize(filters["author_name"])
+            if not requested or not any(
+                n["kind"] == "AUTHOR" and normalize(n.get("name", "")) == requested
+                for n in evidence["nodes"]
+            ):
+                return False
         org_filters = {k: filters[k] for k in ("country", "state", "organization_id", "organization_type") if k in filters}
         if org_filters == {"country": "India"} and filters.get("india_evidence") == "pipeline":
             listed = {normalize(n) for n in paper.get("raw_record", {}).get("authors_with_indian_affiliations", [])}
