@@ -29,8 +29,12 @@ neural networks. The RAG service also normalizes these abbreviations. Do not use
 subtopic unless the KG stores that exact topic. When an institution is named,
 keep its name in semantic_query (or omit semantic_query) so entity linking retains it.
 When a specific author is named, use target=papers and pass that exact name as
-filters.author_name; do not invent an author_id. The returned authors list contains
-the paper's observed coauthors.
+filters.author_name; do not invent an author_id. For an author-only request such
+as "list this author's recent papers", use graph mode and omit semantic_query;
+do not carry the previous turn's topic into the new query. Set semantic_query
+only when the current user message explicitly asks for a topic (for example,
+"this author's reinforcement-learning papers"). The returned authors list
+contains the paper's observed coauthors.
 For India queries the default is author-specific prior SENTRY labels plus trusted
 KG evidence. These are observations, not nationality or current employment.
 Report which evidence supports affiliation; pending institution records are not

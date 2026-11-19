@@ -126,6 +126,14 @@ def query_knowledge(question, mode="hybrid", target="auto", filters=None, k=5, s
         filters.setdefault("india_evidence", "pipeline")
     if target == "auto":
         target = "authors" if re.search(r"\b(who|authors?|researchers?)\b", question, re.I) else "papers"
+    # An author-only lookup is an exact graph query.  Running it through the
+    # hybrid semantic threshold can discard valid papers simply because the
+    # query text (for example, "recent papers") is not close to the paper's
+    # abstract.  A topic can still be supplied explicitly through
+    # ``semantic_query``; in that case hybrid retrieval remains intentional.
+    author_only_lookup = bool(filters.get("author_name")) and not semantic_query
+    if author_only_lookup and mode == "hybrid":
+        mode = "graph"
     query = semantic_query or question
     query = re.sub(r"\bGNNs?\b", "graph neural networks", query, flags=re.I)
     query = re.sub(r"\bRL\b", "reinforcement learning", query, flags=re.I)

@@ -442,11 +442,407 @@ Ground truth data for IEEE-ICDM 2025 is included under `data/ground_truth/`. The
 
 ## RAG and Laya evaluation extension
 
-RAG queries are available through SENTRY chat and `/v1/rag/query`.
-See [the question/testing guide](rag/QUERYING.md) for examples, corpus synchronization,
-and the distinction between prior SENTRY affiliation decisions and trusted KG evidence.
+RAG queries are available through SENTRY chat and `/v1/rag/query`. The detailed
+bootstrap, retrieval, benchmark, fine-tuning and institution-data instructions
+are consolidated below. The conversational query guide remains at
+[`rag/QUERYING.md`](rag/QUERYING.md).
 
-See [rag/README.md](rag/README.md) for KG bootstrap, vector/graph/hybrid queries,
-and opt-in pipeline ingestion; [benchmark/README.md](benchmark/README.md) for the
-standalone Laya benchmark and measured results; and [KG_Data/README.md](KG_Data/README.md)
-for the supplementary institute CSV awaiting review.
+
+## Institution bootstrap data
+`Universities.csv` is the original 1,303-row UGC file supplied with this workspace;
+it has not been edited. The importer uses its real column names, records the file
+SHA-256 and row number, and labels its provenance `UGC_USER_SUPPLIED`. Its download
+date and exact source URL were not supplied and are not invented.
+
+`supplementary_institutions.csv` contains **32 manually normalized records**:
+
+- All 23 IITs from the [government ISTI directory](https://www.indiascienceandtechnology.gov.in/organisations/centres-of-higher-learning/iits), including its second and third pages.
+- [IISc](https://www.iisc.ac.in/about/general-information/contact/) and [ISI](https://asd.isical.ac.in/static/contact).
+- Seven additional universities, completing coverage of the 12 notified institutions in the [UGC IoE list](https://ioe.ugc.ac.in/Home/ListofIOE) accessed on 2026-10-24. Four IITs and IISc already occur in the first two groups.
+
+The CSV is a **review draft**, not an assertion that it has been human verified.
+Every new record has `verification_status=NEEDS_REVIEW`. `iit_source_records.json`
+preserves the names, state fields and website links extracted from the government
+directory. Some of those website links are legacy URLs; they are preserved as
+published. A blank address means the extractor did not capture one.
+
+`ioe_status=NOTIFIED` means included in the referenced UGC list. A recommendation
+or letter of intent is not treated as notification. `NOT_LISTED_IN_REFERENCED_IOE_LIST`
+does not assert that an institute lacks other recognition. A blank notification
+date means not transcribed. The 12 IoE records are IISc, IIT Bombay, IIT Delhi,
+IIT Madras, IIT Kharagpur, Delhi University, University of Hyderabad, BHU, BITS
+Pilani, MAHE, O P Jindal Global University and Shiv Nadar University.
+
+Names and pipe-separated aliases were normalized editorially. City fields refer
+to the primary institution/campus locality, not verified street addresses. Review
+these fields against the per-row sources. ISI branches, overseas campuses, all
+NITs, all IIITs and corporate labs are not an exhaustive part of this supplement.
+In particular, an Indian parent organization does not make an overseas campus an
+Indian affiliation. Bare IIT/NIT/ISI/VIT aliases are intentionally absent.
+
+To use the draft without approving it:
+
+```bash
+.venv/bin/python -m rag.cli bootstrap KG_Data/Universities.csv KG_Data/supplementary_institutions.csv
+```
+
+Pending records are retained for inspection but excluded from trusted entity
+resolution, organization vector search and geographic filters. If a pending
+supplement duplicates a trusted UGC canonical name, its proposed aliases and
+location are stored as a `REVIEW_RECORD`; they cannot alter trusted evidence.
+
+After your review, copy the supplement to a reviewed CSV, correct any facts, and
+set `verification_status=TRUSTED` only for approved rows. Import that file with the
+same command and run `rag.cli index`. Keep `entity_id` unchanged across renames.
+Reingest affected paper JSON to resolve previously unresolved affiliations.
+Full candidate approval/merge tooling and automatic rewiring are deferred.
+
+## Laya affiliation benchmark
+The previously empty `benchmark_data.json` now contains 121 synthetic affiliation
+cases: 40 positive, 40 negative and 41 ambiguous, plus 12 paper-level replay
+fixtures. Every case has an ID, rationale, challenge category and fixed split
+(24 validation / 97 test). Labels are editorial and need human review; this is
+a diagnostic challenge set, not a representative scholarly sample or an
+independent gold-standard dataset. Similar institutional names occur across
+splits, so this split does not measure generalization to unseen institutions.
+
+Positive means at least one **current institutional affiliation located in India**.
+Negative requires identified foreign affiliations. Ambiguous means insufficient
+evidence. Email, nationality, former jobs and a research subject mentioning India
+do not establish location. Overseas campuses are classified by campus location.
+
+## Run
+
+```bash
+.venv/bin/python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python benchmark/test_laya.py --backend both --model convaiinnovations/laya
+
+# Reproduce the checkpoint used in the included report:
+.venv/bin/python benchmark/test_laya.py --backend both --model convaiinnovations/laya \
+  --revision 7b928d828b7b0e022f929d9bd2e44165aa270148 \
+  --output benchmark/results/reproduction.json
+
+# No model or download needed:
+.venv/bin/python benchmark/test_laya.py --backend rules --output benchmark/results/rules_only.json
+```
+
+The script uses the [official Laya SDK](https://github.com/NandhaKishorM/laya) and
+the requested [convaiinnovations/laya checkpoint](https://huggingface.co/convaiinnovations/laya),
+with one typed choice question and three fixed criteria. It does not substitute
+an LLM or silently fall back to rules. Missing dependencies, download errors and
+invalid model responses produce a failed report and nonzero exit. The model is
+loaded once; inference uses CPU with two threads by default. `--device`,
+`--threads`, `--model`, `--revision`, `--dataset`, `--split` and `--output` are
+configurable. Model files are cached under ignored `data/model_cache`.
+
+The report records the dataset SHA-256, complete question/criteria, model revision,
+library versions, per-case distributions and timings, confusion matrices,
+per-class precision/recall/F1, macro-F1, Brier score and ECE. Brier is the sum
+across three classes averaged over cases; ECE uses ten equal-width bins.
+Probabilities are normalized only to compensate for SDK rounding. Reported
+latency excludes model loading but includes the first inference call.
+No confidence threshold was tuned on the test set.
+
+## Independent benchmark comparison
+
+`benchmark/benchmark_data.json` is kept separate from the fine-tuning corpus. Its
+three-class labels are converted by
+[`benchmark/parse_benchmark_data.py`](benchmark/parse_benchmark_data.py) into the exact binary Laya
+format (`state`, `questions`, `expected`). `positive` projects to `INDIAN`, while
+`negative` and `ambiguous` project to `NOT_INDIAN`. The original source label and
+category remain in the comparison report for analysis.
+
+Run both systems on all 121 independent cases with:
+
+```bash
+.venv/bin/python benchmark/test_independent_laya_vs_rules.py
+```
+
+The command writes the parsed input to
+`benchmark/results/benchmark_data_laya.jsonl` and the comparison to
+`benchmark/results/independent_laya_vs_rules_report.json`. It also saves overall,
+per-class, confusion-matrix and category-accuracy PNG plots in
+`benchmark/results/`. Use
+`--split test` or `--split validation` to restrict the source split, and
+`--max-cases N` for a short smoke run.
+
+## Measured result
+
+`results/laya_report.json` records an actual CPU run on 2026-10-24:
+
+| Metric | Existing rules | Laya |
+|---|---:|---:|
+| All 121 cases: accuracy | 62.81% | 33.88% |
+| All 121 cases: macro-F1 | 0.610 | 0.270 |
+| Test split, 97 cases: accuracy | 62.89% | 34.02% |
+| Positive recall | 95.00% | 42.50% |
+| Ambiguous recall | 31.71% | 0.00% |
+| False inclusions / false exclusions | 9 / 2 | 31 / 23 |
+| Paper-level three-class accuracy, 12 fixtures | 58.33% | 25.00% |
+
+Laya predicted 48 positives, 73 negatives and **zero ambiguous** cases. Its mean
+CPU latency was approximately 2.27 seconds per case, excluding loading. This
+historical report evaluates the original three-class base-checkpoint experiment;
+it is not the production checkpoint result. The current production pipeline uses
+`laya_finetuning/laya_finetuned_SENTRY` and the binary contract.
+
+During loading, the SDK warned that an unrelated 11+-option temperature entry
+was clamped to its supported range. This benchmark uses three options. Confidence
+still has no domain-specific calibration guarantee; the measured Brier/ECE are
+diagnostics, not proof of calibration.
+
+The paper replay groups structured author-affiliation decisions and applies the
+pipeline's positive-only inclusion policy. It does **not** rerun web acquisition,
+author extraction or form filling and is not a full end-to-end pipeline accuracy
+measurement. The separate
+`test_rag.py` script tests retrieval integration on synthetic paper fixtures.
+
+For the Laya fine-tuning corpus, see
+[Laya fine-tuning data](#laya-fine-tuning-data). It contains 1,200
+binary JSONL examples (400 `INDIAN`, 800 `NOT_INDIAN`) in Laya's
+`{state, questions, expected}` format, plus reproducible
+train/validation/test splits.
+
+The following comparison scripts are retained as historical diagnostics for the
+former deterministic classifier. They are not imported by the production
+pipeline and can be removed together with `evaluation/india_rules.py` when that
+historical comparison is no longer needed. To reproduce the old comparison on
+the untouched test split, run:
+
+```bash
+.venv/bin/python benchmark/test_laya_vs_rules.py
+```
+
+The default inputs are `laya_finetuning/finetuning_data/test.jsonl` and
+`laya_finetuning/laya_finetuned_SENTRY`. The script writes
+`benchmark/results/laya_vs_rules_test_report.json`. It maps the
+rule classifier's `positive` result to `INDIAN` and both `negative` and
+`ambiguous` results to `NOT_INDIAN`, while retaining the raw rule label in the
+report.
+
+For the Laya fine-tuning corpus, see
+[Laya fine-tuning data](#laya-fine-tuning-data). It contains 1,200
+binary JSONL examples (400 `INDIAN`, 800 `NOT_INDIAN`) in Laya's
+`{state, questions, expected}` format, plus reproducible
+train/validation/test splits.
+
+## Laya fine-tuning data
+This directory contains a reproducible, synthetic supervised corpus for adapting
+Laya to SENTRY's binary affiliation decision:
+
+- `INDIAN`: sufficient evidence that at least one current institutional
+  affiliation is located in India;
+- `NOT_INDIAN`: the affiliation is outside India or there is not enough reliable
+  evidence to establish a current Indian affiliation.
+
+There are **1,200 examples**: 400 `INDIAN` followed by 800 `NOT_INDIAN` rows. The
+seven requested positive categories, seven foreign-negative categories and eight
+former ambiguous categories are all represented. The files contain 960 training,
+120 validation and 120 test rows, with 320/640, 40/80 and 40/80
+`INDIAN`/`NOT_INDIAN` examples respectively. `all.jsonl` is the complete corpus.
+
+The source templates originally carried three labels. Every former `ambiguous`
+row is now a final `NOT_INDIAN` row because it does not establish a current Indian
+affiliation.
+
+Each JSONL row is directly compatible with Laya's native training/evaluation
+reader:
+
+```json
+{"state":"IIT Bombay, Mumbai","questions":{"affiliation_geography":{"type":"choice","instructions":"Does this affiliation provide sufficient evidence that the current institution or campus is located in India?","criteria":{"INDIAN":"Sufficient evidence that the current institution or campus is in India.","NOT_INDIAN":"No sufficient evidence that the current institution or campus is in India."}}},"expected":{"affiliation_geography":"INDIAN"}}
+```
+
+Each row has one `expected` target field. Exact counts, hashes and policy are in
+[laya_finetuning/finetuning_data/manifest.json](laya_finetuning/finetuning_data/manifest.json).
+
+The generator is [benchmark/generate_laya_finetuning.py](benchmark/generate_laya_finetuning.py).
+Re-running it with the same code and seed (`20261029`) reproduces the same rows
+and split assignments.
+
+## Validate and train
+
+```bash
+.venv/bin/python benchmark/generate_laya_finetuning.py
+.venv/bin/python - <<'PY'
+from laya.evals import Dataset
+for name in ("train", "validation", "test"):
+    data = Dataset.from_jsonl(f"benchmark/laya_finetuning/{name}.jsonl")
+    print(name, len(data))
+PY
+
+.venv/bin/laya-train \
+  --data benchmark/laya_finetuning/train.jsonl \
+  --eval benchmark/laya_finetuning/validation.jsonl \
+  --base convaiinnovations/laya \
+  --out data/models/laya-india-affiliation \
+  --epochs 4 --micro-batch 8 --grad-accum 8 --loss rlcd --seed 20261029
+```
+
+On an offline machine, point `--base` at a downloaded local Laya checkpoint.
+The command needs the Laya training dependencies and a writable output path.
+Keep the test split untouched while choosing epochs, learning rates, or
+abstention thresholds. Evaluate the resulting checkpoint with
+`benchmark/test_laya.py --model data/models/laya-india-affiliation --split test`.
+
+## Labeling cautions
+
+This is generated training data, not an externally verified gold-standard
+corpus. It uses manually written institution families and controlled variations.
+The same families can appear across splits, so the test score measures coverage
+of these policy patterns rather than generalization to unseen institutions.
+The 1:2 `INDIAN`/`NOT_INDIAN` ratio is a valid choice when unresolved evidence is
+operationally treated as negative; it is intentionally not a 50/50 class-balanced
+corpus. Report per-class recall, macro-F1, balanced accuracy and the confusion
+matrix in addition to accuracy. If deployment prevalence differs materially,
+consider class weights or calibration during model selection rather than judging
+the model by accuracy alone.
+Review labels before training. In particular:
+
+- A current Indian affiliation makes a multiple-affiliation example `INDIAN`;
+  a foreign coauthor does not cancel it.
+- A former Indian job does not make a current foreign affiliation `INDIAN`.
+- A bare acronym, email address, city alone, India as a research topic, or any
+  other unresolved evidence is `NOT_INDIAN` under the binary policy.
+- An overseas campus is classified by its current campus location.
+- `IIT`, `NIT`, `ISI`, `VIT` and similar acronyms are `NOT_INDIAN` without a
+  disambiguating campus or institution.
+
+For a serious model release, add reviewed examples from real affiliation strings,
+hold out institution families by name, and record annotator agreement. Do not
+use these synthetic labels alone to make employment, nationality or eligibility
+decisions.
+
+## SENTRY RAG extension
+For conversational queries, HTTP endpoints and complete-corpus backfilling,
+see [rag/QUERYING.md](rag/QUERYING.md). RAG is now connected to SENTRY's orchestrator.
+
+This implements the retrieval scope of the supplied architecture: an institution
+and scholarly property graph, semantic vectors, GraphRAG, HybridRAG, provenance
+and grounded answers. Production affiliation decisions use extracted affiliation
+strings and the fine-tuned `laya_finetuning/laya_finetuned_SENTRY` checkpoint.
+The deterministic classifier is not part of the production path.
+Candidate review UI, entity merging, Laya decision fusion, automatic discovery,
+and the other later architecture extensions are not implemented here.
+
+## Install and bootstrap
+
+```bash
+# CPU machine; choose an appropriate PyTorch build if using a GPU.
+.venv/bin/python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m rag.cli bootstrap KG_Data/Universities.csv KG_Data/supplementary_institutions.csv
+```
+
+The SQLite database defaults to `data/rag/sentry.sqlite3`; override with the global
+`--db` option. New supplement records remain pending until you review them; see
+the [Institution bootstrap data](#institution-bootstrap-data) section. No database server or hosted vector service is needed.
+
+Import existing pipeline output, then build semantic vectors:
+
+```bash
+.venv/bin/python -m rag.cli ingest data/final_output/ACL/2025/indian_papers_structured.json --conference ACL --year 2025
+.venv/bin/python -m rag.cli index
+.venv/bin/python -m rag.cli query 'language model hallucination detection' --mode vector
+.venv/bin/python -m rag.cli query 'Jadavpur University collaborations' --mode graph
+.venv/bin/python -m rag.cli query 'multimodal retrieval' --mode hybrid --filters '{"country":"India","year_min":2025}'
+.venv/bin/python -m rag.cli aggregate --filters '{"conference":"ACL","year":2025}'
+```
+
+`index` lazily downloads `sentence-transformers/all-MiniLM-L6-v2` into
+`data/model_cache`. `--embedding-model` and `--embedding-revision` select another
+checkpoint. Model identity includes the resolved revision; changing it requires
+indexing for that model. `HF_HUB_OFFLINE=1` runs with cached weights. The explicit
+global `--embedding-backend hash` provides lexical vectors for offline tests;
+it is **not semantic retrieval** and never silently replaces the real model.
+
+Queries return citations and structured evidence by default. Add `--generate`
+to synthesize an answer with the existing `LLM_API_KEY`, `LLM_BASE_URL` and
+`LLM_MODEL` configuration. This makes an external LLM request. Evidence is bounded
+and marked as data; the prompt requires citations and uncertainty. Unknown or
+missing citation IDs are rejected, but citation ID validation cannot establish
+that each generated claim is entailed by its evidence. No external generation
+was needed for the included verification run.
+
+## Pipeline ingestion
+
+```bash
+export SENTRY_RAG_ENABLED=1
+export SENTRY_KG_PATH=data/rag/sentry.sqlite3
+# Optional: update embeddings immediately after each successful paper.
+export SENTRY_RAG_AUTO_INDEX=1
+```
+
+Then use the existing conference entry points. Successful extractions enter the
+graph before the Indian-only output filter. When RAG is enabled, non-Indian
+scholarly papers are retained in the graph as well; this can increase extraction
+calls. Defaults leave RAG disabled.
+Abstracts are now retained in `PaperInfo` and structured output for retrieval.
+Hook failures are logged without discarding extraction output. Reimport saved
+records and run `index` to retry. Previously checkpointed papers are not silently
+reprocessed; explicitly import old outputs. Older outputs may have titles only;
+missing abstracts are not fabricated. Old outputs are also an Indian-positive
+subset, so they do not support whole-conference coverage claims.
+
+## Retrieval semantics
+
+- Graph nodes cover organizations, geography, papers, paper-scoped authors,
+  conference events, topics and unverified candidates. ORCID, when supplied, links
+  authors across papers; identical names alone do not. Affiliation edges retain
+  the paper, raw string, observed year and resolution method.
+- Exact canonical/qualified alias matches resolve only when unique and trusted.
+  Fuzzy matches are review suggestions. Historical/negated strings and recognized
+  overseas-campus conflicts abstain. This is conservative entity resolution, not
+  a general geographic classifier; the foreign-location guard is not exhaustive.
+- IDs are stable across imports. DOI and URL identity take precedence over the
+  fallback normalized-title hash. Renaming a CSV row should retain `entity_id`.
+  Unknown organization observations never auto-promote to trusted facts.
+- Graph and vector documents share one transactional database. Vectors retain
+  model and content digests. Reingestion updates only changed text vectors and
+  removes obsolete chunks. Searches reject stale indexes rather than silently
+  omitting unindexed documents. Node changes and replacement paper observations retain before/after audit records;
+  this is not a full event-sourced database or complete administrative audit API.
+- Vector search uses normalized dense embeddings and exact dot products, with
+  paper metadata/graph filtering before top-k and best-chunk deduplication. Optional
+  `full_text` is split into overlapping 240-word chunks at 200-word strides.
+- Graph search links explicit known entities and retrieves paper-backed relation
+  evidence. Several named institutions mean a collaboration intersection. For
+  repeated author names, results are alternatives, not an assertion of identity.
+- Hybrid search enforces entity and metadata constraints, then uses reciprocal
+  rank fusion (constant 60, configurable through the Python API) to combine graph
+  and vector rankings. These are initial ranking defaults, not tuned evaluation
+  weights. Arbitrary natural-language filters are not inferred; supply `--filters`.
+- Supported filters: `country`, `state`, `organization_id`, `organization_type`,
+  `author_id`, `author_name`, `topic`, `conference`, `year`, `year_min`, `year_max`. Organization
+  predicates must match the same trusted organization. Geography comes from
+  resolved institutions, not author names or emails. Aggregation counts distinct
+  papers per institution across the filtered graph, not just retrieval top-k.
+- `resolve AFFILIATION`, `subgraph ENTITY_ID --depth 2 --limit 100`, and
+  `path SOURCE_ID TARGET_ID --depth 4` expose bounded graph operations. Paths can
+  include geographic links and observations; a path is not itself evidence of
+  collaboration. Use paper-backed graph search for collaboration questions.
+
+Storage and exact vector scans target a local research corpus. Large deployments
+will need indexed graph queries and an approximate-nearest-neighbor vector backend.
+Unknown dates stay unknown; paper-specific affiliation does not assert a current
+job or nationality. No citation relationships are invented without citation data.
+
+## Verification
+
+```bash
+.venv/bin/python -m unittest discover -s tests -v
+HF_HUB_OFFLINE=1 OMP_NUM_THREADS=2 .venv/bin/python benchmark/test_rag.py
+```
+
+The second command checks real semantic paraphrase retrieval, graph collaboration,
+hybrid filters, citations and incremental indexing on a synthetic corpus. Its
+report is `benchmark/results/rag_smoke_report.json`; it is an integration check,
+not a claim about retrieval quality on a held-out scientific benchmark.
+
+`benchmark/results/existing_corpus_rag_report.json` also records a successful run
+on 68 existing ACL 2025 and ACM SIGCOMM 2025 outputs. They have titles but no
+stored abstracts. All three retrieval modes returned citations and a repeated
+index operation was a no-op. That was the initial partial corpus check. The
+database at `data/rag/sentry.sqlite3` (ignored by Git) is now backfilled from all
+saved outputs using `rag.cli sync --index`; consult `data/rag/corpus_sync_report.json`
+or `/v1/rag/status` for current coverage.

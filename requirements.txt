@@ -55,3 +55,7 @@ wrapt==2.3.0
 wsproto==1.3.2
 # Fine-tuned affiliation classifier used by the production pipeline.
 laya==0.4.14
+# Static metric plots produced by benchmark/test_independent_laya_vs_rules.py.
+matplotlib>=3.8
+# Semantic retrieval dependencies for vector and hybrid RAG queries.
+sentence-transformers==6.2.0

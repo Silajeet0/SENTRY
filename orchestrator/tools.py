@@ -371,7 +371,7 @@ TOOL_SCHEMAS = [
                 "type": "object",
                 "properties": {
                     "question": {"type": "string", "description": "The user's complete research question."},
-                    "semantic_query": {"type": "string", "description": "Topic words for semantic search, e.g. graph neural networks. Omit for graph-only entity questions."},
+                    "semantic_query": {"type": "string", "description": "Topic words for semantic search for the current user question, e.g. graph neural networks. Omit for author-only or other exact entity questions; do not reuse a previous turn's topic."},
                     "mode": {"type": "string", "enum": ["vector", "graph", "hybrid"]},
                     "target": {"type": "string", "enum": ["auto", "authors", "papers", "organizations"]},
                     "k": {"type": "integer", "minimum": 1, "maximum": 20},

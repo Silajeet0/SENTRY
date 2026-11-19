@@ -84,6 +84,23 @@ class RAGServiceTests(unittest.TestCase):
             {"Washim Uddin Mondal", "Coauthor One"},
         )
 
+    def test_author_only_lookup_does_not_apply_semantic_threshold(self):
+        self.kg.ingest_paper({
+            **self.paper,
+            "paper_url": "https://example.org/washim-recent",
+            "paper_title": "Recent author paper",
+            "year": 2026,
+            "all_authors": [{"name": "Washim Uddin Mondal", "affiliation": "IIT Kanpur, India"}],
+        })
+        RAGEngine(self.kg, HashEmbedder()).index()
+        result = query_knowledge(
+            "List some of Washim Uddin Mondal's recent papers",
+            target="papers",
+            filters={"author_name": "Washim Uddin Mondal"},
+        )
+        self.assertEqual(result["mode"], "graph")
+        self.assertEqual([p["title"] for p in result["papers"]], ["Recent author paper"])
+
     def test_similarity_threshold_does_not_admit_graph_only_papers(self):
         result = query_knowledge("Who works on quantum fermentation in India?", min_similarity=1)
         self.assertEqual(result["papers"], [])

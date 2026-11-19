@@ -1,2 +1,0 @@
-# Optional semantic retrieval dependencies; install CPU PyTorch first on CPU machines.
-sentence-transformers==6.2.0
